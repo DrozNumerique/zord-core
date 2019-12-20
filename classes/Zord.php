@@ -364,7 +364,7 @@ class Zord {
     	                $value = self::array_merge($first[$key], $value, isset($base) ? $base.'.'.$key : null);
     	            }
     	        }
-    	        if (is_int($key)) {
+    	        if (!self::is_associative($second)) {
     	           $first[] = $value; 
     	        } else {
     	            if ($value === '__UNSET__') {
