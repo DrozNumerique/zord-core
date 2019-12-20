@@ -83,7 +83,8 @@ class User {
             ]
         ]);
         if ($result) {
-            $user = new User($result->login, self::crypt($login.microtime()));
+            $class = Zord::getClassName('User');
+            $user = new $class($result->login, self::crypt($login.microtime()));
             (new UserHasSessionEntity())->create([
                 'user' => $user->login,
                 'session' => $user->session,
