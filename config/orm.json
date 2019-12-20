@@ -1,0 +1,72 @@
+{
+	"UserEntity": {
+		"table": "users",
+		"fields": [
+			"login",
+	        "password",
+	        "email",
+	        "name",
+	        "ips",
+	        "activate"
+        ],
+        "key": "login"
+    },
+	"UserHasAddressEntity": {
+		"table": "user_has_address",
+		"fields": [
+	        "user",
+	    	"ip",
+	    	"mask",
+	    	"include"
+        ],
+        "key": [
+        	"user",
+        	"ip"
+        ],
+        "expr": {
+           	"ip": {
+           		"get": "INET_NTOA",
+           		"set": "INET_ATON"
+           	}
+        }
+    },
+	"UserHasRoleEntity": {
+		"table": "user_has_role",
+		"fields": [
+	        "user",
+	        "role",
+	        "context",
+	        "start",
+	        "end"
+        ],
+        "key": [
+        	"user",
+        	"role",
+        	"context"
+        ]
+    },
+	"UserHasSessionEntity": {
+		"table": "user_has_session",
+		"fields": [
+	        "user",
+	        "session",
+	        "last"
+        ],
+        "key": "session"
+    },
+	"ProcessEntity": {
+		"table": "process",
+		"fields": [
+	        "pid",
+	        "class",
+	        "user",
+	        "lang",
+	        "params",
+	        "start",
+	        "last",
+	        "step",
+	        "progress"
+        ],
+        "key": "pid"
+    }
+}

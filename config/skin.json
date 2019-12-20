@@ -1,0 +1,17 @@
+{
+	"favicon": "",
+	"scripts": {
+		"zord": {
+			"type": "text/javascript",
+			"src": "/js/zord.js"
+		},
+		"locale": {
+			"type": "text/javascript",
+			"template": "/portal/script/locale"
+		},
+		"var": {
+			"type": "text/javascript",
+			"template": "/portal/script/var"
+		}
+	}
+}

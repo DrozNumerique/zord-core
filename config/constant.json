@@ -1,0 +1,14 @@
+{
+    "DEFAULT_LANG": "fr-FR",
+    "DEFAULT_TITLE": "ꓜꓳꓤꓷ",
+    "DEFAULT_TIMEZONE": "Europe/Paris",
+    "LOG_DATE_FORMAT": "[d/m/Y H:i:s.u]",
+    "SESSION_INACTIVE_DURATION": "00:20:00",
+    "WEBMASTER_MAIL_ADDRESS": "webmaster@zord.tech",
+    "WEBMASTER_MAIL_NAME": "Zord Accounts Management",
+    "ACCOUNT_ACTIVATION_SUBJECT": "Zord Accounts Management",
+    "PROCESS_COMMAND": "php -f ${SCRIPT} ${PID} &",
+    "DETECT_PROCESS_COMMAND": "pgrep -f ${PID}",
+    "KILL_SIGNAL": 9,
+    "MAX_LOG_SIZE": 200000
+}

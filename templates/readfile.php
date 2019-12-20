@@ -1,0 +1,1 @@
+<?php readfile($models['filename']); ?>

@@ -1,0 +1,5 @@
+{
+	"run":"Plugin to run",
+	"after":"after",
+	"before": "before"
+}

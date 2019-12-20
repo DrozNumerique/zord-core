@@ -1,0 +1,51 @@
+{
+	"Controler": {
+		"last": {
+			"parameters": {
+				"type": "FILTER_DEFAULT"
+			}
+		}
+	},
+	"Portal": {
+		"response": "VIEW",
+		"lang": {
+			"parameters": {
+				"lang": "FILTER_DEFAULT"
+			}
+		},
+		"page": {
+			"shortcut": "page",
+			"parameters": {
+				"page": "FILTER_SANITIZE_STRING"
+			}
+		},
+		"download": {
+			"response": "DOWNLOAD"
+		},
+		"upload": {
+			"response": "DATA",
+			"parameters": {
+				"name": "FILTER_SANITIZE_STRING"
+			}
+		}
+	},
+	"Process": {
+		"response": "VIEW",
+		"auth": {
+			"connect": true,
+			"role": "admin"
+		},
+		"status": {
+			"response": "DATA",
+			"parameters": {
+				"pid": "FILTER_SANITIZE_STRING"
+			}
+		},
+		"kill": {
+			"response": "DATA",
+			"parameters": {
+				"pid": "FILTER_SANITIZE_STRING"
+			}
+		}
+	}
+}
