@@ -1,9 +1,60 @@
 {
 	"favicon": "",
+	"styles": {
+		"font-awesome": {
+			"media": "screen",
+			"type": "text/css",
+			"href": "/css/font-awesome.css"
+		},
+		"portal": {
+			"media": "screen",
+			"type": "text/css",
+			"href": "/css/portal.css"
+		},
+		"table": {
+			"media": "screen",
+			"type": "text/css",
+			"href": "/css/table.css"
+		},
+		"chosen": {
+			"media": "screen",
+			"type": "text/css",
+			"href": "/css/chosen.css"
+		},
+		"admin": {
+			"media": "screen",
+			"type": "text/css",
+			"href": "/css/admin.css"
+		}
+	},
 	"scripts": {
 		"zord": {
 			"type": "text/javascript",
 			"src": "/js/zord.js"
+		},
+		"portal": {
+			"type": "text/javascript",
+			"src": "/js/portal.js"
+		},
+		"table": {
+			"type": "text/javascript",
+			"src": "/js/table.js"
+		},
+		"jquery": {
+			"type": "text/javascript",
+			"src": "/js/jquery.js"
+		},
+		"chosen": {
+			"type": "text/javascript",
+			"src": "/js/chosen.js"
+		},
+		"default": {
+			"type": "text/javascript",
+			"template": "/portal/script/default"
+		},
+		"switch": {
+			"type": "text/javascript",
+			"template": "/portal/script/switch"
 		},
 		"locale": {
 			"type": "text/javascript",

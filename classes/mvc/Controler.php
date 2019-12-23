@@ -296,11 +296,14 @@ class Controler {
                     $action = $target['action'];
                     $this->$action($target);
                     return;
-                } else if (class_exists($target['module'])) {
-                    $this->module = new $target['module']($this);
-                    $plugin = Zord::value('plugin', ['module',$target['module'],$target['action']]);
-                    if (method_exists($this->module, $target['action']) || isset($plugin)) {
-                        $this->action = $target['action'];
+                } else {
+                    $class = Zord::getClassName($target['module']);
+                    if (class_exists($class)) {
+                        $this->module = new $class($this);
+                        $plugin = Zord::value('plugin', ['module',$target['module'],$target['action']]);
+                        if (method_exists($this->module, $target['action']) || isset($plugin)) {
+                            $this->action = $target['action'];
+                        }
                     }
                 }
                 if ($this->module && $this->action) {

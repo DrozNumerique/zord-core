@@ -1,0 +1,25 @@
+{
+	"admin": {
+		"styles": [
+			{
+				"media": "screen",
+				"type": "text/css",
+				"href": "/css/admin.css"
+			}
+		],
+		"scripts": [
+			{
+				"type": "text/javascript",
+				"src": "/js/admin/common.js"
+			}
+		]
+	},
+	"error": {
+		"scripts": [
+			{
+				"type": "text/javascript",
+				"template": "/portal/page/error/script/alert"
+			}
+		]
+	}
+}

@@ -6,6 +6,27 @@
 			}
 		}
 	},
+	"Account": {
+		"response": "VIEW",
+		"activate": {
+			"parameters": {
+				"code": "FILTER_SANITIZE_STRING"
+			}
+		},
+		"connection": {
+			"parameters": {
+				"lasthref": "FILTER_VALIDATE_URL"
+			}
+		},
+		"connect": {
+			"parameters": {
+				"login": "FILTER_DEFAULT",
+				"password": "FILTER_FLAG_NONE",
+				"lasthref": "FILTER_VALIDATE_URL"
+			}
+		},
+		"disconnect": {}
+	},
 	"Portal": {
 		"response": "VIEW",
 		"lang": {
@@ -27,6 +48,9 @@
 			"parameters": {
 				"name": "FILTER_SANITIZE_STRING"
 			}
+		},
+		"chosen": {
+			"response": "DATA"
 		}
 	},
 	"Process": {
@@ -45,6 +69,50 @@
 			"response": "DATA",
 			"parameters": {
 				"pid": "FILTER_SANITIZE_STRING"
+			}
+		}
+	},
+	"Admin": {
+		"response": "VIEW",
+		"auth": {
+			"connect": true,
+			"role": "admin"
+		},
+		"index": {
+			"shortcut": "admin",
+			"parameters": {
+				"tab": "FILTER_SANITIZE_STRING"
+			}
+		},
+		"switches": {
+			"response": "DATA"
+		},
+		"account": {
+			"parameters": {
+				"operation": "FILTER_SANITIZE_STRING",
+				"login": "FILTER_SANITIZE_STRING",
+				"name": "FILTER_SANITIZE_STRING",
+				"email": "FILTER_SANITIZE_STRING"
+			}
+		},
+		"profile": {
+			"parameters": {
+				"user": "FILTER_SANITIZE_STRING",
+				"roles": "FILTER_SANITIZE_STRING",
+				"ips": "FILTER_SANITIZE_STRING"
+			}
+		},
+		"context": {
+			"parameters": {
+				"operation": "FILTER_SANITIZE_STRING",
+				"name": "FILTER_SANITIZE_STRING",
+				"title": "FILTER_SANITIZE_STRING"
+			}
+		},
+		"urls": {
+			"parameters": {
+				"context": "FILTER_SANITIZE_STRING",
+				"urls": "FILTER_SANITIZE_STRING"
 			}
 		}
 	}

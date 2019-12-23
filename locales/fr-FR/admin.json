@@ -1,0 +1,50 @@
+{
+	"menu": {
+		"context": "Contextes",
+		"users": "Utilisateurs"
+	},
+	"tab": {
+		"context": {
+			"title": "Gestion des contextes",
+			"urls": "URLs",
+			"name": "Nom",
+			"label": "Titre",
+			"secure": "Sécurisé",
+			"host": "Domaine",
+			"path": "Chemin",
+			"submit": "Valider"
+		},
+		"users": {
+			"title": "Gestion des utilisateurs",
+			"login": "Identifiant",
+			"name": "Nom",
+			"email": "Courriel",
+			"profile": "Profil...",
+			"counter": "Rapport...",
+			"roles": "Rôles",
+			"addresses": "Adresses IP",
+			"role": "Rôle",
+			"context": "Contexte",
+			"start": "Depuis",
+			"end": "Jusqu'à",
+			"ip": "Adresse(s) IP",
+			"mask": "Masque",
+			"include": "Inclure",
+			"exclude": "Exclure",
+			"submit": "Valider",
+			"match": "correspond déjà à l'adresse IP",
+			"mail": {
+				"error": "Echec de l'envoi du mail d'activation",
+				"to": "Destinataire",
+				"activation": "Lien d'activation"
+			}
+		}
+	},
+	"list": {
+		"create": "Ajouter",
+		"delete": "Supprimer",
+		"update": "Modifier",
+		"add": "Ajouter",
+		"remove": "Enlever"
+	}
+}

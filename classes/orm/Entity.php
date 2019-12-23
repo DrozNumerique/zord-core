@@ -9,6 +9,7 @@ abstract class Entity
     protected $fields;
     protected $keys;
     protected $joins;
+    protected $elements;
     
     protected $engine = null;
     protected $select = false;
@@ -29,6 +30,7 @@ abstract class Entity
         $this->fields = Zord::value($this->mapping, [$this->type,'fields']);
         $this->keys = Zord::value($this->mapping, [$this->type,'key']);
         $this->joins = Zord::value($this->mapping, [$this->type,'join']);
+        $this->elements = Zord::value($this->mapping, [$this->type,'elements']);
         if (!is_array($this->keys)) {
             $this->keys = [$this->keys];
         }
@@ -145,48 +147,34 @@ abstract class Entity
         }
     }
     
-    private function deep($many) {
-        if (isset($this->joins)) {
-            foreach (array_keys($this->joins) as $type) {
-                $fields = Zord::value($this->mapping, [$type,'fields']);
-                foreach ($fields as $field) {
-                    $full = $type.'.'.$field;
-                    $alias = $type.'_'.$field;
-                    $get = Zord::value($this->mapping, [$type,'expr',$field,'get']);
-                    if ($get) {
-                        $this->engine()->select_expr($get.'('.$full.') as '.$alias);
-                    } else {
-                        $this->engine()->select($full, $alias);
-                    }
-                }
+    private function deep($type, &$entity) {
+        if (isset($this->elements)) {
+            foreach ($this->elements as $element => $fields) {
+                $attribute = $fields[0];
+                $field = $fields[1];
+                $entities = (new $element())->retrieve([
+                    'many'   => true,
+                    'where' => [$field => $this->key($type, $entity)]
+                ], true);
+                $entity->$attribute = $entities;
             }
         }
-        $entities = $this->engine()->find_many();
-        $results = [];
-        foreach ($entities as $entity) {
-            $id = $this->id($this->type, $entity);
-            $results[$id][$this->type] = $entity;
-            if (isset($this->joins)) {
-                foreach (array_keys($this->joins) as $type) {
-                    $_id = $this->id($type, $entity, true);
-                    $results[$id][$type][$_id] = $entity;
-                }
-            }
-        }
-        return ($many || count($results) == 1) ? $results : false;
     }
     
-    private function id($type, $entity, $deep = false) {
-        $id = '';
+    private function key($type, $entry) {
         $keys = Zord::value($this->mapping, [$type,'key']);
-        if (!is_array($keys)) {
-            $keys = [$keys];
+        if (isset($keys)) {
+            if (is_array($keys)) {
+                $result = [];
+                foreach ($keys as $key) {
+                    $result[$key] = $entry->$key;
+                }
+                return $result;
+            } else {
+                return $entry->$keys;
+            }
         }
-        foreach ($keys as $key) {
-            $alias = $deep ? $type.'_'.$key : $key;
-            $id .= $entity->$alias;
-        }
-        return $id;
+        return null;
     }
     
     public function create(array $data) {
@@ -196,78 +184,94 @@ abstract class Entity
         return $entity;
     }
     
-    public function retrieve($criteria = null) {
-        $many = isset($criteria['many']) && $criteria['many'] === true;
-        $deep = isset($criteria['deep']) && $criteria['deep'] === true;
-        if ($criteria == null) {
-            return $this->engine()->find_many();
-        } else if (is_scalar($criteria)) {
-            $criteria = ['key' => $criteria];
-        } else if (is_array($criteria)) {
-            $is_key = true;
-            $keys = array_keys($criteria);
-            foreach ($keys as $key) {
-                if (!in_array($key, $this->keys)) {
-                    $is_key = false;
-                    break;
+    public function retrieve($criteria = null, $deep = false) {
+        if ($this->is_many($criteria)) {
+            if ($criteria !== null) {
+                $this->query($criteria);
+            }
+            $results = $this->engine()->find_many();
+            if ($deep && isset($this->elements)) {
+                foreach ($results as $result) {
+                    $this->deep($this->type, $result);
                 }
             }
-            foreach ($this->keys as $key) {
-                if (!in_array($key, $keys)) {
-                    $is_key = false;
-                    break;
-                }
-            }
-            if ($is_key) {
+            return $results;
+        } else {
+            if (is_scalar($criteria) || $this->is_key($criteria)) {
                 $criteria = ['key' => $criteria];
             }
-        }
-        if (isset($criteria['key']) && !$many) {
-            if (!$deep) {
-                return $this->engine()->find_one($criteria['key']);
-            } else {
-                return $this->deep(false);
+            $result = isset($criteria['key']) ? $this->engine()->find_one($criteria['key']) : $this->engine()->find_one();
+            if ($result && $deep && isset($this->elements)) {
+                $this->deep($this->type, $result);
             }
-        }
-        $this->query($criteria);
-        if (!$deep) {
-            return $many ? $this->engine()->find_many() : $this->engine()->find_one();
-        } else {
-            return $this->deep($many);
+            return $result;
         }
     }
     
     public function update($criteria, array $data) {
-        $many = isset($criteria['many']) && $criteria['many'] === true;
         $entity = $this->retrieve($criteria);
         if ($entity) {
-            if (!$many) {
-                $this->set($entity, $data);
-            } else {
+            if ($this->is_many($criteria)) {
                 foreach ($entity as $entry) {
                     $this->set($entry, $data);
                 }
+            } else {
+                $this->set($entity, $data);
             }
             $this->save($entity, $data);
         }
         return $entity;
     }
 
-    public function delete($criteria = null) {
-        $many = isset($criteria['many']) && $criteria['many'] === true;
-        if ($criteria == null) {
+    public function delete($criteria = null, $deep = false) {
+        $many = $this->is_many($criteria);
+        if ($criteria == null && !$deep) {
             return $this->engine()->delete_many();
-        } else if (is_scalar($criteria)) {
+        } else if (is_scalar($criteria) || $this->is_key($criteria)) {
             $criteria = ['key' => $criteria];
         }
         if (isset($criteria['key']) && !$many) {
-            $criteria = [
-                'where' => [Zord::value($this->mapping, [$this->type,'key']) => $criteria['key']]
-            ];
+            $where = [];
+            if (is_scalar($criteria['key'])) {
+                $where[$this->keys[0]] = $criteria['key'];
+            } else {
+                foreach($this->keys as $key) {
+                    $where[$key] = $criteria['key'][$key];
+                }
+            }
+            $criteria = ['many' => true, 'where' => $where];
             $many = true;
         }
-        $this->query($criteria);
-        return $many ? $this->engine()->delete_many() : $this->engine()->delete();
+        if (isset($criteria)) {
+            $this->query($criteria);
+        }
+        if ($deep && isset($this->elements)) {
+            $deleted = [];
+            if ($many) {
+                $entries = $this->engine()->find_many();
+                foreach ($entries as $entry) {
+                    $deleted[] = $this->key($this->type, $entry);
+                }
+            } else {
+                $entry = $this->engine()->find_one();
+                if ($entry) {
+                    $deleted[] = $this->key($this->type, $entry);
+                }
+            }
+            $result = $this->delete($criteria, false);
+            foreach ($deleted as $key) {
+                foreach ($this->elements as $element => $fields) {
+                    $result &= (new $element())->delete([
+                        'many'   => true,
+                        'where' => [$fields[1] => $key]
+                    ], true);
+                }
+            }
+            return $result;
+        } else {
+            $result = $many ? $this->engine()->delete_many() : $this->engine()->delete();
+        }
+        return $result;
     }
     
     private function set($entity, $data) {
@@ -288,6 +292,31 @@ abstract class Entity
     private function save($entity, $data) {
         $this->beforeSave($entity, $data);
         $entity->save();
+    }
+    
+    private function is_many($criteria) {
+        return !isset($criteria) || (isset($criteria['many']) && $criteria['many'] === true);
+    }
+    
+    private function is_key($criteria) {
+        if (!isset($criteria)) {
+            return false;
+        }
+        $is_key = true;
+        $keys = array_keys($criteria);
+        foreach ($keys as $key) {
+            if (!in_array($key, $this->keys)) {
+                $is_key = false;
+                break;
+            }
+        }
+        foreach ($this->keys as $key) {
+            if (!in_array($key, $keys)) {
+                $is_key = false;
+                break;
+            }
+        }
+        return $is_key;
     }
     
     protected function beforeSave($entity, $data) {}

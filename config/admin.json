@@ -1,0 +1,36 @@
+{
+	"tabs": {
+		"context": {
+			"scope": "zord",
+			"scripts": [
+				{
+					"src": "/js/admin/context.js",
+					"type": "text/javascript"
+				}
+			]
+		},
+		"users": {
+			"scope": "zord",
+			"scripts": [
+				{
+					"src": "/js/admin/users.js",
+					"type": "text/javascript"
+				}
+			]
+		}
+	},
+	"switches": {
+		"secure": {
+			"yes": {
+				"icon":"fa-chain",
+				"color":"black",
+				"next":"no"
+			},
+			"no": {
+				"icon":"fa-chain-broken",
+				"color":"black",
+				"next":"yes"
+			}
+		}
+	}
+}

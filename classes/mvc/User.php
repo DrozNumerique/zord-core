@@ -127,7 +127,7 @@ class User {
             $start = $period['start'];
             $end = $period['end'];
             $now = new DateTime();
-            return $start < $now && $now < $end;
+            return $start <= $now && $now <= $end;
         }
         return false;
     }

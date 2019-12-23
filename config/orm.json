@@ -9,7 +9,17 @@
 	        "ips",
 	        "activate"
         ],
-        "key": "login"
+        "key": "login",
+        "join": {
+        	"UserHasAddressEntity": ["login", "user"],
+        	"UserHasRoleEntity": ["login", "user"],
+        	"UserHasSessionEntity": ["login", "user"]
+        },
+        "elements": {
+        	"UserHasAddressEntity": ["adresses", "user"],
+        	"UserHasRoleEntity": ["roles", "user"],
+        	"UserHasSessionEntity": ["sessions", "user"]
+        }
     },
 	"UserHasAddressEntity": {
 		"table": "user_has_address",

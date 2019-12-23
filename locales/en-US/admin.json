@@ -1,0 +1,55 @@
+{
+	"menu": {
+		"context": "Context",
+		"users": "Accounts"
+	},
+	"tab": {
+		"context": {
+			"title": "Context management",
+			"urls": "URL",
+			"secure": "Secure",
+			"name": "Name",
+			"label": "Title",
+			"host": "Host",
+			"path": "Path",
+			"submit": "OK"
+		},
+		"users": {
+			"title": "Accounts management",
+			"login": "Login",
+			"name": "Name",
+			"email": "Email",
+			"create": "Create",
+			"delete": "Delete",
+			"update": "Update",
+			"profile": "Profile...",
+			"counter": "Counter...",
+			"roles": "Roles",
+			"addresses": "IP Addresses",
+			"role": "Role",
+			"context": "Context",
+			"start": "Start",
+			"end": "End",
+			"ip": "IP Address(es)",
+			"mask": "Mask",
+			"include": "Include",
+			"exclude": "Exclude",
+			"add": "Add",
+			"remove": "Remove",
+			"submit": "OK",
+			"match": "already matches IP address",
+			"mail": {
+				"error": "Fail to send activation e-mail",
+				"to": "To",
+				"activation": "Activation link "
+			}
+		}
+	},
+	"list": {
+		"create": "Create",
+		"delete": "Delete",
+		"update": "Update",
+		"add": "Add",
+		"remove": "Remove"
+	}
+}
