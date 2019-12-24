@@ -99,8 +99,8 @@ class User {
     
     public function disconnect() {
         session_destroy();
-        (new UserHasSessionEntity())->delete(['key' => $this->session]);
-        $this->roles = array();
+        (new UserHasSessionEntity())->delete($this->session);
+        $this->roles = [];
         $this->session = null;
     }
     
