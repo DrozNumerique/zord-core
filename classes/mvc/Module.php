@@ -311,7 +311,7 @@ class Module {
 	    $mail->addAddress($email, $name);
 	    $mail->Subject = ACCOUNT_ACTIVATION_SUBJECT;
 	    $mail->isHTML(true);
-	    $url = $this->baseURL.'Account/activate?code='.$code;
+	    $url = $this->baseURL.'activate?code='.$code;
 	    $mail->Body = '<a href="'.$url.'">'.$locale->click_here.'</a>';
 	    $mail->AltBody = $locale->copy_paste."\n".$url;
 	    $result = [

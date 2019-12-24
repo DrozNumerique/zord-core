@@ -9,6 +9,7 @@
 	"Account": {
 		"response": "VIEW",
 		"activate": {
+			"shortcut": "activate",
 			"parameters": {
 				"code": "FILTER_SANITIZE_STRING"
 			}
@@ -20,13 +21,16 @@
 			}
 		},
 		"connect": {
+			"shortcut": "connect",
 			"parameters": {
 				"login": "FILTER_DEFAULT",
 				"password": "FILTER_FLAG_NONE",
 				"lasthref": "FILTER_VALIDATE_URL"
 			}
 		},
-		"disconnect": {}
+		"disconnect": {
+			"shortcut": "disconnect"
+		}
 	},
 	"Portal": {
 		"response": "VIEW",
