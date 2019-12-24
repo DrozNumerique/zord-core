@@ -89,11 +89,14 @@ class Account extends Module {
         $mail->Subject = ACCOUNT_ACTIVATION_SUBJECT;
         $mail->isHTML(true);
         $url = $this->baseURL.'activate?code='.$code;
-        $mail->Body = '<a href="'.$url.'">'.$this->locale->click_here.'</a>';
+        $mail->Body = (new View())->render('/mail/activation', [
+            'url'   => $url,
+            'label' => $this->locale->click_here
+        ]);
         $mail->AltBody = $this->locale->copy_paste."\n".$url;
         $result = [
             'activation' => $url,
-            'account' => $name.' &lt;'.$email.'&gt;'
+            'account'    => htmlspecialchars($name.' <'.$email.'>')
         ];
         if (!$mail->Send()) {
             $result['error'] = $mail->ErrorInfo;
