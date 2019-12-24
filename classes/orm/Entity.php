@@ -199,6 +199,8 @@ abstract class Entity
         } else {
             if (is_scalar($criteria) || $this->is_key($criteria)) {
                 $criteria = ['key' => $criteria];
+            } else if (isset($criteria) && !isset($criteria['key'])) {
+                $this->query($criteria);
             }
             $result = isset($criteria['key']) ? $this->engine()->find_one($criteria['key']) : $this->engine()->find_one();
             if ($result && $deep && isset($this->elements)) {

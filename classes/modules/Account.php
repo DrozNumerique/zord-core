@@ -81,4 +81,23 @@ class Account extends Module {
         $this->user->disconnect();
         return $this->redirect($this->baseURL, true);
     }
+    
+    public function sendActivation($email, $name, $code) {
+        $mail = new PHPMailer();
+        $mail->SetFrom(WEBMASTER_MAIL_ADDRESS, WEBMASTER_MAIL_NAME);
+        $mail->addAddress($email, $name);
+        $mail->Subject = ACCOUNT_ACTIVATION_SUBJECT;
+        $mail->isHTML(true);
+        $url = $this->baseURL.'activate?code='.$code;
+        $mail->Body = '<a href="'.$url.'">'.$this->locale->click_here.'</a>';
+        $mail->AltBody = $this->locale->copy_paste."\n".$url;
+        $result = [
+            'activation' => $url,
+            'account' => $name.' &lt;'.$email.'&gt;'
+        ];
+        if (!$mail->Send()) {
+            $result['error'] = $mail->ErrorInfo;
+        }
+        return $result;
+    }
 }

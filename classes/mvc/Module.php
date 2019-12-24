@@ -303,24 +303,4 @@ class Module {
 	public function either($value, $key) {
 	    return $value !== null ? $value : (isset($this->params[$key]) ? $this->params[$key] : null);
 	}
-	
-	protected function sendActivation($email, $name, $code) {
-	    $locale = Zord::getLocale('account', $this->lang);
-	    $mail = new PHPMailer();
-	    $mail->SetFrom(WEBMASTER_MAIL_ADDRESS, WEBMASTER_MAIL_NAME);
-	    $mail->addAddress($email, $name);
-	    $mail->Subject = ACCOUNT_ACTIVATION_SUBJECT;
-	    $mail->isHTML(true);
-	    $url = $this->baseURL.'activate?code='.$code;
-	    $mail->Body = '<a href="'.$url.'">'.$locale->click_here.'</a>';
-	    $mail->AltBody = $locale->copy_paste."\n".$url;
-	    $result = [
-	        'activation' => $url,
-	        'account' => $name.' &lt;'.$email.'&gt;'
-	    ];
-	    if (!$mail->Send()) {
-	        $result['error'] = $mail->ErrorInfo;
-	    }
-	    return $result;
-	}
 }

@@ -68,7 +68,7 @@ class Admin extends Module {
                             'name' => $name,
                             'email' => $email
                         ]);
-                        $result['mail'] = $this->sendActivation($email, $name, $code);
+                        $result['mail'] = (new Account($this->controler))->sendActivation($email, $name, $code);
                         break;
                     }
                     case 'update': {
