@@ -17,6 +17,7 @@ class View {
             $this->context = $this->controler->getContext();
             $this->lang    = $this->controler->getLang();
         }
+        array_push($this->locales, $locale ? $locale : $this->getLocale($template));
     }
     
     public function render($template = null, $models = null, $locale = null) {
@@ -29,17 +30,17 @@ class View {
             $models = $this->models;
         }
         array_push($this->locales, $locale ? $locale : $this->getLocale($template));
-        $locale = end($this->locales);
+        $locale  = $locale ? $locale : end($this->locales);
         $context = $this->context;
         $lang    = $this->lang;
-        $locale  = Zord::getLocale($locale, $this->lang);
+        $locale  = is_string($locale) ? Zord::getLocale($locale, $this->lang) : $locale;
         $page    = isset($models['page']) ? $models['page'] : null;
         if ($this->controler) {
             $baseURL = $this->controler->getBaseURL();
             $user    = $this->controler->getUser();
-            if ($context != 'unknown') {
-                $config  = json_decode(Zord::json_encode(Zord::value('context', $context)));
-                $skin    = Zord::getSkin($context);
+            if ($context !== 'unknown') {
+                $config = json_decode(Zord::json_encode(Zord::value('context', $context)));
+                $skin   = Zord::getSkin($context);
             }
         }
         $this->viewPlugin($template, $models, 'before', $page);
