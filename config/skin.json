@@ -20,11 +20,6 @@
 			"media": "screen",
 			"type": "text/css",
 			"href": "/css/chosen.css"
-		},
-		"admin": {
-			"media": "screen",
-			"type": "text/css",
-			"href": "/css/admin.css"
 		}
 	},
 	"scripts": {
@@ -47,14 +42,6 @@
 		"chosen": {
 			"type": "text/javascript",
 			"src": "/js/chosen.js"
-		},
-		"default": {
-			"type": "text/javascript",
-			"template": "/portal/script/default"
-		},
-		"switch": {
-			"type": "text/javascript",
-			"template": "/portal/script/switch"
 		},
 		"locale": {
 			"type": "text/javascript",
