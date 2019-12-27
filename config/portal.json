@@ -1,0 +1,25 @@
+{
+	"chosen": {
+		"standard": {
+			"width": "100%"
+		},
+		"no-single": {
+			"width": "100%",
+			"disable_search_threshold": 10
+		}
+	},
+	"switches": {
+		"secure": {
+			"yes": {
+				"icon":"fa-chain",
+				"color":"black",
+				"next":"no"
+			},
+			"no": {
+				"icon":"fa-chain-broken",
+				"color":"black",
+				"next":"yes"
+			}
+		}
+	}
+}

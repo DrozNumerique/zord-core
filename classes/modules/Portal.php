@@ -6,8 +6,8 @@ class Portal extends Module {
         return $this->page('home');
     }
     
-    public function chosen() {
-        return Zord::getConfig('chosen');
+    public function config() {
+        return Zord::getConfig('portal');
     }
 }
 

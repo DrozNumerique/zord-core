@@ -124,34 +124,64 @@ var setWindowHeight = function() {
 	windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 };
 
-var chosenStyles = getSessionProperty('chosen.styles', undefined);
+var portalConfig = getSessionProperty('portal.config', undefined);
 
 var activateChosen = function() {
-	for (var type in chosenStyles) {
-		$('.chosen-select-' + type).chosen(chosenStyles[type]).change(function(event, params) {
-			if (event.target.hasAttribute('data-change')) {
-				method = event.target.getAttribute('data-change');
-				if (window[method] instanceof Function) {
-					window[method]();
+	if (typeof portalConfig.chosen !== 'undefined') {
+		for (var type in portalConfig.chosen) {
+			$('.chosen-select-' + type).chosen(portalConfig.chosen[type]).change(function(event, params) {
+				if (event.target.hasAttribute('data-change')) {
+					method = event.target.getAttribute('data-change');
+					if (window[method] instanceof Function) {
+						window[method]();
+					}
 				}
-			}
-	    });
+		    });
+		}
+	}
+}
+
+var activateSwitches = function(element) {
+	if (typeof portalConfig.switches !== 'undefined') {
+		[].forEach.call(Object.keys(portalConfig.switches), function(type) {		
+			[].forEach.call(element.querySelectorAll('.' + type), function(entry) {
+				entry.addEventListener("click", function(event) {
+					var current = entry.children[0].value;
+					var next = portalConfig.switches[type][current]['next'];
+					entry.children[0].value = next;
+					entry.children[1].classList.remove(portalConfig.switches[type][current]['icon']);
+					entry.children[1].classList.add(portalConfig.switches[type][next]['icon']);
+					entry.children[1].style = 'color:' + portalConfig.switches[type][next]['color'] + ';';
+				});
+			});
+		});
 	}
 }
 
 document.addEventListener("DOMContentLoaded", function(event) {
 
-	if (chosenStyles == undefined) {
+	if (portalConfig == undefined) {
 		invokeZord({
 			module: 'Portal',
-			action: 'chosen',
+			action: 'config',
 			async:  false,
 			callback: function(config) {
-				chosenStyles = config;
-				setSessionProperty('chosen.styles', chosenStyles);
+				portalConfig = config;
+				setSessionProperty('portal.config', portalConfig);
 			}
 		});
 	}
+
+	window.addEventListener("selectLoaded", function(event) {
+		selects = document.querySelectorAll('select[data-loading]');
+		var loaded = true;
+		[].forEach.call(selects, function(select) {
+			loaded = (select.dataset.loading == 'true') ? false : loaded;
+		});
+		if (loaded) {
+			activateChosen();
+		}
+	});
 	
 	[].forEach.call(document.querySelectorAll('.slide'), function(element) {
 		element.addEventListener("mouseover", function(event) {

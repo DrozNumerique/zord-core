@@ -6,7 +6,7 @@ class Admin extends Module {
         if (!$this->user->hasRole('admin', $this->context)) {
             return $this->redirect($this->baseURL, true);
         }
-        $tabs = Zord::value('admin', 'tabs');
+        $tabs = Zord::getConfig('admin');
         $scopes = [
             'zord'    => '*',
             'context' => $this->context
@@ -199,10 +199,6 @@ class Admin extends Module {
             $result['urls'] = $urls;
         }
         return $this->index('context', $result);
-    }
-    
-    public function switches() {
-        return Zord::value('admin', 'switches');
     }
     
     private function dataProfile($login) {

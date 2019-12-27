@@ -1,5 +1,3 @@
-var switches = getSessionProperty('admin.switches', null);
-
 function add(line) {
 	var list = line.parentNode;
 	var newLine = list.querySelector('.hidden').cloneNode(true);
@@ -39,18 +37,7 @@ function dress(element) {
 			remove(entry.parentNode);
 		});
 	});
-	[].forEach.call(Object.keys(switches), function(type) {		
-		[].forEach.call(element.querySelectorAll('.' + type), function(entry) {
-			entry.addEventListener("click", function(event) {
-				var current = entry.children[0].value;
-				var next = switches[type][current]['next'];
-				entry.children[0].value = next;
-				entry.children[1].classList.remove(switches[type][current]['icon']);
-				entry.children[1].classList.add(switches[type][next]['icon']);
-				entry.children[1].style = 'color:' + switches[type][next]['color'] + ';';
-			});
-		});
-	});
+	activateSwitches(element);
 }
 
 document.addEventListener("DOMContentLoaded", function(event) {
@@ -74,16 +61,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		});
 	});
 
-	if (switches == null) {
-		invokeZord({
-			module: 'Admin',
-			action: 'switches',
-			callback: function(result) {
-				switches = result;
-				setSessionProperty('admin.switches', switches);
-			}
-		});
-	}
 	dress(document);
 	
 });
