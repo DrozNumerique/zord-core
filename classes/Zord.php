@@ -658,6 +658,8 @@ class Zord {
 	            $result .= $value;
 	        } else if (is_bool($value)) {
 	            $result .= ($value) ? 'true' : 'false';
+	        } else if (!isset($value)) {
+	            $result .= 'undefined';
 	        }
 	        if (is_string($value)) {
 	            $result .= "'";

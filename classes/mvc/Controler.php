@@ -185,16 +185,6 @@ class Controler {
     }
     
     public function models() {
-        $locales = [];
-        foreach (COMPONENT_FOLDERS as $folder) {
-            $locale = $folder.'locales'.DS.$this->lang.DS.'portal.json';
-            if (!file_exists($locale)) {
-                $locale = $folder.'locales'.DS.DEFAULT_LANG.DS.'portal.json';
-            }
-            if (file_exists($locale)) {
-                $locales[] = $locale;
-            }
-        }
         $models = ['portal' => [
             'module' => get_class($this->module),
             'action' => $this->action,
@@ -202,12 +192,18 @@ class Controler {
             'title'  => Zord::portalTitle($this->context, $this->lang),
             'locale' => Zord::objectToArray(Zord::getLocale('portal', $this->lang))
         ]];
-        $this->module->addUpdatedScript(
-            'locale_'.$this->lang.'.js',
-            '/portal/script/locale',
-            $locales,
-            $models
-        );
+        foreach (array_keys(Zord::getConfig('context')) as $name) {
+            $urls = Zord::value('context', [$name,'url']);
+            if (isset($urls)) {
+                $models['baseURL'][$name] = Zord::getContextURL($name);
+            }
+        }
+        $models['user'] = [
+            'login'   => $this->user->login,
+            'name'    => $this->user->name,
+            'email'   => $this->user->email,
+            'session' => $this->user->session
+        ];
         return $models;
     }
     

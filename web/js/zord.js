@@ -6,16 +6,6 @@ function invokeZord(params) {
 
 	var callback = params.callback == undefined ? null : params.callback;
 	var target = 'index.php';
-	var context = params.context;
-	if (context == undefined || (typeof CONTEXT !== 'undefined' && context == CONTEXT)) {
-		if (typeof BASEURL !== 'undefined') {
-			target = BASEURL + target;
-		} else {
-			target = '/' + target;
-		}
-	} else {
-		target = SWITCH[context] + '/' + target;
-	}
 	
 	var query = ['xhr=true'];
 	for (var key in params) {
@@ -49,7 +39,7 @@ function invokeZord(params) {
 						alert(error.message);
 					}
 				} else {
-					document.body.insertAdjacentHTML('beforeend', "<iframe src='" + BASEURL + "Portal/download' style='display: none;'></iframe>");
+					document.body.insertAdjacentHTML('beforeend', "<iframe src='/Portal/download' style='display: none;'></iframe>");
 				}
 				if (params.after !== undefined) {
 					params.after();
@@ -88,7 +78,7 @@ function uploadZord(form, checkUpload, checkResult) {
     		)
 	    };
 	}
-    request.open('POST', BASEURL);
+    request.open('POST', BASEURL[CONTEXT]);
     request.send(data);
 }
 

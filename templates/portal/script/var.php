@@ -1,9 +1,4 @@
-		var BASEURL = '<?php echo $baseURL; ?>';
+		var BASEURL = <?php echo Zord::arrayToJS($models['baseURL']); ?>;
 		var CONTEXT = '<?php echo $context; ?>';
-		var LANG = '<?php echo $lang; ?>';
-		var USER = {
-			login: '<?php echo $user->login; ?>',
-			name: '<?php echo str_replace("'", "\\'", $user->name); ?>',
-			email: '<?php echo $user->email; ?>',
-			session: <?php echo $user->session ? "'".$user->session."'\n" : "undefined\n"; ?>
-		};		
+		var LANG    = '<?php echo $lang; ?>';
+		var USER    = <?php echo Zord::arrayToJS($models['user']); ?>;	

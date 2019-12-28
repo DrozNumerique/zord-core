@@ -1,5 +1,5 @@
 {
-	"favicon": "",
+	"favicon": "/img/favicon.ico",
 	"styles": {
 		"font-awesome": {
 			"media": "screen",
@@ -42,10 +42,6 @@
 		"chosen": {
 			"type": "text/javascript",
 			"src": "/js/chosen.js"
-		},
-		"locale": {
-			"type": "text/javascript",
-			"template": "/portal/script/locale"
 		},
 		"var": {
 			"type": "text/javascript",

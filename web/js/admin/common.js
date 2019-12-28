@@ -37,7 +37,7 @@ function dress(element) {
 			remove(entry.parentNode);
 		});
 	});
-	activateSwitches(element);
+	activateStates(element);
 }
 
 document.addEventListener("DOMContentLoaded", function(event) {

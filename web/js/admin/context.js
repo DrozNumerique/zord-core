@@ -1,6 +1,6 @@
 function checkContext(operation, data) {
 	if (operation == 'delete') {
-		return confirm(LOCALE['admin']['context']['delete']['confirm']);
+		return confirm(PORTAL.locales[LANG].admin.context.delete.confirm);
 	}
 	if (data == undefined || data == null) {
 		return false;
