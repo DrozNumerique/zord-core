@@ -78,7 +78,7 @@ function uploadZord(form, checkUpload, checkResult) {
     		)
 	    };
 	}
-    request.open('POST', BASEURL[CONTEXT]);
+    request.open('POST', 'index.php');
     request.send(data);
 }
 
