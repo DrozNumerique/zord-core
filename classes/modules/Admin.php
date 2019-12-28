@@ -94,10 +94,10 @@ class Admin extends Module {
     
     public function profile() {
         $result = [];
-        if (isset($this->params['user']) &&
+        if (isset($this->params['account']) &&
             isset($this->params['roles']) &&
             isset($this->params['ips'])) {
-            $login = $this->params['user'];
+            $login = $this->params['account'];
             $criteria = [
                 'where' => ['user' => $login],
                 'many' => true
@@ -203,7 +203,7 @@ class Admin extends Module {
     
     private function dataProfile($login) {
         $result = [];
-        $result['user'] = new User($login);
+        $result['account'] = new User($login);
         $result['roles'] = array_merge(Zord::getConfig('role'), ['*']);
         $result['context'] = array_merge(array_keys(Zord::getConfig('context')), ['*']);
         return $result;

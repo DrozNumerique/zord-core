@@ -1,5 +1,5 @@
 <?php
-if (isset($models['user'])) {
+if (isset($models['account'])) {
     $this->render('profile');
 } else {
     $this->render('list');

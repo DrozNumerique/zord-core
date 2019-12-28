@@ -1,6 +1,6 @@
-   				<input type="hidden" id="user" value="<?php echo $models['user']->login ?>"/>
+   				<input type="hidden" id="account" value="<?php echo $models['account']->login ?>"/>
 				<div align="center">
-           			<div class="admin-panel-title"><?php echo $models['user']->name; ?></div>
+           			<div class="admin-panel-title"><?php echo $models['account']->name; ?></div>
            			<?php 
            			    if (isset($models['others'])) {
            			        foreach ($models['others'] as $other) {
@@ -38,7 +38,7 @@
              				<div class="column"><input data-empty="no" type="date" value=""/></div>
              				<div class="remove"><i class="fa fa-times fa-fw" title="<?php echo $locale->list->remove; ?>"></i></div>
          				</li>
-                        <?php foreach ((new UserHasRoleEntity())->retrieve(['where' => ['user' => $models['user']->login], 'many' => true]) as $entry) { ?>
+                        <?php foreach ((new UserHasRoleEntity())->retrieve(['where' => ['user' => $models['account']->login], 'many' => true]) as $entry) { ?>
                         <?php   if ((null !== Zord::value('context', $entry->context)) || ($entry->context == '*')) { ?>
          				<li class="data">
              				<div class="column">
@@ -86,7 +86,7 @@
              				</div>
              				<div class="remove"><i class="fa fa-times fa-fw" title="<?php echo $locale->list->remove; ?>"></i></div>
          				</li>
-                        <?php foreach($models['user']->explodeIP() as $entry) { ?>
+                        <?php foreach($models['account']->explodeIP() as $entry) { ?>
          				<li class="data">
              				<div class="column">
              					<?php
