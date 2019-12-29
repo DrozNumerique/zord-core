@@ -92,9 +92,6 @@
 				"tab": "FILTER_SANITIZE_STRING"
 			}
 		},
-		"switches": {
-			"response": "DATA"
-		},
 		"account": {
 			"parameters": {
 				"operation": "FILTER_SANITIZE_STRING",
