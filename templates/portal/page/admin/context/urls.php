@@ -10,7 +10,7 @@
          				</li>
          				<li class="hidden">
          					<div class="column state" data-type="secure">
-          						<input name="secure" data-empty="no" type="hidden" value="no"/>
+          						<input name="secure" data-empty="no" type="hidden" value="false"/>
           						<i class="display fa fa-chain-broken fa-fw"></i>
          					</div>
           					<div class="column"><input name="host" data-empty="no" type="text"/></div>
@@ -19,10 +19,11 @@
          				</li>
 <?php if (isset($models['urls'])) { ?>
 <?php   foreach ($models['urls'] as $url) { ?>
+<?php     $secure = (isset($url['secure']) && $url['secure']) ? 'true' : 'false'; ?>
          				<li class="data">
          					<div class="column state" data-type="secure">
-          						<input name="secure" data-empty="no" type="hidden" value="<?php echo (isset($url['secure']) && $url['secure']) ? 'yes' : 'no'; ?>"/>
-          						<i class="display fa fa-chain<?php echo (isset($url['secure']) && $url['secure']) ? '' : '-broken'; ?> fa-fw"></i>
+          						<input name="secure" data-empty="no" type="hidden" value="<?php echo $secure; ?>"/>
+          						<i class="display fa fa-fw <?php echo Zord::value('portal', ['states','secure',$secure]); ?>"></i>
          					</div>
            					<div class="column"><input name="host" data-empty="no" type="text" value="<?php echo $url['host']; ?>"/></div>
            					<div class="column"><input name="path" data-empty="no" type="text" value="<?php echo $url['path']; ?>"/></div>

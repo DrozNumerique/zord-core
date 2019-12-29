@@ -21,7 +21,7 @@ function getData() {
 	if (urlsElement) {
 		[].forEach.call(urlsElement.querySelectorAll('.data'), function(entry) {
 			urls.push({
-				secure:entry.children[0].firstElementChild.value == 'yes' ? true : false,
+				secure:entry.children[0].firstElementChild.value == 'true' ? true : false,
 				host:entry.children[1].firstElementChild.value,
 				path:entry.children[2].firstElementChild.value
 			}); 

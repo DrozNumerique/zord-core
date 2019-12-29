@@ -145,7 +145,11 @@ var activateStates = function(element) {
 	if (typeof PORTAL.states !== 'undefined') {
 		[].forEach.call(element.querySelectorAll('.state'), function(entry) {
 			entry.addEventListener("click", function(event) {
-				states = PORTAL.states[entry.dataset.type];
+				types = entry.dataset.type.split('|');
+				states = {};
+				[].forEach.call(types, function(type) {
+					states = Object.assign(states, PORTAL.states[type]);
+				});
 				keys = Object.keys(states);
 				input = entry.querySelector('input');
 				current = input.value;
