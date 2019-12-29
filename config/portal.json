@@ -10,14 +10,8 @@
 	},
 	"states": {
 		"secure": {
-			"yes": {
-				"display":"fa-chain",
-				"next":"no"
-			},
-			"no": {
-				"display":"fa-chain-broken",
-				"next":"yes"
-			}
+			"yes": "fa-chain",
+			"no" : "fa-chain-broken"
 		}
 	}
 }

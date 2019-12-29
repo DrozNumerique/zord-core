@@ -145,14 +145,15 @@ var activateStates = function(element) {
 	if (typeof PORTAL.states !== 'undefined') {
 		[].forEach.call(element.querySelectorAll('.state'), function(entry) {
 			entry.addEventListener("click", function(event) {
-				type = entry.dataset.type;
+				states = PORTAL.states[entry.dataset.type];
+				keys = Object.keys(states);
 				input = entry.querySelector('input');
-				display = entry.querySelector('.display');
 				current = input.value;
-				next = PORTAL.states[type][current]['next'];
+				next = keys[(keys.indexOf(current) + 1) % keys.length]
 				input.value = next;
-				display.classList.remove(PORTAL.states[type][current]['display']);
-				display.classList.add(PORTAL.states[type][next]['display']);
+				display = entry.querySelector('.display');
+				display.classList.remove(states[current]);
+				display.classList.add(states[next]);
 			});
 		});
 	}
