@@ -143,16 +143,16 @@ var activateChosen = function() {
 
 var activateStates = function(element) {
 	if (typeof PORTAL.states !== 'undefined') {
-		[].forEach.call(Object.keys(PORTAL.states), function(type) {		
-			[].forEach.call(element.querySelectorAll('.' + type), function(entry) {
-				entry.addEventListener("click", function(event) {
-					var current = entry.children[0].value;
-					var next = PORTAL.states[type][current]['next'];
-					entry.children[0].value = next;
-					entry.children[1].classList.remove(PORTAL.states[type][current]['icon']);
-					entry.children[1].classList.add(PORTAL.states[type][next]['icon']);
-					entry.children[1].style = 'color:' + PORTAL.states[type][next]['color'] + ';';
-				});
+		[].forEach.call(element.querySelectorAll('.state'), function(entry) {
+			entry.addEventListener("click", function(event) {
+				type = entry.dataset.type;
+				input = entry.querySelector('input');
+				display = entry.querySelector('.display');
+				current = input.value;
+				next = PORTAL.states[type][current]['next'];
+				input.value = next;
+				display.classList.remove(PORTAL.states[type][current]['display']);
+				display.classList.add(PORTAL.states[type][next]['display']);
 			});
 		});
 	}

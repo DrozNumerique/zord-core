@@ -198,10 +198,9 @@
 	padding:0;
 }
 
-.admin-list li div.secure,
-.admin-list li div.select,
+.admin-list li div.state,
 .admin-list li div.disabled {
-	margin-top:8px;
+	margin-top:7px;
 	background:#e6e6e6;
 }
 

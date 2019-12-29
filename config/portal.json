@@ -11,13 +11,11 @@
 	"states": {
 		"secure": {
 			"yes": {
-				"icon":"fa-chain",
-				"color":"black",
+				"display":"fa-chain",
 				"next":"no"
 			},
 			"no": {
-				"icon":"fa-chain-broken",
-				"color":"black",
+				"display":"fa-chain-broken",
 				"next":"yes"
 			}
 		}

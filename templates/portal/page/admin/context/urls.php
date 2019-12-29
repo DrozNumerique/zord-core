@@ -9,9 +9,9 @@
              				<div class="add"><i class="fa fa-plus fa-fw" title="<?php echo $locale->list->add; ?>"></i></div>
          				</li>
          				<li class="hidden">
-         					<div class="column secure">
+         					<div class="column state" data-type="secure">
           						<input name="secure" data-empty="no" type="hidden" value="no"/>
-          						<i class="fa fa-chain-broken fa-fw"></i>
+          						<i class="display fa fa-chain-broken fa-fw"></i>
          					</div>
           					<div class="column"><input name="host" data-empty="no" type="text"/></div>
           					<div class="column"><input name="path" data-empty="no" type="path"/></div>
@@ -20,9 +20,9 @@
 <?php if (isset($models['urls'])) { ?>
 <?php   foreach ($models['urls'] as $url) { ?>
          				<li class="data">
-         					<div class="column secure">
+         					<div class="column state" data-type="secure">
           						<input name="secure" data-empty="no" type="hidden" value="<?php echo (isset($url['secure']) && $url['secure']) ? 'yes' : 'no'; ?>"/>
-          						<i class="fa fa-chain<?php echo (isset($url['secure']) && $url['secure']) ? '' : '-broken'; ?> fa-fw"></i>
+          						<i class="display fa fa-chain<?php echo (isset($url['secure']) && $url['secure']) ? '' : '-broken'; ?> fa-fw"></i>
          					</div>
            					<div class="column"><input name="host" data-empty="no" type="text" value="<?php echo $url['host']; ?>"/></div>
            					<div class="column"><input name="path" data-empty="no" type="text" value="<?php echo $url['path']; ?>"/></div>
