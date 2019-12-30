@@ -1,15 +1,11 @@
-   				<input type="hidden" id="account" value="<?php echo $models['account']->login ?>"/>
+   				<input type="hidden" id="login" value="<?php echo $models['login']; ?>"/>
 				<div align="center">
-           			<div class="admin-panel-title"><?php echo $models['account']->name; ?></div>
-           			<?php 
-           			    if (isset($models['others'])) {
-           			        foreach ($models['others'] as $other) {
-           			?>
+           			<div class="admin-panel-title"><?php echo $models['name']; ?></div>
+<?php if (isset($models['others'])) { ?>
+<?php   foreach ($models['others'] as $other) { ?>
            			<div class="admin-panel-warning"><?php echo $other[0].' '.$locale->tab->users->match.' '.$other[1]; ?></div>
-           			<?php 
-           			        }
-           			    }
-           			?>
+<?php   } ?>
+<?php } ?>
            			<div class="admin-panel-title"><?php echo $locale->tab->users->roles; ?></div>
     				<ul class="admin-list" id="roles" data-columns="170px,170px,170px,170px">
     					<li class="header">
@@ -22,45 +18,45 @@
          				<li class="hidden">
              				<div class="column">
              					<select>
-             						<?php foreach($models['roles'] as $name) { ?>
+<?php foreach($models['roles'] as $name) { ?>
              						<option value="<?php echo $name; ?>"><?php echo $name; ?></option>
-             						<?php } ?>
+<?php } ?>
              					</select>
              				</div>
              				<div class="column">
              					<select>
-             						<?php foreach($models['context'] as $name) { ?>
+<?php foreach($models['context'] as $name) { ?>
              						<option value="<?php echo $name; ?>"><?php echo $name; ?></option>
-             						<?php } ?>
+<?php } ?>
              					</select>
 							</div>
              				<div class="column"><input data-empty="no" type="date" value=""/></div>
              				<div class="column"><input data-empty="no" type="date" value=""/></div>
              				<div class="remove"><i class="fa fa-times fa-fw" title="<?php echo $locale->list->remove; ?>"></i></div>
          				</li>
-                        <?php foreach ((new UserHasRoleEntity())->retrieve(['where' => ['user' => $models['account']->login], 'many' => true]) as $entry) { ?>
-                        <?php   if ((null !== Zord::value('context', $entry->context)) || ($entry->context == '*')) { ?>
+<?php foreach ((new UserHasRoleEntity())->retrieve(['where' => ['user' => $models['login']], 'many' => true]) as $entry) { ?>
+<?php   if ((null !== Zord::value('context', $entry->context)) || ($entry->context == '*')) { ?>
          				<li class="data">
              				<div class="column">
              					<select>
-             						<?php foreach($models['roles'] as $name) { ?>
+<?php     foreach($models['roles'] as $name) { ?>
              						<option value="<?php echo $name; ?>" <?php if ($name == $entry->role) echo 'selected'; ?>><?php echo $name; ?></option>
-             						<?php } ?>
+<?php     } ?>
              					</select>
 							</div>
              				<div class="column">
              					<select>
-             						<?php foreach($models['context'] as $name) { ?>
+<?php     foreach($models['context'] as $name) { ?>
              						<option value="<?php echo $name; ?>" <?php if ($name == $entry->context) echo 'selected'; ?>><?php echo $name; ?></option>
-             						<?php } ?>
+<?php     } ?>
              					</select>
              				</div>
              				<div class="column"><input data-empty="no" type="date" value="<?php echo $entry->start; ?>"/></div>
              				<div class="column"><input data-empty="no" type="date" value="<?php echo $entry->end; ?>"/></div>
              				<div class="remove"><i class="fa fa-times fa-fw" title="<?php echo $locale->list->remove; ?>"></i></div>
          				</li>
-         				<?php   } ?>
-         				<?php } ?>
+<?php   } ?>
+<?php } ?>
      				</ul>
             		<div class="admin-panel-title"><?php echo $locale->tab->users->addresses; ?></div>
      				<ul class="admin-list" id="ips" data-columns="550px,60px,80px">
@@ -86,18 +82,14 @@
              				</div>
              				<div class="remove"><i class="fa fa-times fa-fw" title="<?php echo $locale->list->remove; ?>"></i></div>
          				</li>
-                        <?php foreach($models['account']->explodeIP() as $entry) { ?>
+<?php foreach((new User($models['login']))->explodeIP() as $entry) { ?>
          				<li class="data">
              				<div class="column">
-             					<?php
-             					    $index = 0;
-             					    foreach(explode('.', $entry['ip'], 4) as $number) {
-             					?>
+<?php   $index = 0; ?>
+<?php   foreach(explode('.', $entry['ip'], 4) as $number) { ?>
              					<input data-empty="no" type="text" value="<?php echo $number; ?>" class="ip"/> <?php echo $index < 3 ? '.' : ''; ?>
-             					<?php
-             					        $index++;    
-                                    } 
-                                ?>
+<?php     $index++; ?>
+<?php   } ?>
              				</div>
              				<div class="column"><input data-empty="no" type="number" value="<?php echo $entry['mask']; ?>" min="0" max="32"/></div>
              				<div class="column">
@@ -108,7 +100,7 @@
              				</div>
              				<div class="remove"><i class="fa fa-times fa-fw" title="<?php echo $locale->list->remove; ?>"></i></div>
          				</li>
-         				<?php } ?>
+<?php } ?>
      				</ul>
      				<br/>
      				<br/>

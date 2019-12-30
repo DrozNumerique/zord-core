@@ -17,10 +17,10 @@ function checkAccount(operation, data) {
 function getProfile() {
 	var roles = [];
 	var ips = [];
-	var account = document.getElementById('account').value;
+	var login = document.getElementById('login').value;
 	[].forEach.call(document.getElementById('roles').querySelectorAll('.data'), function(entry) {
 		roles.push({
-			user:account,
+			user:login,
 			role:entry.children[0].firstElementChild.value,
 			context:entry.children[1].firstElementChild.value,
 			start:entry.children[2].firstElementChild.value,
@@ -29,14 +29,14 @@ function getProfile() {
 	});
 	[].forEach.call(document.getElementById('ips').querySelectorAll('.data'), function(entry) {
 		ips.push({
-			user:account,
+			user:login,
 			ip:entry.children[0].children[0].value + '.' + entry.children[0].children[1].value + '.' + entry.children[0].children[2].value + '.' + entry.children[0].children[3].value,
 			mask:entry.children[1].firstElementChild.value,
 			include:entry.children[2].firstElementChild.value
 		}); 
 	});
 	var profile = {
-		account:account,
+		login:login,
 		roles:JSON.stringify(roles),
 		ips:JSON.stringify(ips)
 	};
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 			invokeZord({
 				module:'Admin',
 				action:'profile',
-				account:profile.account,
+				login:profile.login,
 				roles:profile.roles,
 				ips:profile.ips
 			});

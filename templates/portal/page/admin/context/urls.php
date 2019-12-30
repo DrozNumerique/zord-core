@@ -1,4 +1,4 @@
-   				<input type="hidden" id="context" value="<?php echo $models['context'] ?>"/>
+   				<input type="hidden" id="context" value="<?php echo $models['ctx'] ?>"/>
 				<div align="center">
            			<div class="admin-panel-title"><?php echo $locale->tab->context->urls; ?></div> 
     				<ul class="admin-list" id="urls" data-columns="30px,300px,300px">

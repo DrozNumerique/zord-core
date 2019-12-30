@@ -1,5 +1,5 @@
 <?php
-if (isset($models['context'])) {
+if (isset($models['ctx'])) {
     $this->render('urls');
 } else {
     $this->render('list');

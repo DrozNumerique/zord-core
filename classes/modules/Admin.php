@@ -2,7 +2,7 @@
 
 class Admin extends Module {
         
-    public function index($current = null, $models = array()) {
+    public function index($current = null, $models = null) {
         if (!$this->user->hasRole('admin', $this->context)) {
             return $this->redirect($this->baseURL, true);
         }
@@ -18,11 +18,28 @@ class Admin extends Module {
         }
         if (isset($this->params['tab'])) {
             $current = $this->params['tab'];
+            if ($this->resetModels($current)) {
+                $models = [];
+            }
+        }
+        if (!isset($current) && isset($_SESSION['__ZORD__']['__ADMIN__']['__CURRENT__'])) {
+            $current = $_SESSION['__ZORD__']['__ADMIN__']['__CURRENT__'];
+        }
+        if (!isset($models) && isset($_SESSION['__ZORD__']['__ADMIN__']['__MODELS__'])) {
+            $models = $_SESSION['__ZORD__']['__ADMIN__']['__MODELS__'];
+        }
+        if (isset($models['current'])) {
+            $current = $models['current'];
         }
         if (!isset($current)) {
             reset($tabs);
             $current = key($tabs);
         }
+        if (!isset($models)) {
+            $models = [];
+        }
+        $_SESSION['__ZORD__']['__ADMIN__']['__CURRENT__'] = $current;
+        $_SESSION['__ZORD__']['__ADMIN__']['__MODELS__'] = $models;
         $tab = $tabs[$current];
         if (isset($tab['scripts'])) {
             foreach ($tab['scripts'] as $script) {
@@ -94,10 +111,10 @@ class Admin extends Module {
     
     public function profile() {
         $result = [];
-        if (isset($this->params['account']) &&
+        if (isset($this->params['login']) &&
             isset($this->params['roles']) &&
             isset($this->params['ips'])) {
-            $login = $this->params['account'];
+            $login = $this->params['login'];
             $criteria = [
                 'where' => ['user' => $login],
                 'many' => true
@@ -182,6 +199,7 @@ class Admin extends Module {
         return $this->index('context', $result);
     }
     
+    
     public function urls() {
         $result = [];
         if (isset($this->params['ctx']) &&
@@ -195,15 +213,21 @@ class Admin extends Module {
                 unset($context[$name]['url']);
             }
             Zord::saveConfig('context', $context);
-            $result['context'] = $name;
+            $result['ctx'] = $name;
             $result['urls'] = $urls;
         }
         return $this->index('context', $result);
     }
+   
+    protected function resetModels($current) {
+        $reset = Zord::value('admin', [$current,'reset']);
+        return isset($reset) && $reset;
+    }
     
     private function dataProfile($login) {
         $result = [];
-        $result['account'] = new User($login);
+        $result['login'] = $login;
+        $result['name'] = (new User($login))->name;
         $result['roles'] = array_merge(Zord::getConfig('role'), ['*']);
         $result['context'] = array_merge(array_keys(Zord::getConfig('context')), ['*']);
         return $result;
@@ -211,7 +235,7 @@ class Admin extends Module {
     
     private function dataURLs($name) {
         $result = [];
-        $result['context'] = $name;
+        $result['ctx'] = $name;
         $result['urls'] = Zord::value('context', [$name,'url']);
         return $result;
     }
