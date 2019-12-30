@@ -1,7 +1,6 @@
 {
 	"context": {
 		"scope": "zord",
-		"reset": true,
 		"scripts": [
 			{
 				"src": "/js/admin/context.js",
@@ -11,7 +10,6 @@
 	},
 	"users": {
 		"scope": "zord",
-		"reset": true,
 		"scripts": [
 			{
 				"src": "/js/admin/users.js",

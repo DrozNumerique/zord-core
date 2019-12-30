@@ -18,9 +18,7 @@ class Admin extends Module {
         }
         if (isset($this->params['tab'])) {
             $current = $this->params['tab'];
-            if ($this->resetModels($current)) {
-                $models = [];
-            }
+            $models = [];
         }
         if (!isset($current) && isset($_SESSION['__ZORD__']['__ADMIN__']['__CURRENT__'])) {
             $current = $_SESSION['__ZORD__']['__ADMIN__']['__CURRENT__'];
@@ -217,11 +215,6 @@ class Admin extends Module {
             $result['urls'] = $urls;
         }
         return $this->index('context', $result);
-    }
-   
-    protected function resetModels($current) {
-        $reset = Zord::value('admin', [$current,'reset']);
-        return isset($reset) && $reset;
     }
     
     private function dataProfile($login) {
