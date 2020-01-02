@@ -192,6 +192,7 @@ class Controler {
             'title'  => Zord::portalTitle($this->context, $this->lang),
             'locale' => Zord::objectToArray(Zord::getLocale('portal', $this->lang))
         ]];
+        $models['baseURL']['zord'] = $this->baseURL;
         foreach (array_keys(Zord::getConfig('context')) as $name) {
             $urls = Zord::value('context', [$name,'url']);
             if (isset($urls)) {
