@@ -87,7 +87,7 @@ class Controler {
             }
             $target['url'] = $url;
             $target['scheme'] = $scheme;
-            $target['baseURL'] = $scheme.'://'.$host.$target['prefix'].($target['prefix'] == '/' ? '' : '/');
+            $target['baseURL'] = $scheme.'://'.$host.($target['prefix'] == '/' ? '' : $target['prefix']);
             $target['method'] = $_SERVER["REQUEST_METHOD"];
             $target['params'] = $redirect ? $_GET : array_merge($_GET, $_POST);
             if (isset($target['params']['params'])) {

@@ -88,7 +88,7 @@ class Account extends Module {
         $mail->addAddress($email, $name);
         $mail->Subject = ACCOUNT_ACTIVATION_SUBJECT;
         $mail->isHTML(true);
-        $url = $this->baseURL.'activate?code='.$code;
+        $url = $this->baseURL.'/activate?code='.$code;
         $mail->Body = (new View('/mail/activation', ['url' => $url], $this->controler, $this->locale))->render();
         $mail->AltBody = $this->locale->copy_paste."\n".$url;
         $result = [
