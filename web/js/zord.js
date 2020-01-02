@@ -5,7 +5,7 @@ function invokeZord(params) {
 	}
 
 	var callback = params.callback == undefined ? null : params.callback;
-	var target = 'index.php';
+	var target = PREFIX + 'index.php';
 	
 	var query = ['xhr=true'];
 	for (var key in params) {

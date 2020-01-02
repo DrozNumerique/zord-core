@@ -1,3 +1,4 @@
+		var PREFIX  = '<?php echo $baseURL; ?>';
 		var BASEURL = <?php echo Zord::arrayToJS($models['baseURL']); ?>;
 		var CONTEXT = '<?php echo $context; ?>';
 		var LANG    = '<?php echo $lang; ?>';
