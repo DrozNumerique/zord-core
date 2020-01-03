@@ -1,4 +1,4 @@
-<?php if (isset($user)) { ?>
+<?php if (isset($user) && $user->isKnown()) { ?>
 <h1><?php echo $user->name; ?> (<?php echo $user->login; ?>)</h1>
 <?php } ?>
 <?php if ($user->hasRole('admin', $context)) { ?>

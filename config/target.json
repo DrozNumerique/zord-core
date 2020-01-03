@@ -1,11 +1,4 @@
 {
-	"Controler": {
-		"last": {
-			"parameters": {
-				"type": "FILTER_DEFAULT"
-			}
-		}
-	},
 	"Account": {
 		"response": "VIEW",
 		"activate": {
@@ -42,6 +35,11 @@
 				"lang": "FILTER_DEFAULT"
 			}
 		},
+		"last": {
+			"parameters": {
+				"type": "FILTER_DEFAULT"
+			}
+		},
 		"page": {
 			"shortcut": "page",
 			"parameters": {
@@ -64,7 +62,6 @@
 	"Process": {
 		"response": "VIEW",
 		"auth": {
-			"connect": true,
 			"role": "admin"
 		},
 		"status": {
@@ -83,8 +80,8 @@
 	"Admin": {
 		"response": "VIEW",
 		"auth": {
-			"connect": true,
-			"role": "admin"
+			"role": "admin",
+			"alt": "connection"
 		},
 		"index": {
 			"shortcut": "admin",

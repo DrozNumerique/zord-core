@@ -3,9 +3,6 @@
 class Admin extends Module {
         
     public function index($current = null, $models = null) {
-        if (!$this->user->hasRole('admin', $this->context)) {
-            return $this->redirect($this->baseURL, true);
-        }
         $tabs = Zord::getConfig('admin');
         $scopes = [
             'zord'    => '*',

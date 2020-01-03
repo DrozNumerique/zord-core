@@ -103,8 +103,12 @@ class User {
         $this->session = null;
     }
     
+    public function isKnown() {
+        return $this->login !== null;
+    }
+    
     public function isConnected() {
-        return $this->session != null;
+        return $this->session !== null;
     }
     
     public function hasRole($role, $context, $wild = true) {

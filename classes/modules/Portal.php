@@ -6,6 +6,15 @@ class Portal extends Module {
         return $this->page('home');
     }
     
+    public function last() {
+        $type = isset($this->params['type']) ? $this->params['type'] : 'VIEW';
+        $target = $this->controler->getDefaultTarget();
+        if (isset($_SESSION['__ZORD__']['__HISTORY__'][$type]) && count($_SESSION['__ZORD__']['__HISTORY__'][$type]) > 0) {
+            $target = end($_SESSION['__ZORD__']['__HISTORY__'][$type]);
+        }
+        return $this->forward($target);
+    }
+    
     public function config() {
         $config = Zord::getConfig('portal');
         foreach (Zord::getConfig('lang') as $lang => $label) {

@@ -50,6 +50,76 @@ class Controler {
         $this->setUser(User::find());
         $this->handle($this->getTarget($scheme.'://'.$host.$path));
     }
+    
+    public function handle($target) {
+        if ($target) {
+            $this->context  = $target['context'];
+            $this->indexURL = $target['indexURL'];
+            $this->baseURL  = $target['baseURL'];
+            $this->params   = isset($target['params']) ? $target['params'] : [];
+            if ($this->context && $this->baseURL) {
+                $class = Zord::getClassName($target['module']);
+                if (class_exists($class)) {
+                    $this->module = new $class($this);
+                    $plugin = Zord::value('plugin', ['module',$target['module'],$target['action']]);
+                    if (method_exists($this->module, $target['action']) || isset($plugin)) {
+                        $this->action = $target['action'];
+                    }
+                }
+                if ($this->module && $this->action) {
+                    if ($this->isAuthorized($target)) {
+                        $type = null;
+                        $this->actionPlugin('before', $target);
+                        $result = $this->module->execute($this->action);
+                        $this->actionPlugin('after', $target);
+                        if (isset($target['params']['response'])) {
+                            $type = $target['params']['response'];
+                        } else if (null !== Zord::value('target', [$target['module'], $target['action'], 'response'])) {
+                            $type = Zord::value('target', [$target['module'], $target['action'], 'response']);
+                        } else if (null !== Zord::value('target', [$target['module'], 'response'])) {
+                            $type = Zord::value('target', [$target['module'], 'response']);
+                        }
+                        if (null !== $this->module->getResponse($this->action)) {
+                            $type = $this->module->getResponse($this->action);
+                        }
+                        $type = strtoupper($type !== null ? $type : 'VIEW');
+                        $target['type'] = $type;
+                        if ($this->isRedirect($result)) {
+                            $this->redirect($result['__uri__']);
+                        } else if ($this->isForward($result)) {
+                            $this->handle(array_merge($target, $result['__target__']));
+                        } else if ($this->isError($result)) {
+                            $this->error($result, $type);
+                        } else {
+                            $history = Zord::value('target', [$target['module'], $target['action'], 'history']);
+                            if (!isset($history)) {
+                                $history = Zord::value('target', [$target['module'], 'history']);
+                            }
+                            if (!isset($history) || $history !== false) {
+                                $history = $result['__history__'];
+                                if (!isset($history) || $history !== false) {
+                                    $_SESSION['__ZORD__']['__HISTORY__'][$target['type']][] = $target;
+                                }
+                            }
+                            $this->output($result, $type);
+                        }
+                    } else {
+                        $alt = Zord::value('target', [$target['module'],$target['action'],'auth','alt']);
+                        if ($alt == null) {
+                            $alt = Zord::value('target', [$target['module'],'auth','alt']);
+                        }
+                        if (is_string($alt)) {
+                            $this->redirect($this->baseURL.'/'.$alt);
+                        } else {
+                            $this->handle(is_array($alt) ? array_merge($target, $alt) : $this->getDefaultTarget());
+                        }
+                    }
+                } else {
+                    $this->handle($this->getDefaultTarget());
+                }
+            }
+        }
+    }
         
     public function findTarget($host, $path) {
         $target = null;
@@ -170,20 +240,6 @@ class Controler {
         return $target;
     }
     
-    public function history($target) {
-        $_SESSION['__ZORD__']['__HISTORY__'][$target['type']][] = $target;
-    }
-    
-    public function last($target) {
-        $type = isset($target['params']['type']) ? $target['params']['type'] : 'VIEW';
-        $target = $this->getDefaultTarget();
-        if (isset($_SESSION['__ZORD__']['__HISTORY__'][$type]) && count($_SESSION['__ZORD__']['__HISTORY__'][$type]) > 0) {
-            $target = end($_SESSION['__ZORD__']['__HISTORY__'][$type]);
-            Zord::log($target);
-        }
-        $this->handle($target);
-    }
-    
     public function models() {
         $models = ['portal' => [
             'module' => get_class($this->module),
@@ -265,9 +321,6 @@ class Controler {
         if (!$auth) {
             return true;
         }
-        if (is_array($auth) && (!isset($auth['connect']) || !$auth['connect']))  {
-            return true;
-        }
         if (isset($auth['role']) && isset($this->user)) {
             $roles = $auth['role'];
             if (!is_array($roles)) {
@@ -281,76 +334,6 @@ class Controler {
         }
         return false;
     }
-    
-    private function handle($target) {
-        if ($target) {
-            $this->context  = $target['context'];
-            $this->indexURL = $target['indexURL'];
-            $this->baseURL  = $target['baseURL'];
-            $this->params   = isset($target['params']) ? $target['params'] : [];
-            if ($this->context && $this->baseURL) {
-                if ($target['module'] == 'Controler') {
-                    $action = $target['action'];
-                    $this->$action($target);
-                    return;
-                } else {
-                    $class = Zord::getClassName($target['module']);
-                    if (class_exists($class)) {
-                        $this->module = new $class($this);
-                        $plugin = Zord::value('plugin', ['module',$target['module'],$target['action']]);
-                        if (method_exists($this->module, $target['action']) || isset($plugin)) {
-                            $this->action = $target['action'];
-                        }
-                    }
-                }
-                if ($this->module && $this->action) {
-                    if ($this->isAuthorized($target)) {
-                        $type = null;
-                        $this->actionPlugin('before', $target);
-                        $result = $this->module->execute($this->action);
-                        $this->actionPlugin('after', $target);
-                        if (isset($target['params']['response'])) {
-        				    $type = $target['params']['response'];
-        				} else if (null !== Zord::value('target', [$target['module'], $target['action'], 'response'])) {
-        				    $type = Zord::value('target', [$target['module'], $target['action'], 'response']);
-        				} else if (null !== Zord::value('target', [$target['module'], 'response'])) {
-        				    $type = Zord::value('target', [$target['module'], 'response']);
-        				}
-        				if (null !== $this->module->getResponse($this->action)) {
-        				    $type = $this->module->getResponse($this->action);
-        				}
-        				$type = strtoupper($type !== null ? $type : 'VIEW');
-        				$target['type'] = $type;
-        				if ($this->isRedirect($result)) {
-        				    $this->redirect($result['__uri__']);
-        				} else if ($this->isForward($result)) {
-        				    $this->handle(array_merge($target, $result['__target__']));
-        				} else if ($this->isError($result)) {
-        				    $this->error($result, $type);
-        				} else {
-        				    if (!isset($result['__history__']) || $result['__history__'] !== false) {
-        				        $this->history($target);
-        				    }
-        				    $this->output($result, $type);
-        				}   				
-        			} else {
-        			    $forward = Zord::value('target', [$target['module'],$target['action'],'auth','forward']);
-        			    if ($forward == null) {
-        			        $forward = Zord::value('target', [$target['module'],'auth','forward']);
-        			    }
-        			    if (is_array($forward)) {
-        			        $forward = array_merge($target, $forward);
-        				} else {
-        				    $forward = $this->getDefaultTarget();
-        				}
-        				$this->handle($forward);
-        			}
-        		} else {
-        		    $this->handle($this->getDefaultTarget());
-        		}
-            }
-        }
-	}
 	
 	private function isRedirect($content) {
 	    return (
@@ -367,7 +350,7 @@ class Controler {
 	        isset($content['__forward__']) &&
 	        $content['__forward__'] &&
 	        isset($content['__target__'])
-	        );
+	    );
 	}
 	
 	private function isError($content) {
