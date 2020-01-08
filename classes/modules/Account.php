@@ -86,7 +86,7 @@ class Account extends Module {
         $mail = new PHPMailer();
         $mail->SetFrom(WEBMASTER_MAIL_ADDRESS, WEBMASTER_MAIL_NAME);
         $mail->addAddress($email, $name);
-        $mail->Subject = ACCOUNT_ACTIVATION_SUBJECT;
+        $mail->Subject = $this->locale->activate;
         $mail->isHTML(true);
         $url = $this->baseURL.'/activate?code='.$code;
         $mail->Body = (new View('/mail/activation', ['url' => $url], $this->controler, $this->locale))->render();
