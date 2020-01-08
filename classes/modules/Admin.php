@@ -69,29 +69,30 @@ class Admin extends Module {
             $login = $this->params['login'];
             $name = $this->params['name'];
             $email = $this->params['email'];
-            $entity = new UserEntity();
+            $user = new UserEntity();
             if ($login && $operation) {
                 switch ($operation) {
                     case 'create': {
                         $code = User::crypt($login.microtime());
-                        $entity->create([
-                            'login' => $login,
+                        $data = [
+                            'login'    => $login,
                             'activate' => $code,
-                            'name' => $name,
-                            'email' => $email
-                        ]);
-                        $result['mail'] = (new Account($this->controler))->sendActivation($email, $name, $code);
+                            'name'     => $name,
+                            'email'    => $email
+                        ];
+                        $user->create($data);
+                        $result['mail'] = (new Account($this->controler))->sendActivation(json_decode(json_encode($data)), $code);
                         break;
                     }
                     case 'update': {
-                        $entity->update($login, [
+                        $user->update($login, [
                             'name' => $name,
                             'email' => $email
                         ]);
                         break;
                     }
                     case 'delete': {
-                        $entity->delete($login, true);
+                        $user->delete($login, true);
                         break;
                     }
                     case 'profile': {

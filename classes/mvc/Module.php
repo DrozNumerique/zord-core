@@ -303,4 +303,8 @@ class Module {
 	public function either($value, $key) {
 	    return $value !== null ? $value : (isset($this->params[$key]) ? $this->params[$key] : null);
 	}
+	
+	public function sendMail($addresses, $subject, $body, $template, $models) {
+	    return Zord::sendMail($addresses, $subject, $body, $template, $models, $this->controler, $this->locale);
+	}
 }

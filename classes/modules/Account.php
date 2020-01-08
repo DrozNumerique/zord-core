@@ -34,12 +34,12 @@ class Account extends Module {
         $message = null;
         if (!empty($email)) {
             $code = User::crypt($email.microtime());
-            $account = (new UserEntity())->update(
+            $user = (new UserEntity())->update(
                 ['where' => ['email' => $email]],
                 ['activate' => $code]
             );
-            if ($account) {
-                $result = $this->sendActivation($email, $account->name, $code);
+            if ($user) {
+                $result = $this->sendActivation($user, $code);
                 if (isset($result['error'])) {
                     $message = $this->locale->mail_error.'<br/>('.$result['error'].')';
                 } else {
@@ -82,21 +82,21 @@ class Account extends Module {
         return $this->redirect($this->baseURL, true);
     }
     
-    public function sendActivation($email, $name, $code) {
-        $mail = new PHPMailer();
-        $mail->SetFrom(WEBMASTER_MAIL_ADDRESS, WEBMASTER_MAIL_NAME);
-        $mail->addAddress($email, $name);
-        $mail->Subject = $this->locale->activate;
-        $mail->isHTML(true);
+    public function sendActivation($user, $code) {
         $url = $this->baseURL.'/activate?code='.$code;
-        $mail->Body = (new View('/mail/activation', ['url' => $url], $this->controler, $this->locale))->render();
-        $mail->AltBody = $this->locale->copy_paste."\n".$url;
+        $send = $this->sendMail(
+            [$user->email => $user->name],
+            $this->locale->activate,
+            $this->locale->copy_paste."\n".$url,
+            '/mail/activation',
+            ['url' => $url]
+        );
         $result = [
             'activation' => $url,
-            'account'    => htmlspecialchars($name.' <'.$email.'>')
+            'account'    => htmlspecialchars($user->name.' <'.$user->email.'>')
         ];
-        if (!$mail->Send()) {
-            $result['error'] = $mail->ErrorInfo;
+        if ($send !== true) {
+            $result['error'] = $send;
         }
         return $result;
     }

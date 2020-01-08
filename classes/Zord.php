@@ -757,4 +757,22 @@ class Zord {
 	        return self::collapse($first) <=> self::collapse($second);
 	    });
 	}
+	
+	public static function sendMail($addresses, $subject, $body = null, $template = null, $models = [], $controler = null, $locale = null) {
+	    $mail = new PHPMailer();
+	    $mail->SetFrom(WEBMASTER_MAIL_ADDRESS, WEBMASTER_MAIL_NAME);
+	    foreach ($addresses as $email => $name) {
+	       $mail->addAddress($email, $name);
+	    }
+	    $mail->Subject = $subject;
+	    if (isset($template)) {
+	        $mail->isHTML(true);
+	        $mail->Body = (new View($template, $models, $controler, $locale))->render();
+	        $mail->AltBody = isset($body) ? $body : '';
+	    } else {
+	        $mail->isHTML(false);
+	        $mail->Body = isset($body) ? $body : '';;
+	    }
+	    return $mail->Send() === false ? $mail->ErrorInfo : true;
+	}
 }
