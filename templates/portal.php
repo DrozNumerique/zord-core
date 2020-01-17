@@ -7,9 +7,11 @@
 <?php $this->render('link'); ?>
 </head>
 <body>
+<div id="main">
 <?php $this->render('header'); ?>
 <?php $this->render('navigation'); ?>
 <?php $this->render('page'); ?>
 <?php $this->render('footer'); ?>
+</div>
 </body>
 </html>
