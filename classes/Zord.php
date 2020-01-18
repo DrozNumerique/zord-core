@@ -421,14 +421,18 @@ class Zord {
 	}
 	
 	public static function json_encode($val, $pretty = true) {
-	    array_walk_recursive(
-	        $val,
-	        function (&$item, $key) {
-	            if (is_string($item)) {
-	                $item = mb_encode_numericentity($item, self::$convmap, 'UTF-8');
-	            }
-	        }
-	    );
+	    if (is_array($val)) {
+    	    array_walk_recursive(
+    	        $val,
+    	        function (&$item, $key) {
+    	            if (is_string($item)) {
+    	                $item = mb_encode_numericentity($item, self::$convmap, 'UTF-8');
+    	            }
+    	        }
+    	    );
+	    } else {
+	        $val = mb_encode_numericentity($val, self::$convmap, 'UTF-8');
+	    }
 	    $val = mb_decode_numericentity(json_encode($val, $pretty ? JSON_PRETTY_PRINT : null), self::$convmap, 'UTF-8');
 	    return preg_replace_callback(
 	        '#:"(\d+)"#s',
