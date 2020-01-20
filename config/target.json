@@ -31,11 +31,13 @@
 			"shortcut": "default"
 		},
 		"lang": {
+			"shortcut": "lang",
 			"parameters": {
 				"lang": "FILTER_DEFAULT"
 			}
 		},
 		"last": {
+			"shortcut": "last",
 			"parameters": {
 				"type": "FILTER_DEFAULT"
 			}
