@@ -762,6 +762,10 @@ class Zord {
 	    });
 	}
 	
+	public static function html($text, $br = "\n") {
+	    return implode('<br>', explode($br, htmlspecialchars($text)));
+	}
+	
 	public static function sendMail($addresses, $subject, $body = null, $template = null, $models = [], $controler = null, $locale = null) {
 	    $mail = new PHPMailer();
 	    $mail->SetFrom(WEBMASTER_MAIL_ADDRESS, WEBMASTER_MAIL_NAME);
