@@ -766,6 +766,10 @@ class Zord {
 	    return implode('<br>', explode($br, htmlspecialchars($text)));
 	}
 	
+	public static function trunc($string, $maxlength) {
+	    return mb_substr($string, 0, $maxlength).(mb_strlen($string) > $maxlength ? "…" : '');
+	}
+	
 	public static function sendMail($addresses, $subject, $body = null, $template = null, $models = [], $controler = null, $locale = null) {
 	    $mail = new PHPMailer();
 	    $mail->SetFrom(WEBMASTER_MAIL_ADDRESS, WEBMASTER_MAIL_NAME);
