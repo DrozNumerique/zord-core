@@ -200,7 +200,7 @@ class Controler {
                     if (isset($parameters) && is_array($parameters)) {
                         foreach($parameters as $name => $filter) {
                             if (count($target['path']) > 0) {
-                                $target['params'][$name] = filter_var($target['path'][0], constant($filter));
+                                $target['params'][$name] = filter_var(urldecode($target['path'][0]), constant($filter));
                                 array_shift($target['path']);
                             }
                         }
