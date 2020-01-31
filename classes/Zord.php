@@ -787,4 +787,15 @@ class Zord {
 	    }
 	    return $mail->Send() === false ? $mail->ErrorInfo : true;
 	}
+	
+    public static function urlencode($path) {
+        $path = explode('/', $path);
+        array_walk($path, function(&$element) {
+            if (!empty($element)) {
+                $element = urlencode($element);
+            }
+        });
+        $path = implode('/', $path);
+        return $path;
+    }
 }
