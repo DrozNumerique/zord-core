@@ -365,12 +365,18 @@ class Zord {
     	            }
     	        }
     	        if (!self::is_associative($second)) {
-    	           $first[] = $value; 
+    	            $first[] = $value;
     	        } else {
     	            if ($value === '__UNSET__') {
     	                unset($first[$key]);
     	            } else {
-    	                $first[$key] = $value;
+    	                if (isset($first[$key]) && self::matches($first[$key], $value)) {
+    	                    foreach ($value as $entry) {
+    	                        $first[$key][] = $entry;
+    	                    }
+    	                } else {
+    	                    $first[$key] = $value;
+    	                }
     	            }
     	        }
     	    }
@@ -382,6 +388,11 @@ class Zord {
 	    } else {
 	        return [];
 	    }
+	}
+	
+	public static function matches($first, $second) {
+	    return is_array($first)  && !self::is_associative($first) &&
+	           is_array($second) && !self::is_associative($second);
 	}
 	
 	public static function getContextURL($name, $index = 0, $target = '', $lang = null, $session = null) {
