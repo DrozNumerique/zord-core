@@ -354,8 +354,10 @@ class Zord {
 	public static function array_merge($first, $second, $base = null) {
 	    if (is_array($first) && is_array($second)) {
     	    foreach ($second as $key => $value) {
+    	        $reset = false;
     	        if (is_array($value) && self::is_associative($value)) {
     	            if (isset($value['__RESET__'])) {
+    	                $reset = true;
     	                $value = $value['__RESET__'];
     	            } else {
     	                if (!isset($first[$key])) {
@@ -370,7 +372,7 @@ class Zord {
     	            if ($value === '__UNSET__') {
     	                unset($first[$key]);
     	            } else {
-    	                if (isset($first[$key]) && self::matches($first[$key], $value)) {
+    	                if (!$reset && isset($first[$key]) && self::matches($first[$key], $value)) {
     	                    foreach ($value as $entry) {
     	                        $first[$key][] = $entry;
     	                    }
