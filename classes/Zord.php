@@ -131,7 +131,7 @@ class Zord {
 	    if (!isset(self::$locales[$target][$lang])) {
 	        $locale = array();
 	        foreach (COMPONENT_FOLDERS as $folder) {
-	            foreach (['', DEFAULT_LANG.DS, $lang.DS] as $variant) {
+	            foreach (['', $lang.DS] as $variant) {
 	                $locale = self::array_merge($locale, self::arrayFromJSONFile($folder.'locales'.DS.$variant.$target.'.json'));
 	            }
 	        }
