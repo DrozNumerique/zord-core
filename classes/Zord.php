@@ -100,7 +100,7 @@ class Zord {
 	        if (!self::hasConfig($name)) {
 	            self::$config[$name] = [];
 	            foreach (COMPONENT_FOLDERS as $folder) {
-	                self::$config[$name] = self::array_merge(self::$config[$name], self::arrayFromJSONFile($folder.'config'.DS.$name.'.json'), $name);
+	                self::$config[$name] = self::array_merge(self::$config[$name], self::arrayFromJSONFile($folder.'config'.DS.$name.'.json'), false, $name);
 	            }
 	        }
 	        return self::$config[$name];
@@ -131,8 +131,8 @@ class Zord {
 	    if (!isset(self::$locales[$target][$lang])) {
 	        $locale = array();
 	        foreach (COMPONENT_FOLDERS as $folder) {
-	            foreach (['', $lang.DS] as $variant) {
-	                $locale = self::array_merge($locale, self::arrayFromJSONFile($folder.'locales'.DS.$variant.$target.'.json'));
+	            foreach (['', DEFAULT_LANG.DS, $lang.DS] as $variant) {
+	                $locale = self::array_merge($locale, self::arrayFromJSONFile($folder.'locales'.DS.$variant.$target.'.json'), true);
 	            }
 	        }
 	        self::$locales[$target][$lang] = json_decode(json_encode($locale));
@@ -351,10 +351,9 @@ class Zord {
 	    return array_keys($array) !== range(0, count($array) - 1);
 	}
 	
-	public static function array_merge($first, $second, $base = null) {
+	public static function array_merge($first, $second, $reset = false, $base = null) {
 	    if (is_array($first) && is_array($second)) {
     	    foreach ($second as $key => $value) {
-    	        $reset = false;
     	        if (is_array($value) && self::is_associative($value)) {
     	            if (isset($value['__RESET__'])) {
     	                $reset = true;
@@ -363,7 +362,7 @@ class Zord {
     	                if (!isset($first[$key])) {
     	                    $first[$key] = [];
     	                }
-    	                $value = self::array_merge($first[$key], $value, isset($base) ? $base.'.'.$key : null);
+    	                $value = self::array_merge($first[$key], $value, $reset, isset($base) ? $base.'.'.$key : null);
     	            }
     	        }
     	        if (!self::is_associative($second)) {
