@@ -11,11 +11,6 @@
 			"type": "text/css",
 			"href": "/css/portal.css"
 		},
-		"table": {
-			"media": "screen",
-			"type": "text/css",
-			"href": "/css/table.css"
-		},
 		"chosen": {
 			"media": "screen",
 			"type": "text/css",
