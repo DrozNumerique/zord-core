@@ -26,10 +26,6 @@
 			"type": "text/javascript",
 			"src": "/js/portal.js"
 		},
-		"table": {
-			"type": "text/javascript",
-			"src": "/js/table.js"
-		},
 		"jquery": {
 			"type": "text/javascript",
 			"src": "/js/jquery.js"
