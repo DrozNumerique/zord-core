@@ -77,10 +77,8 @@ class Zord {
 	
 	public static function getClassName($class) {
 	    $extend = self::value('extend', $class);
-	    if (isset($extend) && class_exists($extend)) {
-	        $class = $extend;
-	    }
-	    return (new ReflectionClass($class))->isAbstract() ? null : $class;
+	    $class = $extend ?? $class;
+	    return !class_exists($class) || (new ReflectionClass($class))->isAbstract() ? null : $class;
 	}
 	
 	public static function saveConfig($name, $config) {
@@ -470,11 +468,11 @@ class Zord {
 	    $result = null;
 	    switch ($strategy) {
 	        case 'proc_open': {
-	            $desc  = isset($params['desc'])  ? $params['desc']  : [["pipe", "r"],["pipe", "w"],["pipe", "w"]];
-	            $pipes = isset($params['pipes']) ? $params['pipes'] : [];
-	            $cwd   = isset($params['cwd'])   ? $params['cwd']   : null;
-	            $env   = isset($params['env'])   ? $params['env']   : null;
-	            $opt   = isset($params['opt'])   ? $params['opt']   : null;
+	            $desc  = $params['desc']  ?? [["pipe", "r"],["pipe", "w"],["pipe", "w"]];
+	            $pipes = $params['pipes'] ?? [];
+	            $cwd   = $params['cwd']   ?? null;
+	            $env   = $params['env']   ?? null;
+	            $opt   = $params['opt']   ?? null;
 	            $proc = proc_open($command, $desc, $pipes, $cwd, $env, $opt);
 	            if (is_resource($proc)) {
 	                $output = stream_get_contents($pipes[1]);
@@ -489,7 +487,7 @@ class Zord {
 	            break;
 	        }
 	        case 'popen': {
-	            $proc = popen($command, isset($params['mode']) ? $params['mode'] : 'w');
+	            $proc = popen($command, $params['mode'] ?? 'w');
 	            if (is_resource($proc)) {
 	                $result = stream_get_contents($proc);
 	                pclose($proc);
