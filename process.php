@@ -38,6 +38,7 @@ if (isset($_SERVER['argv']) && count($_SERVER['argv']) > 1) {
                     $content = ProcessExecutor::indent($line['indent']).$line['message'].($line['newline'] ? "\n" : "");
                     file_put_contents(LOGS_FOLDER.$class.'-'.$timestamp.'.log', $content, FILE_APPEND);
                 }
+                unlink($report);
             }
         }
     }
