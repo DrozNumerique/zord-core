@@ -44,7 +44,18 @@ class User {
     }
     
     public static function crypt($data) {
-        return hash('sha256', SALT.$data);
+        $salted = defined('SALT') ? SALT.$data : $data;
+        switch (PASSWORD_ALGO) {
+            case 'SHA256': {
+                return hash('sha256', $salted);
+            }
+            case 'MD5': {
+                return md5($salted);
+            }
+            default: {
+                return null;
+            }
+        }
     }
     
     public static function find($checkIP = true) {

@@ -1,4 +1,5 @@
 {
+	"PASSWORD_ALGO": "SHA256",
     "DEFAULT_LANG": "fr-FR",
     "DEFAULT_TITLE": "ꓜꓳꓤꓷ",
     "DEFAULT_TIMEZONE": "Europe/Paris",
