@@ -76,12 +76,11 @@ class Zord {
 	}
 	
 	public static function getClassName($class) {
-	    $name = self::value('extend', $class);
-	    if (isset($name) && class_exists($name)) {
-	        return $name;
-	    } else {
-	        return $class;
+	    $extend = self::value('extend', $class);
+	    if (isset($extend) && class_exists($extend)) {
+	        $class = $extend;
 	    }
+	    return (new ReflectionClass($class))->isAbstract() ? null : $class;
 	}
 	
 	public static function saveConfig($name, $config) {
