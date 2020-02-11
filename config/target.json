@@ -58,7 +58,16 @@
 			}
 		},
 		"config": {
+			"shortcut": "config",
 			"response": "DATA"
+		},
+		"token": {
+			"shortcut": "token",
+			"response": "DATA",
+			"parameters": {
+				"user": "FILTER_SANITIZE_STRING",
+				"key": "FILTER_SANITIZE_STRING"
+			}
 		}
 	},
 	"Process": {

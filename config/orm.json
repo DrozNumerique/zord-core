@@ -64,6 +64,16 @@
         ],
         "key": "session"
     },
+	"UserHasTokenEntity": {
+		"table": "user_has_token",
+		"fields": [
+	        "user",
+	        "key",
+	        "token",
+	        "start"
+        ],
+        "key": "token"
+    },
 	"ProcessEntity": {
 		"table": "process",
 		"fields": [

@@ -3,6 +3,11 @@
 class User {
     
     public static $ZORD_SESSION = '__ZORD_SESSION__';
+    public static $ZORD_TOKEN   = '__ZORD_TOKEN__';
+    public static $ZORD_PROPERTIES = [
+        'session' => '__ZORD_SESSION__',
+        'token'   => '__ZORD_TOKEN__'
+    ];
     
     public $login;
     public $name;
@@ -20,7 +25,7 @@ class User {
                 $this->email = $roles->get('email');
                 $this->ips = $roles->get('ips');
                 $this->session = $session;
-                if ($session != null) {
+                if (isset($session)) {
                     $_SESSION[self::$ZORD_SESSION] = $session;
                 } else if (isset($_SESSION[self::$ZORD_SESSION])) {
                     unset($_SESSION[self::$ZORD_SESSION]);
@@ -59,34 +64,44 @@ class User {
     }
     
     public static function find($checkIP = true) {
-        $result = null;
+        $login = null;
         $session = null;
-        foreach ([$_SESSION, $_COOKIE, $_POST, $_GET] as $var) {
-            if (isset($var[self::$ZORD_SESSION]) && is_string($var[self::$ZORD_SESSION])) {
-                $session = $var[self::$ZORD_SESSION];
-                break;
+        $token = null;
+        foreach (self::$ZORD_PROPERTIES as $property => $key) {
+            foreach ([$_SESSION, $_COOKIE, $_POST, $_GET] as $var) {
+                if (isset($var[$key]) && is_string($var[$key])) {
+                    $$property = $var[$key];
+                    break;
+                }
             }
         }
         if (isset($session)) {
-            $result = UserHasSessionEntity::find($session);
+            $entity = UserHasSessionEntity::find($session);
+            $login = $entity ? $entity->user : null;
+        } else if (isset($token)) {
+            $decrypted = null;
+            if (openssl_private_decrypt(base64_decode(str_replace(' ', '+', $token)), $decrypted, openssl_pkey_get_private(file_get_contents(realpath(str_replace('~', $_SERVER['HOME'], OPENSSL_PRIVATE_KEY)))))) {
+                $token = (new UserHasTokenEntity())->retrieve($decrypted);
+                if ($token) {
+                    $login = $token->user;
+                }
+            }
         }
-        if (!$result) {
+        if (!isset($login)) {
             $session = null;
             if ($checkIP) {
                 $IP = $_SERVER['REMOTE_ADDR'];
                 if (filter_var($IP, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-                    $result = UserHasAddressEntity::find($IP);
+                    $entity = UserHasAddressEntity::find($IP);
+                    $login = $entity ? $entity->user : null;
                 }
             }
         }
         $class = Zord::getClassName('User');
-        if ($result) {
-            return new $class($result->user, $session);
-        }
-        return new $class();
+        return new $class($login, $session);
     }
     
-    public static function authenticate($login, $password) {
+    public static function authenticate($login, $password, $transient = true) {
         $result = (new UserEntity())->retrieve([
             'where' => [
                 'raw' => '(login = ? AND password = ?)',
@@ -94,14 +109,18 @@ class User {
             ]
         ]);
         if ($result) {
-            $class = Zord::getClassName('User');
-            $user = new $class($result->login, self::crypt($login.microtime()));
-            (new UserHasSessionEntity())->create([
-                'user' => $user->login,
-                'session' => $user->session,
-                'last' => date('Y-m-d H:i:s')
-            ]);
-            return $user;
+            if ($transient) {
+                $class = Zord::getClassName('User');
+                $user = new $class($login, self::crypt($login.microtime()));
+                (new UserHasSessionEntity())->create([
+                    'user' => $user->login,
+                    'session' => $user->session,
+                    'last' => date('Y-m-d H:i:s')
+                ]);
+                return $user;
+            } else {
+                return true;
+            }
         } else {
             return false;
         }

@@ -5,10 +5,13 @@
     "DEFAULT_TIMEZONE": "Europe/Paris",
     "LOG_DATE_FORMAT": "[d/m/Y H:i:s.u]",
     "SESSION_INACTIVE_DURATION": "00:20:00",
+    "TOKEN_INACTIVE_DURATION": "00:00:10",
     "WEBMASTER_MAIL_ADDRESS": "webmaster@zord.tech",
     "WEBMASTER_MAIL_NAME": "Zord Webmaster",
     "PROCESS_COMMAND": "php -f ${SCRIPT} ${PID} &",
     "DETECT_PROCESS_COMMAND": "pgrep -f ${PID}",
     "KILL_SIGNAL": 9,
-    "MAX_LOG_SIZE": 200000
+    "MAX_LOG_SIZE": 200000,
+    "OPENSSL_PRIVATE_KEY": "~/.ssh/id_rsa",
+    "OPENSSL_PUBLIC_KEY": "~/.ssh/id_rsa.pub.pem"
 }
