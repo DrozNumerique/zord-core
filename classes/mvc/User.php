@@ -84,6 +84,7 @@ class User {
                 $token = (new UserHasTokenEntity())->retrieve($decrypted);
                 if ($token) {
                     $login = $token->user;
+                    (new UserHasTokenEntity())->delete($decrypted);
                 }
             }
         }

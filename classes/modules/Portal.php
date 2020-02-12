@@ -20,7 +20,10 @@ class Portal extends Module {
             if ($user && file_exists($keyfile)) {
                 $token = (new UserHasTokenEntity())->retrieve([
                     'many'  => false,
-                    'where' => ['user' => $this->params['user']]
+                    'where' => [
+                        'user' => $this->params['user'],
+                        'key'  => $this->params['key'],
+                    ]
                 ]);
                 if (!$token) {
                     $token = uniqid($user->login, true);
