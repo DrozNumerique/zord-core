@@ -56,6 +56,10 @@ abstract class ProcessExecutor {
         return $this->lang;
     }
     
+    public function getLocale() {
+        return $this->locale;
+    }
+    
     public function getUser() {
         return $this->user;
     }
