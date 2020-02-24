@@ -79,8 +79,7 @@ class Account extends Module {
                 $user = User::authenticate($login, $password);
                 if ($user) {
                     $this->controler->setUser($user);
-                    $target = $lasthref ? $this->controler->getTarget($lasthref, true) : $this->controler->getDefaultTarget();
-                    return $this->forward($target);
+                    return $this->redirect($lasthref ?? $this->baseURL, true);
                 } else {
                     $message = $this->locale->messages->auth_failed;
                 }

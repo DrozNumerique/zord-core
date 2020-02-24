@@ -1,5 +1,7 @@
 <?php $action = $models['action'] ?? ($user->isConnected() ? 'profile' : 'connect'); ?>
-<form class="account" method="post" action="<?php echo $baseURL; ?>/Account/<?php echo $action; ?>">
+<form class="account" method="post" action="<?php echo $baseURL; ?>">
+	<input type="hidden" name="module" value="Account"/>
+	<input type="hidden" name="action" value="<?php echo $action; ?>"/>
 <?php if (isset($models['lasthref']) && $models['lasthref']) { ?>
 	<input type="hidden" name="lasthref" value="<?php echo $models['lasthref'] ?>"/>
 <?php } ?>
