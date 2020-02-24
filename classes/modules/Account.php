@@ -48,8 +48,12 @@ class Account extends Module {
             } else if ($token) {
                 $user = (new UserEntity())->retrieve(['where' => ['activate' => $token]]);
                 if ($user) {
-                    $name     = $user->name;
-                    $password = self::$FAKE_PASSWORD;
+                    if (isset($user->name)) {
+                        $name = $user->name;
+                    }
+                    if (isset($user->password)) {
+                        $password = self::$FAKE_PASSWORD;
+                    }
                     $token = User::crypt($user->login.microtime());
                     (new UserEntity())->update(
                         ['where' => ['login' => $user->login]],
