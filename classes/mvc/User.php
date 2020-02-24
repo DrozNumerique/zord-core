@@ -18,12 +18,12 @@ class User {
     
     public function __construct($login = null, $session = null) {
         if ($login) {
-            $roles = (new UserEntity())->retrieve($login);
-            if ($roles) {
-                $this->login = $roles->get('login');
-                $this->name = $roles->get('name');
-                $this->email = $roles->get('email');
-                $this->ips = $roles->get('ips');
+            $user = (new UserEntity())->retrieve($login);
+            if ($user) {
+                $this->login = $user->get('login');
+                $this->name = $user->get('name');
+                $this->email = $user->get('email');
+                $this->ips = $user->get('ips');
                 $this->session = $session;
                 if (isset($session)) {
                     $_SESSION[self::$ZORD_SESSION] = $session;
@@ -102,6 +102,17 @@ class User {
         return new $class($login, $session);
     }
     
+    public static function bind($login) {
+        $class = Zord::getClassName('User');
+        $user = new $class($login, self::crypt($login.microtime()));
+        (new UserHasSessionEntity())->create([
+            'user' => $user->login,
+            'session' => $user->session,
+            'last' => date('Y-m-d H:i:s')
+        ]);
+        return $user;
+    }
+    
     public static function authenticate($login, $password, $transient = true) {
         $result = (new UserEntity())->retrieve([
             'where' => [
@@ -111,14 +122,7 @@ class User {
         ]);
         if ($result) {
             if ($transient) {
-                $class = Zord::getClassName('User');
-                $user = new $class($login, self::crypt($login.microtime()));
-                (new UserHasSessionEntity())->create([
-                    'user' => $user->login,
-                    'session' => $user->session,
-                    'last' => date('Y-m-d H:i:s')
-                ]);
-                return $user;
+                return self::bind($login);
             } else {
                 return true;
             }

@@ -2,79 +2,118 @@
 
 class Account extends Module {
     
-    public function activate() {
-        $code = isset($this->params['code']) ? $this->params['code'] : null;
-        if ($code) {
-            $user = (new UserEntity())->retrieve([
-                'where' => ['activate' => $code]
-            ]);
-            if ($user) {
-                return $this->connection($user->login, $code, null, $this->locale->activate);
+    private static $FAKE_PASSWORD = '************'; 
+    
+    public function profile() {
+        $update   = isset($this->params['update'])   ? $this->params['update'] == 'true' : false;
+        $token    = isset($this->params['token'])    ? trim($this->params['token'])      : null;
+        $name     = isset($this->params['name'])     ? trim($this->params['name'])       : null;
+        $password = isset($this->params['password']) ? trim($this->params['password'])   : null;
+        $confirm  = isset($this->params['confirm'])  ? trim($this->params['confirm'])    : null;
+        $message  = null;
+        if ($update) {
+            $login = null;
+            $activated = false;
+            if ($this->user->isConnected()) {
+                $login = $this->user->login;
+            } else if ($token) {
+                $user = (new UserEntity())->retrieve(['where' => ['activate' => $token]]);
+                if ($user) {
+                    $login = $user->login;
+                    $activated = isset($user->password);
+                }
+            }
+            if ($login) {
+                if ($password == $confirm) {
+                    $data = ['name' => $name, 'activate' => ''];
+                    if (!empty($password) && $password !== self::$FAKE_PASSWORD) {
+                        $data['password'] = $password;
+                        $activated = true;
+                    }
+                    (new UserEntity())->update(['where' => ['login' => $login]], $data);
+                    if (!$this->user->isConnected() && $activated) {
+                        $this->controler->setUser(User::bind($login));
+                    }
+                    $message = $this->locale->messages->profile_updated;
+                } else {
+                    $message = $this->locale->messages->wrong_confirm;
+                }
+            } else {
+                return $this->error(404);
+            }
+        } else {
+            if ($this->user->isConnected()) {
+                $name     = $this->user->name;
+                $password = self::$FAKE_PASSWORD;
+            } else if ($token) {
+                $user = (new UserEntity())->retrieve(['where' => ['activate' => $token]]);
+                if ($user) {
+                    $token = User::crypt($user->login.microtime());
+                    (new UserEntity())->update(
+                        ['where' => ['login' => $user->login]],
+                        ['activate' => $token]
+                    );
+                } else {
+                    return $this->error(404);
+                }
+            } else {
+                return $this->error(404);
             }
         }
-        return $this->error(404);
-    }
-    
-    public function connection($login = '', $activate = null, $lasthref = null, $message = null) {
-        return $this->page('connection', [
-            'login' => $login,
-            'activate' => $activate,
-            'lasthref' => $this->either($lasthref, 'lasthref'),
-            'message' => $message
+        return $this->page('account', [
+            'action'   => 'profile',
+            'name'     => $name,
+            'password' => $password,
+            'message'  => $message,
+            'token'    => $token
         ]);
     }
     
-    public function connect() {
+    public function connect($lasthref = null) {
         $login    = isset($this->params['login'])    ? trim($this->params['login'])    : '';
         $password = isset($this->params['password']) ? trim($this->params['password']) : null;
-        $confirm  = isset($this->params['confirm'])  ? trim($this->params['confirm'])  : null;
-        $email    = isset($this->params['email'])    ? $this->params['email']          : null;
-        $activate = isset($this->params['activate']) ? $this->params['activate']       : null;
-        $lasthref = isset($this->params['lasthref']) ? $this->params['lasthref']       : null;
+        $lasthref = isset($this->params['lasthref']) ? $this->params['lasthref']       : $lasthref;
         $message = null;
-        if (!empty($email)) {
-            $code = User::crypt($email.microtime());
-            $user = (new UserEntity())->update(
-                ['where' => ['email' => $email]],
-                ['activate' => $code]
-            );
-            if ($user) {
-                $result = $this->sendActivation($user, $code);
-                if (isset($result['error'])) {
-                    $message = $this->locale->mail_error.'<br/>('.$result['error'].')';
-                } else {
-                    $message = $this->locale->mail_sent;
-                }
-            } else {
-                $message = $this->locale->unknown_user;
-            }
-        } else if (!empty($login) && !empty($password)) {
-            if (!empty($activate)) {
-                if ($password == $confirm) {
-                    (new UserEntity())->update(
-                        ['where' => ['activate' => $activate]],
-                        [
-                            'password' => $password,
-                            'activate' => ''
-                        ]
-                    );
-                } else {
-                    $message = $this->locale->wrong_confirm;
-                    $password = null;
-                }
-            }
-            if ($password) {
+        if (!empty($login)) {
+            if (!empty($password)) {
                 $user = User::authenticate($login, $password);
                 if ($user) {
                     $this->controler->setUser($user);
                     $target = $lasthref ? $this->controler->getTarget($lasthref, true) : $this->controler->getDefaultTarget();
                     return $this->forward($target);
                 } else {
-                    $message = $this->locale->auth_failed;
+                    $message = $this->locale->messages->auth_failed;
+                }
+            } else {
+                $token = User::crypt($login.microtime());
+                $user = (new UserEntity())->update(
+                    ['where' => ['email' => $login]],
+                    ['activate' => $token]
+                );
+                if (!$user && ACCOUNT_AUTO_CREATE) {
+                    $user = (new UserEntity())->create([
+                        'login'    => $login,
+                        'email'    => $login,
+                        'activate' => $token
+                    ]);
+                }
+                if ($user) {
+                    $result = $this->sendActivation($user, $token);
+                    if (isset($result['error'])) {
+                        $message = $this->locale->messages->mail_error.'|('.$result['error'].')';
+                    } else {
+                        $message = $this->locale->messages->mail_sent;
+                    }
+                } else {
+                    $message = $this->locale->messages->unknown_user;
                 }
             }
         } 
-        return $this->connection($login, $activate, $lasthref, $message);
+        return $this->page('account', [
+            'action'   => 'connect',
+            'lasthref' => $lasthref,
+            'message'  => $message
+        ]);
     }
     
     public function disconnect() {
@@ -83,11 +122,11 @@ class Account extends Module {
     }
     
     public function sendActivation($user, $code) {
-        $url = $this->baseURL.'/activate?code='.$code;
+        $url = $this->baseURL.'/profile?token='.$code;
         $send = $this->sendMail(
             [$user->email => $user->name],
-            $this->locale->activate,
-            $this->locale->copy_paste."\n".$url,
+            $this->locale->mail->activate,
+            $this->locale->mail->copy_paste."\n".$url,
             '/mail/activation',
             ['url' => $url]
         );

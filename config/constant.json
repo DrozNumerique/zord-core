@@ -13,5 +13,6 @@
     "KILL_SIGNAL": 9,
     "MAX_LOG_SIZE": 200000,
     "OPENSSL_PRIVATE_KEY": "~/.ssh/id_rsa",
-    "OPENSSL_PUBLIC_KEY": "~/.ssh/id_rsa.pub.pem"
+    "OPENSSL_PUBLIC_KEY": "~/.ssh/id_rsa.pub.pem",
+    "ACCOUNT_AUTO_CREATE": false
 }

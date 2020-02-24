@@ -1,1 +1,1 @@
-<a href="<?php echo $models['url']; ?>"><?php echo $locale->click_here; ?></a>
+<a href="<?php echo $models['url']; ?>"><?php echo $locale->mail->click_here; ?></a>

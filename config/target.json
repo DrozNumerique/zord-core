@@ -1,16 +1,10 @@
 {
 	"Account": {
 		"response": "VIEW",
-		"activate": {
-			"shortcut": "activate",
+		"profile": {
+			"shortcut": "profile",
 			"parameters": {
-				"code": "FILTER_SANITIZE_STRING"
-			}
-		},
-		"connection": {
-			"shortcut": "connection",
-			"parameters": {
-				"lasthref": "FILTER_VALIDATE_URL"
+				"token": "FILTER_SANITIZE_STRING"
 			}
 		},
 		"connect": {
