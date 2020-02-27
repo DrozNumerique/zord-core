@@ -3,6 +3,7 @@
 class RestWrapper {
     
     protected $client    = null;
+    protected $config    = null;
     protected $functions = null;
     
     public function __construct() {
@@ -23,6 +24,7 @@ class RestWrapper {
             }
             $this->client    = new $class($config['baseURL'], $options);
             $this->functions = $config['functions'] ?? [];
+            $this->config    = $config;
         }
     }
     
@@ -30,25 +32,26 @@ class RestWrapper {
         $config = $this->functions[$name] ?? false;
         if ($config && $config['path']) {
             $method = $config['method'] ?? 'GET';
+            $path = Zord::substitute($config['path'], $data);
             switch ($method) {
                 case 'GET': {
-                    return $this->client->get($config['path'], $data, $headers);
+                    return $this->client->get($path, $data, $headers);
                     break;
                 }
                 case 'HEAD': {
-                    return $this->client->head($config['path']);
+                    return $this->client->head($path);
                     break;
                 }
                 case 'POST': {
-                    return $this->client->post($config['path'], $data, $headers);
+                    return $this->client->post($path, $data, $headers);
                     break;
                 }
                 case 'PUT': {
-                    return $this->client->put($config['path'], $data, $headers);
+                    return $this->client->put($path, $data, $headers);
                     break;
                 }
                 case 'DELETA': {
-                    return $this->client->delete($config['path'], $headers);
+                    return $this->client->delete($path, $headers);
                     break;
                 }
             }
