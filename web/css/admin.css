@@ -283,6 +283,15 @@
 	border-radius: 0px !important;
 	font-size:15px !important;
 	font-family: arial,sans-serif;
+	vertical-align: middle;
+}
+
+.admin-table th {
+	background: darkgray;
+}
+
+.admin-table td {
+	background: white;
 }
 
 #context.admin-list {
