@@ -1,12 +1,12 @@
 # zord-core
 Framework générique pour développement de portails
 
-#Cadre métier
+# Cadre métier
 
 Édition numérique de textes littéraires. Publication de textes et outils de recherche scientifiques dans les contenus
 Lien avec les normes et outils des lecteurs, chercheurs, bibliothécaires, distributeurs : enregistrements de références bibliographiques, citations, annotations, fiches de métadonnées normées…
 
-#Objectif de Zord
+# Objectif de Zord
 
 Zord est un logiciel destiné à :
 
@@ -27,7 +27,7 @@ Zord a pour vocation d'être un outil à disposition des chercheurs en littérat
 * XML sémantique
 * outils de recherche et de visualisation des résultats de la recherche.
 
-#Niveau potentiel de complexité des textes
+# Niveau potentiel de complexité des textes
 
 * textes littéraires encodés en XML-TEI,
 * essais, correspondances, théâtre, dialogues, dictionnaires, traductions…,
@@ -39,13 +39,12 @@ Zord a pour vocation d'être un outil à disposition des chercheurs en littérat
 * insertion des numéros de page du texte original (textes issus d'ouvrages papier ou pdf),
 * correspondance folio/PDF, page à page.
 
-#Licence et dépôt
+# Licence et dépôt
 
 Licence LGPL v.3 : https://github.com/DrozNumerique/Zord/blob/master/LICENSE
 Les sources du logiciel ainsi que sa documentation seront déposée et régulièrement mises à jour sur le dépôt Git de Zord :
 
-    https://github.com/DrozNumerique/Zord_dev : la totalité des développements Zord, stables ou non
-    https://github.com/DrozNumerique/Zord : les différentes releases publiques
+    https://github.com/DrozNumerique/Zord-core : la totalité des développements Zord, stables ou non
 
 La paternité du code est attribuée à son développeur original David Dauvergne est n'est en aucun cas cessible. S'y ajouteront les coorodonnées de ses futurs développeurs.
 Supports cibles et responsive design
