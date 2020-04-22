@@ -44,12 +44,16 @@ Zord a pour vocation d'être un outil à disposition des chercheurs en littérat
 Licence LGPL v.3 : https://github.com/DrozNumerique/Zord/blob/master/LICENSE
 Les sources du logiciel ainsi que sa documentation seront déposée et régulièrement mises à jour sur le dépôt Git de Zord :
 
-    https://github.com/DrozNumerique/Zord-core : la totalité des développements Zord, stables ou non
+* https://github.com/DrozNumerique/zord-core : Framework générique pour développement de portails
+* https://github.com/DrozNumerique/zord-library : Library application build upon Zord framework
+* https://github.com/DrozNumerique/zord-store : composants communs dédiés à la gestion d'un référentiel d'ouvrages 
 
-La paternité du code est attribuée à son développeur original David Dauvergne est n'est en aucun cas cessible. S'y ajouteront les coorodonnées de ses futurs développeurs.
-Supports cibles et responsive design
+La paternité du code est attribuée à ses développeurs David Dauvergne, Éric Arrivé, est n'est en aucun cas cessible. S'y ajouteront les coorodonnées de ses futurs développeurs.
+
+# Supports cibles et responsive design
 
 Le prestataire doit assurer un design s'adaptant aux différents supports de lecture : PC, tablettes .
+
 Multi-liguisme
 
 L'ensemble des pages et fonctionnalités de chacun des sites devra pouvoir être décliné et plusieurs langues. Le site sera nativement construit de manière bilingue fr/en.
