@@ -456,9 +456,13 @@ class Zord {
 	    );
 	}
 	
-	public static function substitute($raw, $values) {
+	public static function substitute($raw, $values, $base = '') {
 	    foreach($values as $key => $value) {
-	        $raw = str_replace('${'.$key.'}', $value, $raw);
+	        if (is_array($value)) {
+	            $raw = self::substitute($raw, $value, $base.$key.'.');
+	        } else if (is_scalar($value)) {
+	            $raw = str_replace('${'.$base.$key.'}', $value, $raw);
+	        }
 	    }
 	    return $raw;
 	}
