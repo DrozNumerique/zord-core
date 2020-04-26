@@ -775,8 +775,10 @@ class Zord {
 	    });
 	}
 	
-	public static function html($text, $br = "\n") {
-	    return implode('<br>', explode($br, htmlspecialchars($text)));
+	public static function html($text, $config = []) {
+	    $br = $config['br'] ?? "\n";
+	    $escape = $config['escape'] ?? true;
+	    return implode('<br>', explode($br, $escape ? htmlspecialchars($text) : $text));
 	}
 	
 	public static function trunc($string, $maxlength) {
