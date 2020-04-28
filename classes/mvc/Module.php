@@ -42,6 +42,10 @@ class Module {
         return $this->locale;
     }
     
+    public function configure() {
+        
+    }
+    
     public function execute($action) {
         if (!$this->hasAccess($action)) {
             return $this->error(403);

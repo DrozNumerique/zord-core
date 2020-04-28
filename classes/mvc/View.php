@@ -36,8 +36,9 @@ class View {
         $locale  = is_string($locale) ? Zord::getLocale($locale, $this->lang) : $locale;
         $page    = isset($models['page']) ? $models['page'] : null;
         if ($this->controler) {
-            $baseURL = $this->controler->getBaseURL();
-            $user    = $this->controler->getUser();
+            $controler = $this->controler;
+            $baseURL   = $this->controler->getBaseURL();
+            $user      = $this->controler->getUser();
             if ($context !== 'unknown') {
                 $config = json_decode(Zord::json_encode(Zord::value('context', $context)));
                 $skin   = Zord::getSkin($context);

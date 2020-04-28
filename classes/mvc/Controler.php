@@ -69,6 +69,8 @@ class Controler {
                 if ($this->module && $this->action) {
                     if ($this->isAuthorized($target)) {
                         $type = null;
+                        $this->configure();
+                        $this->module->configure();
                         $this->actionPlugin('before', $target);
                         $result = $this->module->execute($this->action);
                         $this->actionPlugin('after', $target);
@@ -264,6 +266,10 @@ class Controler {
             'session' => $this->user->session
         ];
         return $models;
+    }
+    
+    protected function configure() {
+        
     }
     
     protected function normalizePath($path, $params) {
