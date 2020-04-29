@@ -70,7 +70,6 @@ class Controler {
                     if ($this->isAuthorized($target)) {
                         $type = null;
                         $this->configure();
-                        $this->module->configure();
                         $this->actionPlugin('before', $target);
                         $result = $this->module->execute($this->action);
                         $this->actionPlugin('after', $target);
@@ -269,7 +268,7 @@ class Controler {
     }
     
     protected function configure() {
-        
+        $this->module->configure();
     }
     
     protected function normalizePath($path, $params) {
