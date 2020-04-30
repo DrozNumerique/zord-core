@@ -98,14 +98,12 @@ class Controler {
                         } else if ($this->isError($result)) {
                             $this->error($result, $type);
                         } else {
-                            $history = true;
+                            $history = Zord::value('target', [$target['module'], $target['action'], 'history']);
+                            if (!isset($history)) {
+                                $history = Zord::value('target', [$target['module'], 'history']);
+                            }
                             if (isset($result['__history__'])) {
                                 $history = $result['__history__'];
-                            } else {
-                                $history = Zord::value('target', [$target['module'], $target['action'], 'history']);
-                                if (!isset($history)) {
-                                    $history = Zord::value('target', [$target['module'], 'history']);
-                                }
                             }
                             if (!isset($history) || $history === true) {
                                 $_SESSION['__ZORD__']['__HISTORY__'][$target['type']][] = $target;

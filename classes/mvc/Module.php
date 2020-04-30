@@ -161,7 +161,7 @@ class Module {
 	    ];
 	}
 	
-	public function view($template, $models = [], $type = 'text/html;charset=UTF-8', $history = true) {
+	public function view($template, $models = [], $type = 'text/html;charset=UTF-8', $history = null) {
 	    return [
 	        '__template__' => $template,
 	        '__models__'   => $models,
