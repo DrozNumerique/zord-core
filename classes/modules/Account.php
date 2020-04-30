@@ -5,11 +5,11 @@ class Account extends Module {
     private static $FAKE_PASSWORD = '************'; 
     
     public function profile() {
-        $update   = isset($this->params['update'])   ? $this->params['update'] == 'true' : false;
-        $token    = isset($this->params['token'])    ? trim($this->params['token'])      : null;
-        $name     = isset($this->params['name'])     ? trim($this->params['name'])       : null;
-        $password = isset($this->params['password']) ? trim($this->params['password'])   : null;
-        $confirm  = isset($this->params['confirm'])  ? trim($this->params['confirm'])    : null;
+        $update   = isset($this->params['update'])   ? $this->params['update'] === 'true' : false;
+        $token    = isset($this->params['token'])    ? trim($this->params['token'])       : null;
+        $name     = isset($this->params['name'])     ? trim($this->params['name'])        : null;
+        $password = isset($this->params['password']) ? trim($this->params['password'])    : null;
+        $confirm  = isset($this->params['confirm'])  ? trim($this->params['confirm'])     : null;
         $message  = null;
         if ($update) {
             $login = null;

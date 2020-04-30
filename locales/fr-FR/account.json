@@ -15,7 +15,9 @@
 		"auth_failed": "Echec de l'authentification",
 		"mail_sent": "Message d'activation envoyé",
 		"mail_error": "Erreur lors de l'envoi du message d'activation",
-		"unknown_user": "Utilisateur inconnu"
+		"unknown_user": "Utilisateur inconnu",
+		"forgot_password": "Pour modifier votre mot de passe, renseigner l'identifiant avec votre adresse courriel et laisser vide le mot de passe, puis cliquer sur connexion",
+		"create_account": "Pour créer un compte ou modifier votre mot de passe, renseigner l'identifiant avec votre adresse courriel et laisser vide le mot de passe, puis cliquer sur connexion"
 	},
 	"mail": {
 		"activate": "Activation du compte",

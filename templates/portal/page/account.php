@@ -14,4 +14,7 @@
 	<div>
 		<input type="submit" name="submit" value="<?php echo $locale->actions->$action ?>"/>
 	</div>
+<?php if ($action == 'connect') { ?>
+	<div><?php echo ACCOUNT_AUTO_CREATE ? $locale->messages->create_account : $locale->messages->forgot_password ; ?></div>
+<?php } ?>
 </form>

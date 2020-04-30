@@ -15,7 +15,9 @@
 		"auth_failed": "Authentication failed",
 		"mail_sent": "Activation mail sent",
 		"mail_error": "Failed to sent activation mail",
-		"unknown_user": "Unknown user"
+		"unknown_user": "Unknown user",
+		"forgot_password": "To change your password, complete login field with your email address and leave password field blank, then click connect button",
+		"create_account": "To create an account or change your password, complete login field with your email address and leave password field blank, then click connect button"
 	},
 	"mail": {
 		"activate": "Activate account",
