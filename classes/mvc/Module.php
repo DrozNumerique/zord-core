@@ -142,13 +142,14 @@ class Module {
         $this->addUpdatedModel('styles', $generated, $template, $sources, $models, $pattern, $key);
     }
     
-	public function forward($target = array()) {
+	public function forward($target = array(), $replay = false) {
 	    if (count($target) == 0) {
 	        $target = $this->controler->getDefaultTarget();
 	    }
 	    return [
 			'__forward__' => true,
-		    '__target__' => $target
+		    '__target__' => $target,
+	        '__replay__' => $replay
 	    ];
 	}
 	

@@ -63,7 +63,7 @@ class Portal extends Module {
                 $target['prefix'] = Zord::value('context', [$this->context,'url'])[$this->indexURL]['path'];
             }
         }
-        return $this->forward($target);
+        return $this->forward($target, true);
     }
     
     public function config() {

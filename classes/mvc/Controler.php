@@ -11,6 +11,7 @@ class Controler {
     protected $module = null;
     protected $action = null;
     protected $params = [];
+    protected $replay = false;
     
     public function getUser() {
         return $this->user;
@@ -40,6 +41,10 @@ class Controler {
         return $this->params;
     }
     
+    public function isReplay() {
+        return $this->replay;
+    }
+    
     public function dispatch() {
         $scheme = $_SERVER['REQUEST_SCHEME'];
         $host   = $_SERVER['HTTP_HOST'];
@@ -51,12 +56,13 @@ class Controler {
         $this->handle($this->getTarget($scheme.'://'.$host.$path));
     }
     
-    public function handle($target) {
+    public function handle($target, $replay = false) {
         if ($target) {
             $this->context  = $target['context'];
             $this->indexURL = $target['indexURL'];
             $this->baseURL  = $target['baseURL'];
             $this->params   = isset($target['params']) ? $target['params'] : [];
+            $this->replay   = $replay;
             if ($this->context && $this->baseURL) {
                 $class = Zord::getClassName($target['module']);
                 if (class_exists($class)) {
@@ -88,7 +94,7 @@ class Controler {
                         if ($this->isRedirect($result)) {
                             $this->redirect($result['__uri__']);
                         } else if ($this->isForward($result)) {
-                            $this->handle(array_merge($target, $result['__target__']));
+                            $this->handle(array_merge($target, $result['__target__']), $result['__replay__']);
                         } else if ($this->isError($result)) {
                             $this->error($result, $type);
                         } else {
