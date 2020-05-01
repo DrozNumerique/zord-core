@@ -787,6 +787,7 @@ class Zord {
 	
 	public static function sendMail($addresses, $subject, $body = null, $template = null, $models = [], $controler = null, $locale = null) {
 	    $mail = new PHPMailer();
+	    $mail->CharSet = 'UTF-8';
 	    $mail->SetFrom(WEBMASTER_MAIL_ADDRESS, WEBMASTER_MAIL_NAME);
 	    foreach ($addresses as $email => $name) {
 	       $mail->addAddress($email, $name);
