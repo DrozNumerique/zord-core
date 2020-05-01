@@ -794,6 +794,10 @@ class Zord {
 	    $mail->Subject = $subject;
 	    $html = isset($template) ? (new View($template, $models, $controler, $locale))->render() : null;
 	    $mail->isHTML(isset($html));
+	    if (is_callable($body)) {
+	        $body = isset($html) ? call_user_func($body, $html, $models, $controler, $locale): call_user_func($body, $models, $controler, $locale);
+	        Zord::log($body);
+	    }
 	    $body = $body ?? (isset($html) ? self::body($html) : '');
 	    $mail->Body = $html ?? $body;
 	    if (isset($html)) {
