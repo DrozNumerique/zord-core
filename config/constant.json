@@ -14,5 +14,9 @@
     "MAX_LOG_SIZE": 200000,
     "OPENSSL_PRIVATE_KEY": "~/.ssh/id_rsa",
     "OPENSSL_PUBLIC_KEY": "~/.ssh/id_rsa.pub.pem",
-    "ACCOUNT_AUTO_CREATE": false
+    "ACCOUNT_AUTO_CREATE": false,
+    "VIEW_MARK_BEGIN": "<!--#",
+    "VIEW_MARK_END": "#-->",
+    "MAIL_TEXT_BEGIN": "TEXT_BEGIN",
+    "MAIL_TEXT_END": "TEXT_END"
 }

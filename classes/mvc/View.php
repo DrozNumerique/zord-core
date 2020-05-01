@@ -58,6 +58,10 @@ class View {
         }
     }
     
+    public function mark($content) {
+        echo Zord::mark($content)."\n";
+    }
+    
     private function viewPlugin($template, $models, $point, $page = null) {
         $plugins = null;
         if (isset($page)) {

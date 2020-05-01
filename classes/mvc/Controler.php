@@ -271,6 +271,10 @@ class Controler {
         return $models;
     }
     
+    public function fullPath($path) {
+        return substr($path, 0, 4) == 'http' ? $path : $this->baseURL.$path;
+    }
+    
     protected function configure() {
         $this->module->configure();
     }

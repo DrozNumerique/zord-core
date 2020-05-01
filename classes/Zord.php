@@ -792,15 +792,44 @@ class Zord {
 	       $mail->addAddress($email, $name);
 	    }
 	    $mail->Subject = $subject;
-	    if (isset($template)) {
-	        $mail->isHTML(true);
-	        $mail->Body = (new View($template, $models, $controler, $locale))->render();
-	        $mail->AltBody = isset($body) ? $body : '';
-	    } else {
-	        $mail->isHTML(false);
-	        $mail->Body = isset($body) ? $body : '';;
+	    $html = isset($template) ? (new View($template, $models, $controler, $locale))->render() : null;
+	    $mail->isHTML(isset($html));
+	    $body = $body ?? (isset($html) ? self::body($html) : '');
+	    $mail->Body = $html ?? $body;
+	    if (isset($html)) {
+	        $mail->AltBody = $body;
 	    }
 	    return $mail->Send() === false ? $mail->ErrorInfo : true;
+	}
+	
+	public static function mark($content) {
+	    return VIEW_MARK_BEGIN.$content.VIEW_MARK_END;
+	}
+	
+	public static function body($html) {
+	    $text = '';
+	    $begin = false;
+	    $body = '';
+	    foreach(explode("\n", html_entity_decode($html)) as $line) {
+	        $line = trim($line);
+	        if ($line == self::mark(MAIL_TEXT_END)) {
+	            break;
+	        }
+	        if ($begin) {
+	            $body .= $line."\n";
+	        }
+	        if ($line == self::mark(MAIL_TEXT_BEGIN)) {
+	            $begin = true;
+	        }
+	    }
+	    foreach(explode("\n", strip_tags($body)) as $line) {
+	        $line = trim($line);
+	        if (!empty($line)) {
+	            $text .= $line."\n";
+	        }
+	    }
+	    Zord::log($text);
+	    return $text;
 	}
 	
     public static function urlencode($path) {
