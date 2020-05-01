@@ -828,7 +828,6 @@ class Zord {
 	            $text .= $line."\n";
 	        }
 	    }
-	    Zord::log($text);
 	    return $text;
 	}
 	
