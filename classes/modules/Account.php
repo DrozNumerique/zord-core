@@ -128,13 +128,17 @@ class Account extends Module {
     
     public function sendActivation($user, $code) {
         $url = $this->baseURL.'/profile?token='.$code;
-        $send = $this->sendMail(
-            [$user->email => $user->name],
-            $this->locale->mail->activate,
-            $this->locale->mail->copy_paste."\n".$url,
-            '/mail/activation',
-            ['url' => $url]
-        );
+        $send = $this->sendMail([
+            'recipients' => [
+                $user->email => $user->name
+            ],
+            'subject'    => $this->locale->mail->activate,
+            'text'       => $this->locale->mail->copy_paste."\n".$url,
+            'template'   => '/mail/activation',
+            'models'     => [
+                'url' => $url
+            ],
+        ]);
         $result = [
             'activation' => $url,
             'account'    => htmlspecialchars($user->name.' <'.$user->email.'>')

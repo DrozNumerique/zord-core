@@ -785,23 +785,33 @@ class Zord {
 	    return mb_substr($string, 0, $maxlength).(mb_strlen($string) > $maxlength ? "…" : '');
 	}
 	
-	public static function sendMail($addresses, $subject, $body = null, $template = null, $models = [], $controler = null, $locale = null) {
+	public static function sendMail($parameters) {
+	    $template  = $parameters['template']  ?? null;
+	    $models    = $parameters['models']    ?? null;
+	    $controler = $parameters['controler'] ?? null;
+	    $locale    = $parameters['locale']    ?? null;
+	    $post      = $parameters['post']      ?? null;
+	    $text      = $parameters['text']      ?? null;
+	    $html      = isset($template) ? (new View($template, $models, $controler, $locale))->render() : null;
+	    if (is_callable($post)) {
+	        $html = isset($html) ? call_user_func($post, $html, $models, $controler, $locale): call_user_func($post, $models, $controler, $locale);
+	    }
+	    if (is_callable($text)) {
+	        $text = isset($html) ? call_user_func($text, $html, $models, $controler, $locale): call_user_func($text, $models, $controler, $locale);
+	    }
+	    $text = $text ?? (isset($html) ? self::text($html) : '');
 	    $mail = new PHPMailer();
-	    $mail->CharSet = 'UTF-8';
-	    $mail->SetFrom(WEBMASTER_MAIL_ADDRESS, WEBMASTER_MAIL_NAME);
-	    foreach ($addresses as $email => $name) {
-	       $mail->addAddress($email, $name);
-	    }
-	    $mail->Subject = $subject;
-	    $html = isset($template) ? (new View($template, $models, $controler, $locale))->render() : null;
 	    $mail->IsHTML(isset($html));
-	    if (is_callable($body)) {
-	        $body = isset($html) ? call_user_func($body, $html, $models, $controler, $locale): call_user_func($body, $models, $controler, $locale);
+	    $mail->CharSet = 'UTF-8';
+	    $mail->Encoding = 'base64';
+	    $mail->SetFrom(WEBMASTER_MAIL_ADDRESS, WEBMASTER_MAIL_NAME);
+	    foreach ($parameters['recipients'] as $email => $name) {
+	        $mail->AddAddress($email, $name);
 	    }
-	    $body = $body ?? (isset($html) ? self::body($html) : '');
-	    $mail->Body = $html ?? $body;
+	    $mail->Subject = $parameters['subject'];
+	    $mail->Body = $html ?? $text;
 	    if (isset($html)) {
-	        $mail->AltBody = $body;
+	        $mail->AltBody = $text;
 	    }
 	    return $mail->Send() === false ? $mail->ErrorInfo : true;
 	}
@@ -810,14 +820,13 @@ class Zord {
 	    return VIEW_MARK_BEGIN.$content.VIEW_MARK_END;
 	}
 	
-	public static function body($html) {
-	    $text = '';
+	public static function text($html) {
 	    $begin = false;
 	    $body = '';
 	    foreach(explode("\n", html_entity_decode($html)) as $line) {
 	        $line = trim($line);
 	        if ($line == self::mark(MAIL_TEXT_END)) {
-	            break;
+	            $begin = false;
 	        }
 	        if ($begin) {
 	            $body .= $line."\n";
@@ -826,6 +835,7 @@ class Zord {
 	            $begin = true;
 	        }
 	    }
+	    $text = '';
 	    foreach(explode("\n", strip_tags($body)) as $line) {
 	        $line = trim($line);
 	        if (!empty($line)) {
