@@ -803,7 +803,7 @@ class Zord {
 	    $mail = new PHPMailer();
 	    $mail->IsHTML(isset($html));
 	    $mail->CharSet = 'UTF-8';
-	    $mail->Encoding = 'base64';
+	    //$mail->Encoding = 'base64';
 	    $mail->SetFrom(WEBMASTER_MAIL_ADDRESS, WEBMASTER_MAIL_NAME);
 	    foreach ($parameters['recipients'] as $email => $name) {
 	        $mail->AddAddress($email, $name);
