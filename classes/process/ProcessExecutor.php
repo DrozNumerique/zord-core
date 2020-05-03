@@ -15,7 +15,7 @@ abstract class ProcessExecutor {
         (new ProcessEntity())->create([
             'pid'    => $pid,
             'class'  => Zord::getClassName($class),
-            'user'   => $user->login,
+            'user'   => $user,
             'lang'   => $lang,
             'params' => Zord::json_encode($params)
         ]);
