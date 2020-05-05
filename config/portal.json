@@ -13,5 +13,13 @@
 			"true" : "fa-chain",
 			"false": "fa-chain-broken"
 		}
+	},
+	"user": {
+		"profile": [
+			"name",
+			"email",
+			"ips",
+			"password"
+		]
 	}
 }

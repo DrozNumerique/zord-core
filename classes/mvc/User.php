@@ -9,22 +9,24 @@ class User {
         'token'   => '__ZORD_TOKEN__'
     ];
     
-    public $login;
-    public $name;
-    public $email;
-    public $ips;
+    public $login = null;
+    public $name = null;
+    public $email = null;
+    public $ips = null;
+    public $password = null;
     public $session = null;
     public $roles = [];
     
     public function __construct($login = null, $session = null) {
         if ($login) {
-            $user = (new UserEntity())->retrieve($login);
-            if ($user) {
-                $this->login = $user->get('login');
-                $this->name = $user->get('name');
-                $this->email = $user->get('email');
-                $this->ips = $user->get('ips');
-                $this->session = $session;
+            $this->login = $login;
+            $entity = (new UserEntity())->retrieve($login);
+            if ($entity) {
+                $this->name     = $entity->name;
+                $this->email    = $entity->email;
+                $this->ips      = $entity->ips;
+                $this->password = $entity->password;
+                $this->session  = $session;
                 if (isset($session)) {
                     $_SESSION[self::$ZORD_SESSION] = $session;
                 } else if (isset($_SESSION[self::$ZORD_SESSION])) {
@@ -43,6 +45,23 @@ class User {
                         $this->roles[$context][$role]['start'] = $start;
                         $this->roles[$context][$role]['end'] = $end;
                     }
+                }
+            }
+            $entity = (new UserHasProfileEntity())->retrieve([
+                'where' => [
+                    'raw'        => 'user = ? AND date IN (SELECT MAX(date) FROM '.Zord::value('orm', ['UserHasProfileEntity','table']).' GROUP BY user)',
+                    'parameters' => [$this->login]
+                ]
+            ]);
+            $profile = [];
+            if ($entity !== false) {
+                $profile = Zord::objectToArray(json_decode($entity->profile));
+            } else {
+                $profile = $this->profile();
+            }
+            foreach (Zord::value('portal', ['user','profile']) as $property) {
+                if (isset($profile[$property])) {
+                    $this->$property = $profile[$property];
                 }
             }
         }
@@ -98,13 +117,17 @@ class User {
                 }
             }
         }
+        return self::get($login, $session);
+    }
+    
+    public static function get($login, $session = null) {
         $class = Zord::getClassName('User');
-        return new $class($login, $session);
+        $user = new $class($login, $session ?? self::crypt($login.microtime()));
+        return $user;
     }
     
     public static function bind($login) {
-        $class = Zord::getClassName('User');
-        $user = new $class($login, self::crypt($login.microtime()));
+        $user = self::get($login);
         (new UserHasSessionEntity())->create([
             'user' => $user->login,
             'session' => $user->session,
@@ -129,6 +152,23 @@ class User {
         } else {
             return false;
         }
+    }
+    
+    public function profile() {
+        $profile = [];
+        foreach (Zord::value('portal', ['user','profile']) as $property) {
+            if (isset($this->$property)) {
+                $profile[$property] = $this->$property;
+            }
+        }
+        return $profile;
+    }
+    
+    public function saveProfile() {
+        (new UserHasProfileEntity())->create([
+            'user'    => $this->login,
+            'profile' => $this->profile()
+        ]);
     }
     
     public function disconnect() {

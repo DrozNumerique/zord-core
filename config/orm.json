@@ -11,15 +11,29 @@
         ],
         "key": "login",
         "join": {
+        	"UserHasProfileEntity": ["login", "user"],
         	"UserHasAddressEntity": ["login", "user"],
         	"UserHasRoleEntity": ["login", "user"],
-        	"UserHasSessionEntity": ["login", "user"]
+        	"UserHasSessionEntity": ["login", "user"],
+        	"UserHasTokenEntity": ["login", "user"]
         },
         "elements": {
-        	"UserHasAddressEntity": ["adresses", "user"],
+        	"UserHasProfileEntity": ["profiles", "user"],
+        	"UserHasAddressEntity": ["addresses", "user"],
         	"UserHasRoleEntity": ["roles", "user"],
-        	"UserHasSessionEntity": ["sessions", "user"]
+        	"UserHasSessionEntity": ["sessions", "user"],
+        	"UserHasTokenEntity": ["tokens", "user"]
         }
+    },
+    "UserHasProfileEntity": {
+    	"table": "user_has_profile",
+    	"fields": [
+    		"id",
+    		"user",
+    		"date",
+    		"profile"
+    	],
+    	"key": "id"
     },
 	"UserHasAddressEntity": {
 		"table": "user_has_address",

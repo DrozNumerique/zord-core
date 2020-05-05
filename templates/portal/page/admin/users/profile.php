@@ -82,7 +82,7 @@
              				</div>
              				<div class="remove"><i class="fa fa-times fa-fw" title="<?php echo $locale->list->remove; ?>"></i></div>
          				</li>
-<?php foreach((new User($models['login']))->explodeIP() as $entry) { ?>
+<?php foreach($models['ips'] as $entry) { ?>
          				<li class="data">
              				<div class="column">
 <?php   $index = 0; ?>

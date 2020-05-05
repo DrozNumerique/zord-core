@@ -217,8 +217,10 @@ class Admin extends Module {
     
     private function dataProfile($login) {
         $result = [];
+        $user = new User($login);
         $result['login'] = $login;
-        $result['name'] = (new User($login))->name;
+        $result['name'] = $user->name;
+        $result['ips'] = $user->explodeIP();
         $result['roles'] = array_merge(Zord::getConfig('role'), ['*']);
         $result['context'] = array_merge(array_keys(Zord::getConfig('context')), ['*']);
         return $result;

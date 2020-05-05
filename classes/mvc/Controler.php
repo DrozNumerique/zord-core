@@ -272,7 +272,10 @@ class Controler {
     }
     
     public function fullPath($path) {
-        return substr($path, 0, 4) == 'http' ? $path : $this->baseURL.$path;
+        $urls = Zord::value('context', [$this->context,'url']);
+        $host = $urls[$this->indexURL]['host'];
+        $scheme = 'http'.($urls[$this->indexURL]['secure'] ?? false ? 's' : '');
+        return substr($path, 0, 4) == 'http' ? $path : $scheme.'://'.$host.$path;
     }
     
     protected function configure() {

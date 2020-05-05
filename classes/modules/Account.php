@@ -33,6 +33,8 @@ class Account extends Module {
                     (new UserEntity())->update(['where' => ['login' => $login]], $data);
                     if (!$this->user->isConnected() && $activated) {
                         $this->controler->setUser(User::bind($login));
+                    } else {
+                        $this->controler->setUser(User::get($login, $this->user->session));
                     }
                     $message = $this->locale->messages->profile_updated;
                 } else {
