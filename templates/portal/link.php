@@ -1,9 +1,5 @@
-<?php if (isset($models['portal']['meta']) && is_array($models['portal']['meta'])) { ?>
-	<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/" />
-	<link rel="unapi-server" type="application/xml" title="unAPI" href="/unapi"/>
-<?php } ?>
 <?php if (isset($skin->favicon)) {?>
-	<link rel="icon" type="image/x-icon" href="<?php echo $skin->favicon; ?>" />
+	<link rel="icon" type="<?php echo $skin->favicon->type; ?>" href="<?php echo $skin->favicon->href; ?>" />
 <?php } ?>
 <?php 
 if (isset($skin->styles)) {

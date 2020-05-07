@@ -1,5 +1,8 @@
 {
-	"favicon": "/img/favicon.ico",
+	"favicon": {
+		"type": "image/x-icon",
+		"href": "/img/favicon.ico"
+	},
 	"styles": {
 		"font-awesome": {
 			"media": "screen",
