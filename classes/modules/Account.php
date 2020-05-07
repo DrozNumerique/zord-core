@@ -139,7 +139,7 @@ class Account extends Module {
             'template'   => '/mail/activation',
             'models'     => [
                 'url' => $url
-            ],
+            ]
         ]);
         $result = [
             'activation' => $url,
