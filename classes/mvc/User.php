@@ -122,12 +122,12 @@ class User {
     
     public static function get($login, $session = null) {
         $class = Zord::getClassName('User');
-        $user = new $class($login, $session ?? self::crypt($login.microtime()));
+        $user = new $class($login, $session);
         return $user;
     }
     
     public static function bind($login) {
-        $user = self::get($login);
+        $user = self::get($login, self::crypt($login.microtime()));
         (new UserHasSessionEntity())->create([
             'user' => $user->login,
             'session' => $user->session,

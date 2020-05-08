@@ -205,8 +205,15 @@ class Controler {
                     if (isset($parameters) && is_array($parameters)) {
                         foreach($parameters as $name => $filter) {
                             if (count($target['path']) > 0) {
-                                $target['params'][$name] = filter_var(urldecode($target['path'][0]), constant($filter));
-                                array_shift($target['path']);
+                                $value = null;
+                                if ($filter == 'PATH') {
+                                    $value = implode(DS, array_map('urldecode', $target['path']));
+                                    $target['path'] = [];
+                                } else if (defined($filter)) {
+                                    $value = filter_var(urldecode($target['path'][0]), constant($filter));
+                                    array_shift($target['path']);
+                                }
+                                $target['params'][$name] = $value;
                             }
                         }
                     }
