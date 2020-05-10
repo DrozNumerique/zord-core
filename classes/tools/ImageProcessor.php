@@ -54,6 +54,9 @@ abstract class ImageProcessor {
     public function process($file, $folder) {
         $this->file = realpath($file);
         $this->folder = $folder;
+        if (!file_exists($folder)) {
+            mkdir($folder, 0777, true);
+        }
         $this->image = $this->load($file);
         list($this->width, $this->height) = getimagesize($this->file);
         $this->run();
