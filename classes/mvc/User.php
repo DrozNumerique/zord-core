@@ -99,7 +99,7 @@ class User {
             $login = $entity ? $entity->user : null;
         } else if (isset($token)) {
             $decrypted = null;
-            if (openssl_private_decrypt(base64_decode(str_replace(' ', '+', $token)), $decrypted, openssl_pkey_get_private(file_get_contents(realpath(str_replace('~', $_SERVER['HOME'], OPENSSL_PRIVATE_KEY)))))) {
+            if (openssl_private_decrypt(base64_decode(str_replace(' ', '+', $token)), $decrypted, openssl_pkey_get_private(file_get_contents(Zord::realpath(OPENSSL_PRIVATE_KEY))))) {
                 $token = (new UserHasTokenEntity())->retrieve($decrypted);
                 if ($token) {
                     $login = $token->user;

@@ -855,4 +855,8 @@ class Zord {
         $path = implode('/', $path);
         return $path;
     }
+    
+    public static function realPath($path) {
+        return realpath(str_replace('~', $_SERVER['HOME'], $path));
+    }
 }
