@@ -17,7 +17,7 @@ class User {
     public $session = null;
     public $roles = [];
     
-    public function __construct($login = null, $session = null) {
+    public function __construct($login = null, $session = null, $date = null) {
         if ($login) {
             $this->login = $login;
             $entity = (new UserEntity())->retrieve($login);
@@ -47,12 +47,29 @@ class User {
                     }
                 }
             }
-            $entity = (new UserHasProfileEntity())->retrieve([
-                'where' => [
-                    'raw'        => 'user = ? AND date IN (SELECT MAX(date) FROM '.Zord::value('orm', ['UserHasProfileEntity','table']).' GROUP BY user)',
-                    'parameters' => [$this->login]
-                ]
-            ]);
+            $entity = false;
+            if (!isset($date)) {
+                $entity = (new UserHasProfileEntity())->retrieve([
+                    'where' => [
+                        'raw'        => 'user = ? AND date IN (SELECT MAX(date) FROM '.Zord::value('orm', ['UserHasProfileEntity','table']).' GROUP BY user)',
+                        'parameters' => [$this->login]
+                    ]
+                ]);
+            } else {
+                $entities = (new UserHasProfileEntity())->retrieve([
+                    'many'  => true,
+                    'where' => ['user' => $this->login],
+                    'order' => ['desc' => 'date']
+                ]);
+                $previous = null;
+                foreach ($entities as $entity) {
+                    if (date_create($date) < date_create($entity->date)) {
+                        break;
+                    }
+                    $previous = $entity;
+                }
+                $entity = $previous ?? false;
+            }
             $profile = [];
             if ($entity !== false) {
                 $profile = Zord::objectToArray(json_decode($entity->profile));
@@ -120,10 +137,14 @@ class User {
         return self::get($login, $session);
     }
     
-    public static function get($login, $session = null) {
+    public static function get($login, $session = null, $date = null) {
         $class = Zord::getClassName('User');
-        $user = new $class($login, $session);
+        $user = new $class($login, $session, $date);
         return $user;
+    }
+    
+    public static function retrieve($login, $date) {
+        return self::get($login, null, $date);
     }
     
     public static function bind($login) {
