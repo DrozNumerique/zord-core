@@ -56,19 +56,25 @@ class User {
                     ]
                 ]);
             } else {
-                $entities = (new UserHasProfileEntity())->retrieve([
+                $iterator = (new UserHasProfileEntity())->retrieve([
                     'many'  => true,
-                    'where' => ['user' => $this->login],
+                    'where' => ['user' => 'arrive@free.fr'],
                     'order' => ['desc' => 'date']
-                ]);
-                $previous = null;
-                foreach ($entities as $entity) {
-                    if (date_create($date) < date_create($entity->date)) {
-                        break;
+                ])->getIterator();
+                $entity = false;
+                if ($iterator->count() > 0) {
+                    $previous = null;
+                    $date = date_create($date);
+                    while ($current = $iterator->current()) {
+                        if ($date > date_create($current->date) &&
+                            (!isset($previous) || $date < date_create($previous->date))) {
+                            break;
+                        }
+                        $previous = $current;
+                        $iterator->next();
                     }
-                    $previous = $entity;
+                    $entity = $current;
                 }
-                $entity = $previous ?? false;
             }
             $profile = [];
             if ($entity !== false) {
