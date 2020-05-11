@@ -12,7 +12,8 @@
 			"parameters": {
 				"login": "FILTER_DEFAULT",
 				"password": "FILTER_FLAG_NONE",
-				"lasthref": "FILTER_VALIDATE_URL"
+				"success": "FILTER_VALIDATE_URL",
+				"failure": "FILTER_VALIDATE_URL"
 			}
 		},
 		"disconnect": {

@@ -77,17 +77,18 @@ class Account extends Module {
         ]);
     }
     
-    public function connect($lasthref = null) {
+    public function connect($success = null, $failure = null) {
         $login    = isset($this->params['login'])    ? trim($this->params['login'])    : '';
         $password = isset($this->params['password']) ? trim($this->params['password']) : null;
-        $lasthref = isset($this->params['lasthref']) ? $this->params['lasthref']       : $lasthref;
+        $success = isset($this->params['success'])   ? $this->params['success']        : $success;
+        $failure = isset($this->params['failure'])   ? $this->params['failure']        : $failure;
         $message = null;
         if (!empty($login)) {
             if (!empty($password)) {
                 $user = User::authenticate($login, $password);
                 if ($user) {
                     $this->controler->setUser($user);
-                    return $this->redirect($lasthref ?? $this->baseURL, true);
+                    return $this->redirect($success ?? $this->baseURL, true);
                 } else {
                     $message = $this->locale->messages->auth_failed;
                 }
@@ -115,11 +116,15 @@ class Account extends Module {
                     $message = $this->locale->messages->unknown_user;
                 }
             }
-        } 
+        }
+        if (isset($failure)) {
+            return $this->redirect($failure.(isset($message) ? '?message='.$message : ''));
+        }
         return $this->page('account', [
-            'action'   => 'connect',
-            'lasthref' => $lasthref,
-            'message'  => $message
+            'action'  => 'connect',
+            'success' => $success,
+            'failure' => $failure,
+            'message' => $message
         ]);
     }
     

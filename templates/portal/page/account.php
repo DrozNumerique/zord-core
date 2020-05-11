@@ -2,8 +2,11 @@
 <form class="account" method="post" action="<?php echo $baseURL; ?>">
 	<input type="hidden" name="module" value="Account"/>
 	<input type="hidden" name="action" value="<?php echo $action; ?>"/>
-<?php if (isset($models['lasthref']) && $models['lasthref']) { ?>
-	<input type="hidden" name="lasthref" value="<?php echo $models['lasthref'] ?>"/>
+<?php if (isset($models['success']) && $models['success']) { ?>
+	<input type="hidden" name="success" value="<?php echo $models['success'] ?>"/>
+<?php } ?>
+<?php if (isset($models['failure']) && $models['failure']) { ?>
+	<input type="hidden" name="failure" value="<?php echo $models['failure'] ?>"/>
 <?php } ?>
 <?php if (isset($models['message']) && $models['message']) { ?>
 <?php   foreach (explode('|', $models['message']) as $message) { ?>	
