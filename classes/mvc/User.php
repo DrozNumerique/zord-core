@@ -58,7 +58,7 @@ class User {
             } else {
                 $iterator = (new UserHasProfileEntity())->retrieve([
                     'many'  => true,
-                    'where' => ['user' => 'arrive@free.fr'],
+                    'where' => ['user' => $login],
                     'order' => ['desc' => 'date']
                 ])->getIterator();
                 $entity = false;
