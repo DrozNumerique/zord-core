@@ -37,6 +37,8 @@ class View {
         $page    = isset($models['page']) ? $models['page'] : null;
         if ($this->controler) {
             $controler = $this->controler;
+            $host      = $this->controler->getHost();
+            $scheme    = $this->controler->getScheme();
             $baseURL   = $this->controler->getBaseURL();
             $user      = $this->controler->getUser();
             if ($context !== 'unknown') {

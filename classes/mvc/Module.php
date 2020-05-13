@@ -171,7 +171,7 @@ class Module {
 	}
 	
 	public function page($page = null, $models = array()) {
-	    $page = $page != null ? $page : $this->params['page'];
+	    $page = $this->either($page, 'page');
 	    $template = '/portal/page/'.$page;
 	    $this->response = 'VIEW';
 	    if (Zord::template($template, $this->context, $this->lang)) {

@@ -4,6 +4,8 @@ class Controler {
     
     protected $user = null;
     protected $context = null;
+    protected $host = null;
+    protected $scheme = null;
     protected $indexURL = 0;
     protected $baseURL = null;
     protected $lang = null;
@@ -19,6 +21,14 @@ class Controler {
     
     public function setUser($user) {
         $this->user = $user;
+    }
+    
+    public function getHost() {
+        return $this->host;
+    }
+    
+    public function getScheme() {
+        return $this->scheme;
     }
     
     public function getContext() {
@@ -58,6 +68,8 @@ class Controler {
     
     public function handle($target, $replay = false) {
         if ($target) {
+            $this->host     = $target['host'];
+            $this->scheme   = $target['scheme'];
             $this->context  = $target['context'];
             $this->indexURL = $target['indexURL'];
             $this->baseURL  = $target['baseURL'];
@@ -135,6 +147,8 @@ class Controler {
                 foreach ($params['url'] as $index => $config) {
                     if ($this->contextMatches($host, $path, $config)) {
                         $target = [
+                            'host'     => $host,
+                            'scheme'   => ($config['secure'] ?? false) ? 'https' : 'http',
                             'context'  => $context,
                             'indexURL' => $index,
                             'prefix'   => $config['path']
@@ -163,6 +177,7 @@ class Controler {
                 die();
             }
             $target['url'] = $url;
+            $target['host'] = $host;
             $target['scheme'] = $scheme;
             $target['baseURL'] = $scheme.'://'.$host.($target['prefix'] == '/' ? '' : $target['prefix']);
             $target['method'] = $_SERVER["REQUEST_METHOD"];
@@ -236,6 +251,7 @@ class Controler {
     public function getDefaultTarget($target = null) {
         if (!isset($target)) {
             $target = array(
+                'host'     => $this->host,
                 'context'  => $this->context,
                 'indexURL' => $this->indexURL,
                 'baseURL'  => $this->baseURL
