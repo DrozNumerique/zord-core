@@ -282,7 +282,7 @@ class Zord {
 	    if (!is_string($msg)) {
 	        $msg = var_export($msg, true);
 	    }
-	    $content .= DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->format(LOG_DATE_FORMAT).' ';
+	    $content .= DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimezone(new DateTimeZone(DEFAULT_TIMEZONE))->format(LOG_DATE_FORMAT).' ';
 	    $backtrace = debug_backtrace(false);
 	    if (isset($backtrace[0]['file']) && isset($backtrace[0]['line'])) {
 	        $content .= $backtrace[0]['file'].':'.$backtrace[0]['line'].' ';

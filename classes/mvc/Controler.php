@@ -98,10 +98,9 @@ class Controler {
                         } else if (null !== Zord::value('target', [$target['module'], 'response'])) {
                             $type = Zord::value('target', [$target['module'], 'response']);
                         }
-                        if (null !== $this->module->getResponse($this->action)) {
-                            $type = $this->module->getResponse($this->action);
-                        }
-                        $type = strtoupper($type !== null ? $type : 'VIEW');
+                        $response = $this->module->getResponse($this->action);
+                        $type = $response ?? $type;
+                        $type = strtoupper($type ?? 'VIEW');
                         $target['type'] = $type;
                         if ($this->isRedirect($result)) {
                             $this->redirect($result['__uri__']);
