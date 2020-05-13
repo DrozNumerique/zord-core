@@ -137,7 +137,12 @@ class Account extends Module {
         $url = $this->baseURL.'/profile?token='.$code;
         $send = $this->sendMail([
             'recipients' => [
-                $user->email => $user->name
+                'to' => [
+                    $user->email => $user->name
+                ],
+                'bcc' => [
+                    WEBMASTER_MAIL_ADDRESS => WEBMASTER_MAIL_NAME
+                ]
             ],
             'subject'    => $this->locale->mail->activate,
             'text'       => $this->locale->mail->copy_paste."\n".$url,

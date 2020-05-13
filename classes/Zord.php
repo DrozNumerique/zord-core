@@ -805,8 +805,26 @@ class Zord {
 	    $mail->CharSet = 'UTF-8';
 	    //$mail->Encoding = 'base64';
 	    $mail->SetFrom(WEBMASTER_MAIL_ADDRESS, WEBMASTER_MAIL_NAME);
-	    foreach ($parameters['recipients'] as $email => $name) {
-	        $mail->AddAddress($email, $name);
+	    foreach ($parameters['recipients'] as $kind => $recipients) {
+	        foreach ($recipients as $email => $name) {
+	            switch ($kind) {
+	                case 'to': {
+	                    $mail->AddAddress($email, $name);
+	                    break;
+	                }
+	                case 'cc': {
+	                    $mail->AddCC($email, $name);
+	                    break;
+	                }
+	                case 'bcc': {
+	                    $mail->AddBCC($email, $name);
+	                    break;
+	                }
+	            }
+	        }
+	    }
+	    if (isset($parameters['reply'])) {
+	        $mail->AddReplyTo($parameters['reply']['email'], $parameters['reply']['name'] ?? '');
 	    }
 	    $mail->Subject = $parameters['subject'];
 	    $mail->Body = $html ?? $text;
