@@ -15,13 +15,13 @@ class Module {
     protected $type = null;
     
     public function __construct($controler) {
-        foreach (Zord::getConfig('extend') as $type => $class) {
-            if ($class == strtolower(get_class($this))) {
-                $this->type = $type;
+        $class = null;
+        foreach (Zord::getConfig('extend') as $class => $extend) {
+            if ($extend == get_class($this)) {
                 break;
             }
         }
-        $this->type = $this->type ?? strtolower(get_class($this));
+        $this->type = strtolower($class ?? get_class($this));
         $this->controler = $controler;
         if ($controler) {
             $this->context  = $controler->getContext();
