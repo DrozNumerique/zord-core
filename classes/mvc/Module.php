@@ -12,8 +12,16 @@ class Module {
     protected $locale = null;
     protected $models = [];
     protected $response = null;
+    protected $type = null;
     
     public function __construct($controler) {
+        foreach (Zord::getConfig('extend') as $type => $class) {
+            if ($class == strtolower(get_class($this))) {
+                $this->type = $type;
+                break;
+            }
+        }
+        $this->type = $this->type ?? strtolower(get_class($this));
         $this->controler = $controler;
         if ($controler) {
             $this->context  = $controler->getContext();
@@ -23,7 +31,7 @@ class Module {
             $this->user     = $controler->getUser();
             $this->lang     = $controler->getLang();
         }
-        $this->locale = Zord::getLocale(strtolower(get_class($this)), $this->lang);
+        $this->locale = Zord::getLocale($this->type, $this->lang);
     }
     
     public function getControler() {
