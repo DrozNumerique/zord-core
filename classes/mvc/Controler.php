@@ -251,6 +251,7 @@ class Controler {
         if (!isset($target)) {
             $target = array(
                 'host'     => $this->host,
+                'scheme'   => $this->scheme,
                 'context'  => $this->context,
                 'indexURL' => $this->indexURL,
                 'baseURL'  => $this->baseURL
