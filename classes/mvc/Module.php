@@ -190,7 +190,7 @@ class Module {
 	    }
 	}
 	
-	public function send($path, $role) {
+	public function send($path, $role = null) {
 	    $file = $this->file($path, $role);
 	    if ($file['code'] == 200) {
 	        $contentType = Zord::value('content', strtolower(pathinfo($file['name'], PATHINFO_EXTENSION)));

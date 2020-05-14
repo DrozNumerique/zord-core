@@ -214,7 +214,7 @@ class User {
     }
     
     public function hasRole($role, $context, $wild = true) {
-        if (!$role) {
+        if (!isset($role)) {
             return true;
         }
         $period = null;
