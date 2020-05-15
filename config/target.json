@@ -87,7 +87,7 @@
 		"response": "VIEW",
 		"auth": {
 			"role": "admin",
-			"alt": "connection"
+			"alt": "connect"
 		},
 		"index": {
 			"shortcut": "admin",

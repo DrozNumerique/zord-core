@@ -7,6 +7,6 @@
 <?php if ($user->isConnected()) { ?>
 <a href="/disconnect">Disconnect</a><br>
 <?php } else { ?>
-<a href="/connection">Connection</a><br>
+<a href="/connect">Connection</a><br>
 <?php } ?>
 <?php echo $locale->zord; ?>
