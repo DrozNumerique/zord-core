@@ -7,7 +7,7 @@
 	},
 	"actions": {
 		"connect": "Connect",
-		"profile" : "Update"
+		"identity" : "Update"
 	},
 	"messages": {
 		"profile_updated": "Profile updated",

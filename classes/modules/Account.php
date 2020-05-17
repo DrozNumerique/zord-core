@@ -2,9 +2,9 @@
 
 class Account extends Module {
     
-    private static $FAKE_PASSWORD = '************'; 
+    public static $FAKE_PASSWORD = '************'; 
     
-    public function profile() {
+    public function identity() {
         $update   = isset($this->params['update'])   ? $this->params['update'] === 'true' : false;
         $token    = isset($this->params['token'])    ? trim($this->params['token'])       : null;
         $name     = isset($this->params['name'])     ? trim($this->params['name'])        : null;
@@ -69,7 +69,7 @@ class Account extends Module {
             }
         }
         return $this->page('account', [
-            'action'   => 'profile',
+            'action'   => 'identity',
             'name'     => $name,
             'password' => $password,
             'message'  => $message,
@@ -134,7 +134,7 @@ class Account extends Module {
     }
     
     public function sendActivation($user, $code) {
-        $url = $this->baseURL.'/profile?token='.$code;
+        $url = $this->baseURL.'/identity?token='.$code;
         $send = $this->sendMail([
             'recipients' => [
                 'to' => [

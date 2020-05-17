@@ -1,8 +1,8 @@
 {
 	"Account": {
 		"response": "VIEW",
-		"profile": {
-			"shortcut": "profile",
+		"identity": {
+			"shortcut": "identity",
 			"parameters": {
 				"token": "FILTER_SANITIZE_STRING"
 			}
