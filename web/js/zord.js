@@ -5,6 +5,7 @@ function invokeZord(params) {
 	}
 
 	var callback = params.callback == undefined ? null : params.callback;
+	var failure  = params.failure  == undefined ? null : params.failure;
 	var target = BASEURL['zord'] + '/index.php';
 	
 	var query = ['xhr=true'];
@@ -17,9 +18,8 @@ function invokeZord(params) {
 	
 	request.onreadystatechange = function() {
 		if (this.readyState === XMLHttpRequest.DONE) {
+			type = this.getResponseHeader("Content-Type");
 			if (this.status === 200) {
-				type = this.getResponseHeader("Content-Type");
-				description = this.getResponseHeader("Content-Description");
 				if (type.startsWith('application/json')) {
 					if (callback !== null) {
 						callback(JSON.parse(this.responseText));
@@ -43,6 +43,17 @@ function invokeZord(params) {
 				}
 				if (params.after !== undefined) {
 					params.after();
+				}
+			} else if (this.status >= 400) {
+				if (type.startsWith('application/json')) {
+					var error = JSON.parse(this.responseText);
+					if (failure != null) {
+						failure(error);
+					} else if (error.message !== undefined) {
+						alert(error.message);
+					} else {
+						alert(error.code + ' ' + error.reason);
+					}
 				}
 			}
 		}
