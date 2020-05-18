@@ -411,6 +411,9 @@ class Controler {
 	    $status = $this->status($result['__code__']);
 	    switch ($type) {
 	        case 'DATA': {
+	            if (isset($result['__message__'])) {
+	                $status['message'] = $result['__message__'];
+	            }
 	            $this->output($status, $type, $result['__code__']);
 	            break;
 	        }
