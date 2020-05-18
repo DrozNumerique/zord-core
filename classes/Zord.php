@@ -769,10 +769,16 @@ class Zord {
 	    return $separator ? str_replace([' ',"\u{00a0}",'"',"'",',',';','.','-','(',')','[',']',':','/','!','?','+','=','*','#','«','»','„','“','”','‚','‘','’','<','>','‹','›','`','…'], '', $string) : $string;
 	}
 	
-	public static function sort(&$array) {
-	    uasort($array, function($first, $second) {
-	        return self::collapse($first) <=> self::collapse($second);
-	    });
+	public static function sort(&$array, $values = true) {
+	    if ($values) {
+    	    uasort($array, function($first, $second) {
+    	        return self::collapse($first) <=> self::collapse($second);
+    	    });
+	    } else {
+	        uksort($array, function($first, $second) {
+	            return self::collapse($first) <=> self::collapse($second);
+	        });
+	    }
 	}
 	
 	public static function html($text, $config = []) {
