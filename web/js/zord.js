@@ -35,8 +35,10 @@ function invokeZord(params) {
 					var error = JSON.parse(this.responseText);
 					if (success != null) {
 						success(error);
-					} else {
+					} else if (error.message !== undefined) {
 						alert(error.message);
+					} else {
+						alert(error.code + ' ' + error.reason);
 					}
 				} else {
 					document.body.insertAdjacentHTML('beforeend', "<iframe src='/Portal/download' style='display: none;'></iframe>");
