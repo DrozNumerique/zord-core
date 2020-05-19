@@ -130,7 +130,7 @@ abstract class Entity
                         if ($value == '__NULL__' || !isset($value)) {
                             $this->engine()->where_null($key);
                         } else if ($value == '__NOT_NULL__') {
-                            $this->engine()->where__not_null($key);
+                            $this->engine()->where_not_null($key);
                         } else {
                             $this->engine()->where($key, $value);
                         }
