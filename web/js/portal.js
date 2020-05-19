@@ -170,7 +170,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 			module: 'Portal',
 			action: 'config',
 			async:  false,
-			callback: function(config) {
+			success: function(config) {
 				PORTAL = config;
 				setSessionProperty('portal.config', PORTAL);
 			}

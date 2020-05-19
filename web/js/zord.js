@@ -4,7 +4,7 @@ function invokeZord(params) {
 		params.before();
 	}
 
-	var callback = params.callback == undefined ? null : params.callback;
+	var success = params.success == undefined ? null : params.success;
 	var failure  = params.failure  == undefined ? null : params.failure;
 	var target = BASEURL['zord'] + '/index.php';
 	
@@ -21,20 +21,20 @@ function invokeZord(params) {
 			type = this.getResponseHeader("Content-Type");
 			if (this.status === 200) {
 				if (type.startsWith('application/json')) {
-					if (callback !== null) {
-						callback(JSON.parse(this.responseText));
+					if (success !== null) {
+						success(JSON.parse(this.responseText));
 					}
 				} else if (type.startsWith('text/html')) {
-					if (callback !== null) {
-						callback(this.responseText);
+					if (success !== null) {
+						success(this.responseText);
 					} else {
 						document.write(this.responseText);
 						document.close();
 					}
 				} else if (type.startsWith('application/error')) {
 					var error = JSON.parse(this.responseText);
-					if (callback != null) {
-						callback(error);
+					if (success != null) {
+						success(error);
 					} else {
 						alert(error.message);
 					}
@@ -100,7 +100,7 @@ function checkProcess(pid, offset, callback) {
 			action:'status',
 			pid:pid,
 			offset:offset,
-			callback:function(result) {
+			success:function(result) {
 				if (callback !== undefined) {
 					callback(result);
 				}
@@ -115,7 +115,7 @@ function killProcess(pid, callback) {
 			module:'Process',
 			action:'kill',
 			pid:pid,
-			callback:function(result) {
+			success:function(result) {
 				if (callback !== undefined) {
 					callback(result);
 				}
