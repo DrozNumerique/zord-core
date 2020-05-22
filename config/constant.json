@@ -18,5 +18,7 @@
     "VIEW_MARK_BEGIN": "<!--#",
     "VIEW_MARK_END": "#-->",
     "MAIL_TEXT_BEGIN": "TEXT_BEGIN",
-    "MAIL_TEXT_END": "TEXT_END"
+    "MAIL_TEXT_END": "TEXT_END",
+    "MAIL_TRACE": true,
+    "MAIL_FOLDER": "mails"
 }

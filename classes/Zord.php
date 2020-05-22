@@ -792,6 +792,7 @@ class Zord {
 	}
 	
 	public static function sendMail($parameters) {
+	    $id        = $parameters['id']        ?? null;
 	    $template  = $parameters['template']  ?? null;
 	    $models    = $parameters['models']    ?? null;
 	    $controler = $parameters['controler'] ?? null;
@@ -806,6 +807,7 @@ class Zord {
 	        $text = isset($html) ? call_user_func($text, $html, $models, $controler, $locale): call_user_func($text, $models, $controler, $locale);
 	    }
 	    $text = $text ?? (isset($html) ? self::text($html) : '');
+	    $body = $html ?? $text;
 	    $mail = new PHPMailer();
 	    $mail->IsHTML(isset($html));
 	    $mail->CharSet = 'UTF-8';
@@ -833,9 +835,12 @@ class Zord {
 	        $mail->AddReplyTo($parameters['reply']['email'], $parameters['reply']['name'] ?? '');
 	    }
 	    $mail->Subject = $parameters['subject'];
-	    $mail->Body = $html ?? $text;
+	    $mail->Body = $body;
 	    if (isset($html)) {
 	        $mail->AltBody = $text;
+	    }
+	    if (MAIL_TRACE && isset($id)) {
+	       file_put_contents(self::liveFolder(MAIL_FOLDER).$id.'.'.(isset($html) ? 'html' : 'txt'), $body);
 	    }
 	    return $mail->Send() === false ? $mail->ErrorInfo : true;
 	}
