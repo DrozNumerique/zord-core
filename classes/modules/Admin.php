@@ -21,7 +21,7 @@ class Admin extends Module {
             $current = $_SESSION['__ZORD__']['__ADMIN__']['__CURRENT__'];
         }
         if (!isset($models) && isset($_SESSION['__ZORD__']['__ADMIN__']['__MODELS__'])) {
-            $models = $_SESSION['__ZORD__']['__ADMIN__']['__MODELS__'];
+            $models = $this->updateModels($_SESSION['__ZORD__']['__ADMIN__']['__MODELS__']);
         }
         if (isset($models['current'])) {
             $current = $models['current'];
@@ -213,6 +213,10 @@ class Admin extends Module {
             $result['urls'] = $urls;
         }
         return $this->index('context', $result);
+    }
+    
+    protected function updateModels($models) {
+        return $models;
     }
     
     protected function dataProfile($login) {
