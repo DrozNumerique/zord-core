@@ -215,9 +215,9 @@ class Admin extends Module {
         return $this->index('context', $result);
     }
     
-    private function dataProfile($login) {
+    protected function dataProfile($login) {
         $result = [];
-        $user = new User($login);
+        $user = User::get($login);
         $result['login'] = $login;
         $result['name'] = $user->name;
         $result['ips'] = $user->explodeIP();
@@ -226,7 +226,7 @@ class Admin extends Module {
         return $result;
     }
     
-    private function dataURLs($name) {
+    protected function dataURLs($name) {
         $result = [];
         $result['ctx'] = $name;
         $result['urls'] = Zord::value('context', [$name,'url']);
