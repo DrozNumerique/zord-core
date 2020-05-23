@@ -457,14 +457,28 @@ class Zord {
 	}
 	
 	public static function substitute($raw, $values, $base = '') {
-	    foreach($values as $key => $value) {
-	        if (is_array($value)) {
-	            $raw = self::substitute($raw, $value, $base.$key.'.');
-	        } else if (is_scalar($value)) {
-	            $raw = str_replace('${'.$base.$key.'}', $value, $raw);
+	    if (is_array($values)) {
+    	    foreach($values as $key => $value) {
+    	        if (is_array($value)) {
+    	            $raw = self::substitute($raw, $value, $base.$key.'.');
+    	        } else if (is_scalar($value)) {
+    	            $raw = str_replace('${'.$base.$key.'}', $value, $raw);
+    	        }
+    	    }
+	    } else if (is_object($values)) {
+	        foreach(get_object_vars($values) as $key => $value) {
+	            if (is_object($value)) {
+	                $raw = self::substitute($raw, $value, $base.$key.'.');
+	            } else if (is_scalar($value)) {
+	                $raw = str_replace('$['.$base.$key.']', $value, $raw);
+	            }
 	        }
 	    }
 	    return $raw;
+	}
+	
+	public static function resolve($raw, $models, $locale) {
+	    return self::substitute(self::substitute($raw, $models), $locale);
 	}
 	
 	public static function execute($strategy, $command, $params = []) {
@@ -840,7 +854,10 @@ class Zord {
 	        $mail->AltBody = $text;
 	    }
 	    if (MAIL_TRACE && isset($id)) {
-	       file_put_contents(self::liveFolder(MAIL_FOLDER).$id.'.'.(isset($html) ? 'html' : 'txt'), $body);
+	        $base = self::liveFolder(MAIL_FOLDER).$id.DS;
+	        mkdir($base);
+	        file_put_contents($base.'body.'.(isset($html) ? 'html' : 'txt'), $body);
+	        file_put_contents($base.'subject.txt', $parameters['subject']);
 	    }
 	    return $mail->Send() === false ? $mail->ErrorInfo : true;
 	}

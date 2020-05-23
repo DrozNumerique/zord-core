@@ -17,7 +17,7 @@ class View {
             $this->context = $this->controler->getContext();
             $this->lang    = $this->controler->getLang();
         }
-        array_push($this->locales, $locale ? $locale : $this->getLocale($template));
+        array_push($this->locales, $locale ?? $this->getLocale($template));
     }
     
     public function render($template = null, $models = null, $locale = null) {
@@ -29,8 +29,8 @@ class View {
         if ($models == null) {
             $models = $this->models;
         }
-        array_push($this->locales, $locale ? $locale : $this->getLocale($template));
-        $locale  = $locale ? $locale : end($this->locales);
+        array_push($this->locales, $locale ?? $this->getLocale($template));
+        $locale  = $locale ?? end($this->locales);
         $context = $this->context;
         $lang    = $this->lang;
         $locale  = is_string($locale) ? Zord::getLocale($locale, $this->lang) : $locale;
@@ -63,6 +63,13 @@ class View {
         if ($template == $this->template) {
             return ob_get_clean();
         }
+    }
+    
+    public function value($raw, $models = null, $locale = null) {
+        $models = $models ?? $this->models;
+        $locale = $locale ?? end($this->locales);
+        $locale = is_string($locale) ? Zord::getLocale($locale, $this->lang) : $locale;
+        return Zord::resolve($raw, $models, $locale);
     }
     
     public function mark($content) {
