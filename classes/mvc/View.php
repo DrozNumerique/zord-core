@@ -46,6 +46,11 @@ class View {
                 $skin   = Zord::getSkin($context);
             }
         }
+        if (isset($models['view'])) {
+            foreach ($models['view'] as $name => $value) {
+                $$name = $value;
+            }
+        }
         $this->viewPlugin($template, $models, 'before', $page);
         if (!$this->viewPlugin($template, $models, 'instead', $page)) {
             $file = Zord::template($template, $context, $lang);
@@ -77,8 +82,12 @@ class View {
                 $plugins = [$plugins];
             }
             foreach($plugins as $plugin) {
-                if ($plugin != 'none') {
-                    $this->render($plugin, $models);
+                if ($plugin !== 'none') {
+                    $locale = null;
+                    if (strpos($plugin, ':') > 0) {
+                        list($plugin, $locale) = explode(':', $plugin);
+                    }
+                    $this->render($plugin, $models, $locale);
                 }
             }
             return true;

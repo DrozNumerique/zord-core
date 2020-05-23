@@ -1,6 +1,7 @@
 {
 	"PASSWORD_ALGO": "SHA256",
     "DEFAULT_LANG": "fr-FR",
+    "DEFAULT_CURRENCY": "EUR",
     "DEFAULT_TITLE": "ꓜꓳꓤꓷ",
     "DEFAULT_TIMEZONE": "Europe/Paris",
     "LOG_DATE_FORMAT": "[d/m/Y H:i:s.u]",

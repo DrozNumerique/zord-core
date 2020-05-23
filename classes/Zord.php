@@ -888,4 +888,21 @@ class Zord {
     public static function realPath($path) {
         return realpath(str_replace('~', $_SERVER['HOME'], $path));
     }
+    
+    public static function price($amount, $lang = DEFAULT_LANG, $currency = DEFAULT_CURRENCY) {
+        $locale = str_replace('-', '_', $lang);
+        $format = numfmt_create($locale, NumberFormatter::CURRENCY);
+        return numfmt_format_currency($format, $amount, $currency);
+    }
+    
+    public static function date($date, $lang = DEFAULT_LANG, $format = null) {
+        $locale = str_replace('-', '_', $lang);
+        $date = date_create($date);
+        return datefmt_format_object($date, $format, $locale);
+    }
+    
+    public static function country($code, $lang = DEFAULT_LANG) {
+        $locale = self::getLocale('country', $lang);
+        return isset($locale->$code) ? $locale->$code : null;
+    }
 }
