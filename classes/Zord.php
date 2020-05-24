@@ -14,7 +14,7 @@ class Zord {
 	    define('LOGS_FOLDER', self::liveFolder('logs'));
 	    define('BUILD_FOLDER', self::liveFolder('build'));
 	    foreach (array_reverse(COMPONENT_FOLDERS) as $folder) {
-	        $constants = Zord::arrayFromJSONFile($folder.'config'.DS.'constant.json');
+	        $constants = self::arrayFromJSONFile($folder.'config'.DS.'constant.json');
 	        foreach($constants as $name => $value) {
 	            if (!defined($name)) {
 	                define($name, $value);
@@ -27,17 +27,17 @@ class Zord {
 	    if (isset($_SERVER['SERVER_ADDR'])) {
 	        session_start();
 	    }
-	    spl_autoload_register([new Zord(), 'autoload']);
+	    spl_autoload_register([new self(), 'autoload']);
 	}
 	
 	public function autoload($className, $rebuild = true) {
-	    $classesFile = Zord::liveFolder('config').'classes.json';
+	    $classesFile = self::liveFolder('config').'classes.json';
 	    if (count($this->classMap) === 0) {
-	        $this->classMap = Zord::arrayFromJSONFile($classesFile);
+	        $this->classMap = self::arrayFromJSONFile($classesFile);
 	    }
 	    if (isset($this->classMap[$className])) {
 	        $classFile = $this->classMap[$className];
-	        if (file_exists($classFile) && !Zord::needsUpdate($classesFile, $classFile)) {
+	        if (file_exists($classFile) && !self::needsUpdate($classesFile, $classFile)) {
 	            require_once ($classFile);
 	            return true;
 	        }
@@ -83,7 +83,7 @@ class Zord {
 	
 	public static function saveConfig($name, $config) {
 	    if (is_array($config)) {
-	        file_put_contents(Zord::liveFolder('config').$name.'.json', self::json_encode($config));
+	        file_put_contents(self::liveFolder('config').$name.'.json', self::json_encode($config));
 	        self::$config[$name] = $config;
 	    }
 	}
@@ -239,13 +239,13 @@ class Zord {
 	
 	public static function addRecursive($zip, $path, $sub = null, $excludes = ['php']) {
 	    $entries = [];
-	    foreach (Zord::listRecursive($path) as $relative => $absolute) {
+	    foreach (self::listRecursive($path) as $relative => $absolute) {
    	        if (!empty($sub)) $relative = $sub.'/'.$relative;
    	        if (is_dir($absolute)) {
    	            $zip->addEmptyDir($relative);
    	        } else {
    	            $extension = strtolower(pathinfo($absolute, PATHINFO_EXTENSION));
-   	            if (!in_array($extension, $excludes) && !empty(Zord::value('content', $extension))) {
+   	            if (!in_array($extension, $excludes) && !empty(self::value('content', $extension))) {
    	                $zip->addFile($absolute, $relative);
    	                $entries[] = $relative;
    	            }
@@ -394,7 +394,7 @@ class Zord {
 	}
 	
 	public static function getContextURL($name, $index = 0, $target = '', $lang = null, $session = null) {
-	    $urls = Zord::value('context', [$name,'url']);
+	    $urls = self::value('context', [$name,'url']);
 	    $url = null;
 	    if (is_array($urls) && $index < count($urls)) {
 	        $host = $urls[$index]['host'];
@@ -482,7 +482,7 @@ class Zord {
 	}
 	
 	public static function execute($strategy, $command, $params = []) {
-	    $command = Zord::substitute($command, $params);
+	    $command = self::substitute($command, $params);
 	    $result = null;
 	    switch ($strategy) {
 	        case 'proc_open': {
@@ -806,7 +806,7 @@ class Zord {
 	}
 	
 	public static function sendMail($parameters) {
-	    $id        = $parameters['id']        ?? null;
+	    $category  = $parameters['category']  ?? null;
 	    $template  = $parameters['template']  ?? null;
 	    $models    = $parameters['models']    ?? null;
 	    $controler = $parameters['controler'] ?? null;
@@ -853,11 +853,12 @@ class Zord {
 	    if (isset($html)) {
 	        $mail->AltBody = $text;
 	    }
-	    if (MAIL_TRACE && isset($id)) {
-	        $base = self::liveFolder(MAIL_FOLDER).$id.DS;
+	    if (MAIL_TRACE && isset($category)) {
+	        $base = self::liveFolder(MAIL_FOLDER).$category.DS.date('YmdHis').DS;
 	        mkdir($base);
 	        file_put_contents($base.'body.'.(isset($html) ? 'html' : 'txt'), $body);
 	        file_put_contents($base.'subject.txt', $parameters['subject']);
+	        file_put_contents($base.'recipients.json', self::json_encode($parameters['recipients']));
 	    }
 	    return $mail->Send() === false ? $mail->ErrorInfo : true;
 	}

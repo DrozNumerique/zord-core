@@ -136,7 +136,7 @@ class Account extends Module {
     public function sendActivation($user, $code) {
         $url = $this->baseURL.'/identity?token='.$code;
         $send = $this->sendMail([
-            'id'         => 'identity_'.$user->login.'_'.date('YmdHis'),  
+            'category'   => 'identity'.DS.$user->login,
             'recipients' => [
                 'to' => [
                     $user->email => $user->name
