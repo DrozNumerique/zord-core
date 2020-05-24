@@ -126,7 +126,10 @@ class User {
                 $token = (new UserHasTokenEntity())->retrieve($decrypted);
                 if ($token) {
                     $login = $token->user;
-                    (new UserHasTokenEntity())->delete($decrypted);
+                    if ($token->key !== null) {
+                        (new UserHasTokenEntity())->delete($decrypted);
+                    }
+                    return self::bind($login);
                 }
             }
         }

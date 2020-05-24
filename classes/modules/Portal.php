@@ -10,14 +10,14 @@ class Portal extends Module {
         (new UserHasTokenEntity())->delete([
             'many' => true,
             'where' => [
-                'raw' => 'ADDTIME(start, ?) < NOW()',
+                'raw' => 'ADDTIME(start, ?) < NOW() AND `key` IS NOT NULL',
                 'parameters' => TOKEN_INACTIVE_DURATION
             ]
         ]);
         if (isset($this->params['user']) && isset($this->params['key'])) {
             $user = (new UserEntity())->retrieve($this->params['user']);
             $keyfile = Zord::getComponentPath('config'.DS.'keys'.DS.$this->params['user'].DS.$this->params['key'].'.pub');
-            if ($user && file_exists($keyfile)) {
+            if ($user !== false && file_exists($keyfile)) {
                 $token = (new UserHasTokenEntity())->retrieve([
                     'many'  => false,
                     'where' => [
@@ -25,18 +25,9 @@ class Portal extends Module {
                         'key'  => $this->params['key'],
                     ]
                 ]);
-                if (!$token) {
-                    $token = uniqid($user->login, true);
-                    $crypted = null;
-                    if (openssl_public_encrypt($token, $crypted, openssl_pkey_get_public(file_get_contents($keyfile)))) {
-                        (new UserHasTokenEntity())->create([
-                            'user'  => $this->params['user'],
-                            'key'   => $this->params['key'],
-                            'token' => $token,
-                            'start' => date('Y-m-d H:i:s')
-                        ]);
-                        return base64_encode($crypted);
-                    } else {
+                if ($token === false) {
+                    $token = Zord::token($keyfile, $this->params['user'], $this->params['key']);
+                    if (!isset($token)) {
                         return $this->error(500);
                     }
                 } else {

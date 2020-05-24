@@ -146,6 +146,11 @@ abstract class ProcessExecutor {
             }
         }
     }
+    
+    public function sendMail($parameters) {
+        $parameters['locale'] = $this->locale;
+        return Zord::sendMail($parameters);
+    }
 }
 
 ?>

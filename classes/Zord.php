@@ -927,4 +927,19 @@ class Zord {
         $locale = self::getLocale('country', $lang);
         return isset($locale->$code) ? $locale->$code : null;
     }
+    
+    public static function token($keyfile, $user, $key = null) {
+        $token = uniqid($user, true);
+        $crypted = null;
+        if (openssl_public_encrypt($token, $crypted, openssl_pkey_get_public(file_get_contents($keyfile)))) {
+            (new UserHasTokenEntity())->create([
+                'user'  => $user,
+                'key'   => $key,
+                'token' => $token,
+                'start' => date('Y-m-d H:i:s')
+            ]);
+            return base64_encode($crypted);
+        }
+        return null;
+    }
 }

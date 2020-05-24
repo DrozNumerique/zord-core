@@ -33,7 +33,7 @@ if (isset($_SERVER['argv']) && count($_SERVER['argv']) > 1) {
             (new ProcessEntity())->delete($pid);
             $report = LOGS_FOLDER.$pid.'.json';
             if (file_exists($report)) {
-                $timestamp = date('Y-m-d-H-i-s');
+                $timestamp = Zord::timestamp('Y-m-d-H-i-s');
                 foreach (Zord::arrayFromJSONFile($report) as $line) {
                     $content = ProcessExecutor::indent($line['indent']).$line['message'].($line['newline'] ? "\n" : "");
                     file_put_contents(LOGS_FOLDER.$class.'-'.$timestamp.'.log', $content, FILE_APPEND);
