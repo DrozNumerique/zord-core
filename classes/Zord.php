@@ -261,6 +261,10 @@ class Zord {
 	    }
 	}
 	
+	public static function timestamp($format = LOG_DATE_FORMAT, $timezone = DEFAULT_TIMEZONE) {
+	    return DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimezone(new DateTimeZone($timezone))->format($format);
+	}
+	
 	public static function log($msg, $fileName = 'system') {    
 	    $logFile = LOGS_FOLDER.$fileName.'.log';
 	    $fileSize = 0;
@@ -282,7 +286,7 @@ class Zord {
 	    if (!is_string($msg)) {
 	        $msg = var_export($msg, true);
 	    }
-	    $content .= DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''))->setTimezone(new DateTimeZone(DEFAULT_TIMEZONE))->format(LOG_DATE_FORMAT).' ';
+	    $content .= self::timestamp().' ';
 	    $backtrace = debug_backtrace(false);
 	    if (isset($backtrace[0]['file']) && isset($backtrace[0]['line'])) {
 	        $content .= $backtrace[0]['file'].':'.$backtrace[0]['line'].' ';
@@ -854,8 +858,8 @@ class Zord {
 	        $mail->AltBody = $text;
 	    }
 	    if (MAIL_TRACE && isset($category)) {
-	        $base = self::liveFolder(MAIL_FOLDER).$category.DS.date('YmdHis').DS;
-	        mkdir($base);
+	        $base = self::liveFolder(MAIL_FOLDER).$category.DS.self::timestamp('Y.m.d.H.i.s.u').DS;
+	        mkdir($base, 0777, true);
 	        file_put_contents($base.'body.'.(isset($html) ? 'html' : 'txt'), $body);
 	        file_put_contents($base.'subject.txt', $parameters['subject']);
 	        file_put_contents($base.'recipients.json', self::json_encode($parameters['recipients']));
