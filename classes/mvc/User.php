@@ -117,10 +117,7 @@ class User {
                 }
             }
         }
-        if (isset($session)) {
-            $entity = UserHasSessionEntity::find($session);
-            $login = $entity ? $entity->user : null;
-        } else if (isset($token)) {
+        if (isset($token)) {
             $decrypted = null;
             if (openssl_private_decrypt(base64_decode(str_replace(' ', '+', $token)), $decrypted, openssl_pkey_get_private(file_get_contents(Zord::realpath(OPENSSL_PRIVATE_KEY))))) {
                 $token = (new UserHasTokenEntity())->retrieve($decrypted);
@@ -132,6 +129,9 @@ class User {
                     return self::bind($login);
                 }
             }
+        } else if (isset($session)) {
+            $entity = UserHasSessionEntity::find($session);
+            $login = $entity ? $entity->user : null;
         }
         if (!isset($login)) {
             $session = null;
