@@ -94,16 +94,22 @@ class Account extends Module {
                 }
             } else {
                 $token = User::crypt($login.microtime());
-                $user = (new UserEntity())->update(
-                    ['where' => ['email' => $login]],
-                    ['activate' => $token]
+                $user = (new UserEntity())->retrieve(
+                    ['where' => ['email' => $login]]
                 );
-                if (!$user && ACCOUNT_AUTO_CREATE) {
-                    $user = (new UserEntity())->create([
-                        'login'    => $login,
-                        'email'    => $login,
-                        'activate' => $token
-                    ]);
+                if ($user !== false) {
+                    if (ACCOUNT_AUTO_CREATE) {
+                        $user = (new UserEntity())->create([
+                            'login'    => $login,
+                            'email'    => $login,
+                            'activate' => $token
+                        ]);
+                    }
+                } else {
+                    $user = (new UserEntity())->update(
+                        ['where' => ['email' => $login]],
+                        ['activate' => $token]
+                    );
                 }
                 if ($user) {
                     $result = $this->sendActivation($user, $token);
