@@ -97,11 +97,12 @@ class Account extends Module {
                 $user = (new UserEntity())->retrieve(
                     ['where' => ['email' => $login]]
                 );
-                if ($user !== false) {
+                if ($user === false) {
                     if (ACCOUNT_AUTO_CREATE) {
                         $user = (new UserEntity())->create([
                             'login'    => $login,
                             'email'    => $login,
+                            'name'     => $login,
                             'activate' => $token
                         ]);
                     }
