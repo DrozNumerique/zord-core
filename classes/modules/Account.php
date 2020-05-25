@@ -137,17 +137,15 @@ class Account extends Module {
         $url = $this->baseURL.'/identity?token='.$code;
         $send = $this->sendMail([
             'category'   => 'identity'.DS.$user->login,
+            'principal'  => ['email' => $user->email, 'name' => $user->name],
             'recipients' => [
-                'to' => [
-                    $user->email => $user->name
-                ],
                 'bcc' => [
                     WEBMASTER_MAIL_ADDRESS => WEBMASTER_MAIL_NAME
                 ]
             ],
             'subject'    => $this->locale->mail->activate,
             'text'       => $this->locale->mail->copy_paste."\n".$url,
-            'template'   => '/mail/activation',
+            'content'    => '/mail/activation',
             'models'     => [
                 'url' => $url
             ]

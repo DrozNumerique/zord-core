@@ -809,62 +809,83 @@ class Zord {
 	    return mb_substr($string, 0, $maxlength).(mb_strlen($string) > $maxlength ? "…" : '');
 	}
 	
-	public static function sendMail($parameters) {
-	    $category  = $parameters['category']  ?? null;
-	    $template  = $parameters['template']  ?? null;
-	    $models    = $parameters['models']    ?? null;
-	    $controler = $parameters['controler'] ?? null;
-	    $locale    = $parameters['locale']    ?? null;
-	    $post      = $parameters['post']      ?? null;
-	    $text      = $parameters['text']      ?? null;
-	    $html      = isset($template) ? (new View($template, $models, $controler, $locale))->render() : null;
+	public static function sendMail($mail) {
+	    $category  = $mail['category']  ?? null;
+	    $textonly  = $mail['textonly']  ?? false;
+	    $template  = $mail['template']  ?? '/mail';
+	    $principal = $mail['principal'] ?? null;
+	    $models    = $mail['models']    ?? [];
+	    $controler = $mail['controler'] ?? null;
+	    $locale    = $mail['locale']    ?? null;
+	    $post      = $mail['post']      ?? null;
+	    $text      = $mail['text']      ?? null;
+	    $models['mail'] = $mail;
+	    if (isset($models['context'])) {
+	        $context = Zord::value('context', $models['context']);
+	        $config = $context['url'][0];
+	        $host = $config['host'];
+	        $scheme = ($config['secure'] ?? false) ? 'https' : 'http';
+	        $baseURL = $scheme.'://'.$host.($config['path'] == '/' ? '' : $config['path']);
+	        $models['view'] = array_merge($models['view'] ?? [], [
+	            'context'  => $models['context'],
+	            'host'     => $host,
+	            'scheme'   => $scheme,
+	            'indexURL' => 0,
+	            'baseURL'  => $baseURL,
+	            'skin'     => Zord::getSkin($models['context'])
+	        ]);
+	    }
+	    $html      = $textonly === true ? null : (new View($template, $models, $controler, $locale))->render();
 	    if (is_callable($post)) {
-	        $html = isset($html) ? call_user_func($post, $html, $models, $controler, $locale): call_user_func($post, $models, $controler, $locale);
+	        $html = isset($html) ? call_user_func($post, $html, $models, $controler, $locale) : call_user_func($post, $models, $controler, $locale);
 	    }
 	    if (is_callable($text)) {
-	        $text = isset($html) ? call_user_func($text, $html, $models, $controler, $locale): call_user_func($text, $models, $controler, $locale);
+	        $text = isset($html) ? call_user_func($text, $html, $models, $controler, $locale) : call_user_func($text, $models, $controler, $locale);
 	    }
 	    $text = $text ?? (isset($html) ? self::text($html) : '');
 	    $body = $html ?? $text;
-	    $mail = new PHPMailer();
-	    $mail->IsHTML(isset($html));
-	    $mail->CharSet = 'UTF-8';
+	    $mailer = new PHPMailer();
+	    $mailer->IsHTML(isset($html));
+	    $mailer->CharSet = 'UTF-8';
 	    //$mail->Encoding = 'base64';
-	    $mail->SetFrom(WEBMASTER_MAIL_ADDRESS, WEBMASTER_MAIL_NAME);
-	    foreach ($parameters['recipients'] as $kind => $recipients) {
+	    $mailer->SetFrom(WEBMASTER_MAIL_ADDRESS, WEBMASTER_MAIL_NAME);
+	    if (isset($principal)) {
+	        $mail['recipients']['to'][$principal['email']] = $principal['name'];
+	    }
+	    foreach ($mail['recipients'] as $kind => $recipients) {
 	        foreach ($recipients as $email => $name) {
 	            switch ($kind) {
 	                case 'to': {
-	                    $mail->AddAddress($email, $name);
+	                    $mailer->AddAddress($email, $name);
 	                    break;
 	                }
 	                case 'cc': {
-	                    $mail->AddCC($email, $name);
+	                    $mailer->AddCC($email, $name);
 	                    break;
 	                }
 	                case 'bcc': {
-	                    $mail->AddBCC($email, $name);
+	                    $mailer->AddBCC($email, $name);
 	                    break;
 	                }
 	            }
 	        }
 	    }
-	    if (isset($parameters['reply'])) {
-	        $mail->AddReplyTo($parameters['reply']['email'], $parameters['reply']['name'] ?? '');
+	    if (isset($mail['reply'])) {
+	        $mailer->AddReplyTo($mail['reply']['email'], $mail['reply']['name'] ?? '');
 	    }
-	    $mail->Subject = $parameters['subject'];
-	    $mail->Body = $body;
+	    $mailer->Subject = $mail['subject'];
+	    $mailer->Body = $body;
 	    if (isset($html)) {
-	        $mail->AltBody = $text;
+	        $mailer->AltBody = $text;
 	    }
 	    if (MAIL_TRACE && isset($category)) {
 	        $base = self::liveFolder(MAIL_FOLDER).$category.DS.self::timestamp('Y.m.d.H.i.s.u').DS;
 	        mkdir($base, 0777, true);
 	        file_put_contents($base.'body.'.(isset($html) ? 'html' : 'txt'), $body);
-	        file_put_contents($base.'subject.txt', $parameters['subject']);
-	        file_put_contents($base.'recipients.json', self::json_encode($parameters['recipients']));
+	        file_put_contents($base.'subject.txt', $mail['subject']);
+	        file_put_contents($base.'recipients.json', self::json_encode($mail['recipients']));
 	    }
-	    return $mail->Send() === false ? $mail->ErrorInfo : true;
+	    return $mailer->Send() === false ? $mailer->ErrorInfo : true;
 	}
 	
 	public static function mark($content) {

@@ -317,9 +317,9 @@ class Module {
 	    return $value !== null ? $value : (isset($this->params[$key]) ? $this->params[$key] : null);
 	}
 	
-	public function sendMail($parameters) {
-	    $parameters['controler'] = $this->controler;
-	    $parameters['locale'] = $this->locale;
-	    return Zord::sendMail($parameters);
+	public function sendMail($mail) {
+	    $mail['controler'] = $this->controler;
+	    $mail['locale'] = $this->locale;
+	    return Zord::sendMail($mail);
 	}
 }
