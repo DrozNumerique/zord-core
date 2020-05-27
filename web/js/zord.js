@@ -88,7 +88,7 @@ function uploadZord(form, checkUpload, checkResult) {
     				checkResult(JSON.parse(request.responseText));
     			},
     			500
-    		)
+    		);
 	    };
 	}
     request.open('POST', 'index.php');
