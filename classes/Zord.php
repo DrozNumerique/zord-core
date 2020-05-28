@@ -963,4 +963,25 @@ class Zord {
         }
         return null;
     }
+    
+    public static function array($var) {
+        if (!isset($var) || is_null($var)) {
+            $var = [];
+        }
+        if (is_scalar($var)) {
+            $var = [$var];
+        }
+        return $var;
+    }
+    
+    public static function union($first, $second) {
+        $first  = self::array($first);
+        $second = self::array($second);
+        foreach ($second as $element) {
+            if (!in_array($element, $first)) {
+                $first[] = $element;
+            }
+        }
+        return $first;
+    }
 }
