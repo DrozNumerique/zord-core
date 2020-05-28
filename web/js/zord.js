@@ -1,20 +1,44 @@
 function invokeZord(params) {
-	
-	if (params.before !== undefined) {
-		params.before();
-	}
 
+	var before = params.before == undefined ? null : params.before;
+	var after = params.after == undefined ? null : params.after;
+	var async = params.async == undefined ? true : params.async;
+	var form = params.form == undefined ? null : params.form;
+	var upload = params.upload == undefined ? false : params.upload;
+	var uploading = params.uploading == undefined ? null : params.uploading;
+	var uploaded = params.uploaded == undefined ? null : params.uploaded;
 	var success = params.success == undefined ? null : params.success;
 	var failure  = params.failure  == undefined ? null : params.failure;
 	var target = BASEURL['zord'] + '/index.php';
 	
-	var query = ['xhr=true'];
-	for (var key in params) {
-		query.push(encodeURIComponent(key) + '=' + encodeURIComponent(params[key]));
+	if (before !== null) {
+		before();
 	}
-	query = query.join("&").replace( /%20/g , "+");
 	
 	var request = new XMLHttpRequest();
+	request.open("POST", target , async);
+	request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+	var query;
+	if (form !== null) {
+		query = new FormData(form);
+	} else {
+		request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+		query = ['xhr=true'];
+		for (var key in params) {
+			query.push(encodeURIComponent(key) + '=' + encodeURIComponent(params[key]));
+		}
+		query = query.join("&").replace( /%20/g , "+");
+	}
+	
+	if (upload === true) {
+	    if (uploading !== null) {
+	    	request.upload.onloadstart = uploading;
+		}
+	    if (uploaded !== null) {
+	    	request.upload.onload = uploaded;
+		}
+	}
 	
 	request.onreadystatechange = function() {
 		if (this.readyState === XMLHttpRequest.DONE) {
@@ -33,8 +57,8 @@ function invokeZord(params) {
 					}
 				} else if (type.startsWith('application/error')) {
 					var error = JSON.parse(this.responseText);
-					if (success != null) {
-						success(error);
+					if (failure !== null) {
+						failure(error);
 					} else if (error.message !== undefined) {
 						alert(error.message);
 					} else {
@@ -43,13 +67,13 @@ function invokeZord(params) {
 				} else {
 					document.body.insertAdjacentHTML('beforeend', "<iframe src='/Portal/download' style='display: none;'></iframe>");
 				}
-				if (params.after !== undefined) {
-					params.after();
+				if (after !== null) {
+					after();
 				}
 			} else if (this.status >= 400) {
 				if (type.startsWith('application/json')) {
 					var error = JSON.parse(this.responseText);
-					if (failure != null) {
+					if (failure !== null) {
 						failure(error);
 					} else if (error.message !== undefined) {
 						alert(error.message);
@@ -61,38 +85,8 @@ function invokeZord(params) {
 		}
 	};
 
-	request.open("POST", target , params.async == undefined ? true : params.async);
-	request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-	request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 	request.send(query);
 	
-}
-
-function uploadZord(form, checkUpload, checkResult) {
-    var data = new FormData(form);
-    var request = new XMLHttpRequest();
-    if (checkUpload !== undefined) {
-    	request.upload.onloadstart = function() {
-    		setTimeout(
-    			function() {
-    				checkUpload();
-    			},
-    			500
-    		)
-	    };
-	}
-    if (checkResult !== undefined) {
-    	request.upload.onload = function() {
-    		setTimeout(
-    			function() {
-    				checkResult(JSON.parse(request.responseText));
-    			},
-    			500
-    		);
-	    };
-	}
-    request.open('POST', 'index.php');
-    request.send(data);
 }
 
 function checkProcess(pid, offset, callback) {

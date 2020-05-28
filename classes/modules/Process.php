@@ -16,20 +16,22 @@ class Process extends Module {
             $file = LOGS_FOLDER.$pid.'.json';
             if (file_exists($file)) {
                 $report = Zord::arrayFromJSONFile($file);
-                $report = array_slice($report, $offset);
-                if ($entity) {
-                    $step = $entity->step;
-                    $progress = $entity->progress;
-                } else {
-                    $step = 'closed';
-                    $progress = 100;
-                    unlink($file);
+                if (is_array($report)) {
+                    $report = array_slice($report, $offset);
+                    if ($entity) {
+                        $step = $entity->step;
+                        $progress = $entity->progress;
+                    } else {
+                        $step = 'closed';
+                        $progress = 100;
+                        unlink($file);
+                    }
+                    return [
+                        'step'     => $step,
+                        'progress' => $progress,
+                        'report'   => $report
+                    ];
                 }
-                return [
-                    'step'     => $step,
-                    'progress' => $progress,
-                    'report'   => $report
-                ];
             }
         }
         return ['error' => 'Unknow process '.$pid];
