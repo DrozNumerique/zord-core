@@ -128,8 +128,16 @@ class Controler {
                         }
                         if (is_string($alt)) {
                             $this->redirect($this->baseURL.'/'.$alt);
+                        } else if (is_array($alt)) {
+                            $this->handle(array_merge($target, $alt));
                         } else {
-                            $this->handle(is_array($alt) ? array_merge($target, $alt) : $this->getDefaultTarget());
+                            $type = Zord::value('target', [$target['module'], $target['action'], 'response']);
+                            if (!isset($type)) {
+                                $type = Zord::value('target', [$target['module'], 'response']);
+                            }
+                            $this->error([
+                                '__code__' => 403
+                            ], $type ?? 'VIEW');
                         }
                     }
                 } else {
