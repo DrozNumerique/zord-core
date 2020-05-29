@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="<?php echo $lang; ?>">
 <head>
-	<base href="<?php echo $scheme.'://'.$host; ?>">
+	<base href="<?php echo $base; ?>">
 <?php $this->render('title'); ?>
 <?php $this->render('meta'); ?>
 <?php $this->render('script'); ?>

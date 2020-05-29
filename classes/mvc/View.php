@@ -41,6 +41,7 @@ class View {
             $scheme    = $this->controler->getScheme();
             $baseURL   = $this->controler->getBaseURL();
             $user      = $this->controler->getUser();
+            $base      = $this->controler->getBase();
             if ($context !== 'unknown') {
                 $config = json_decode(Zord::json_encode(Zord::value('context', $context)));
                 $skin   = Zord::getSkin($context);

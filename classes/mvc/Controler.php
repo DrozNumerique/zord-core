@@ -8,6 +8,7 @@ class Controler {
     protected $scheme = null;
     protected $indexURL = 0;
     protected $baseURL = null;
+    protected $base = null;
     protected $lang = null;
     protected $locale = null;
     protected $module = null;
@@ -43,6 +44,10 @@ class Controler {
         return $this->baseURL;
     }
     
+    public function getBase() {
+        return $this->base;
+    }
+    
     public function getLang() {
         return $this->lang;
     }
@@ -73,6 +78,7 @@ class Controler {
             $this->context  = $target['context'];
             $this->indexURL = $target['indexURL'];
             $this->baseURL  = $target['baseURL'];
+            $this->base     = $target['base'];
             $this->params   = isset($target['params']) ? $target['params'] : [];
             $this->replay   = $replay;
             if ($this->context && $this->baseURL) {
@@ -187,6 +193,7 @@ class Controler {
             $target['host'] = $host;
             $target['scheme'] = $scheme;
             $target['baseURL'] = $scheme.'://'.$host.($target['prefix'] == '/' ? '' : $target['prefix']);
+            $target['base'] = $scheme.'://'.$host;
             $target['method'] = $_SERVER["REQUEST_METHOD"];
             $target['params'] = $redirect ? $_GET : array_merge($_GET, $_POST);
             if (isset($target['params']['params'])) {
