@@ -102,5 +102,20 @@
 	        "progress"
         ],
         "key": "pid"
+    },
+	"ProcessHasReportEntity": {
+		"table": "process_has_report",
+		"fields": [
+	        "process",
+	        "index",
+	        "indent",
+	        "style",
+	        "message",
+	        "newline"
+        ],
+        "key": [
+        	"process",
+        	"index"
+        ]
     }
 }

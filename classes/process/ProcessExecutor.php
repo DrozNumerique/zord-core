@@ -4,7 +4,7 @@ abstract class ProcessExecutor {
     
     protected $pid = null;
     protected $parameters = array();
-    protected $report = array();
+    protected $index = 1;
     protected $lang = DEFAULT_LANG;
     protected $locale = null;
     protected $user = null;
@@ -19,12 +19,29 @@ abstract class ProcessExecutor {
             'lang'   => $lang,
             'params' => Zord::json_encode($params)
         ]);
-        file_put_contents(LOGS_FOLDER.$pid.'.json', '[]');
         Zord::execute('popen', PROCESS_COMMAND, [
             'SCRIPT' => ROOT.'process.php',
             'PID'    => $pid
         ]);
         return $pid;
+    }
+    
+    public static function stop($pid, $step = 'closed') {
+        $process = (new ProcessEntity())->update($pid, ['step' => $step]);
+        $entities = (new ProcessHasReportEntity())->retrieve([
+            'many'  => true,
+            'where' => ['process' => $pid],
+            'order' => ['asc' => 'index']
+        ]);
+        $log = LOGS_FOLDER.$process->class.'-'.Zord::timestamp('Y-m-d-H-i-s').'.log';
+        foreach ($entities as $entity) {
+            $content = ProcessExecutor::indent($entity->indent).$entity->message.($entity->newline == 1 ? "\n" : "");
+            file_put_contents($log, $content, FILE_APPEND);
+        }
+        (new ProcessHasReportEntity())->delete($pid, [
+            'many'  => true,
+            'where' => ['process' => $pid]
+        ]);
     }
     
     public static function indent($indent) {
@@ -88,13 +105,15 @@ abstract class ProcessExecutor {
             }
         } else {
             if ($this->pid) {
-                $this->report[] = [
+                (new ProcessHasReportEntity())->create([
+                    'process' => $this->pid,
+                    'index'   => $this->index,
                     'indent'  => $indent,
                     'style'   => $style,
                     'message' => $message,
-                    'newline' => $newline
-                ];
-                file_put_contents(LOGS_FOLDER.$this->pid.'.json', Zord::json_encode($this->report));
+                    'newline' => $newline ? 1 : 0
+                ]);
+                $this->index++;
             } else {
                 echo self::indent($indent).self::style($style).$message.self::style('default').($newline ? "\n" : "");
             }

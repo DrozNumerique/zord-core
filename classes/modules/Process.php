@@ -3,35 +3,33 @@
 class Process extends Module {
     
     public function status() {
-        $pid = null;
-        $offset = 0;
-        if (isset($this->params['pid'])) {
-            $pid = $this->params['pid'];
-        }
-        if (isset($this->params['offset'])) {
-            $offset = $this->params['offset'];
-        }
-        if ($pid) {
-            $entity = (new ProcessEntity())->retrieve(['key' => $pid]);
-            $file = LOGS_FOLDER.$pid.'.json';
-            if (file_exists($file)) {
-                $report = Zord::arrayFromJSONFile($file);
-                if (is_array($report)) {
-                    $report = array_slice($report, $offset);
-                    if ($entity) {
-                        $step = $entity->step;
-                        $progress = $entity->progress;
-                    } else {
-                        $step = 'closed';
-                        $progress = 100;
-                        unlink($file);
-                    }
-                    return [
-                        'step'     => $step,
-                        'progress' => $progress,
-                        'report'   => $report
+        $pid = $this->params['pid'] ?? null;
+        $offset = $this->params['offset'] ?? 0;
+        if (isset($pid)) {
+            $process = (new ProcessEntity())->retrieve($pid);
+            if ($process !== false) {
+                $report = [];
+                $entities = (new ProcessHasReportEntity())->retrieve([
+                    'many'  => true,
+                    'where' => [
+                        'process' => $pid,
+                        'index'   => ['>' => $offset]
+                    ],
+                    'order' => ['asc' => 'index']
+                ]);
+                foreach ($entities as $entity) {
+                    $report[] = [
+                        'indent'  => $entity->indent,
+                        'style'   => $entity->style,
+                        'message' => $entity->message,
+                        'newline' => $entity->newline == 1
                     ];
                 }
+                return [
+                    'step'     => $process->step,
+                    'progress' => $process->progress,
+                    'report'   => $report
+                ];
             }
         }
         return ['error' => 'Unknow process '.$pid];
@@ -40,13 +38,13 @@ class Process extends Module {
     public function kill() {
         $pid = isset($this->params['pid']) ? $this->params['pid'] : null;
         if ($pid) {
-            $entity = (new ProcessEntity())->retrieve(['key' => $pid]);
+            $entity = (new ProcessEntity())->retrieve($pid);
             if ($entity) {
-                $PID = Zord::execute('exec', DETECT_PROCESS_COMMAND, ['PID' => $pid]);
-                if ($PID && !empty($PID)) {
-                    $PID = explode("\n", $PID);
-                    posix_kill((integer) $PID[0], KILL_SIGNAL);
-                    (new ProcessEntity())->delete($pid);
+                $process = Zord::execute('exec', DETECT_PROCESS_COMMAND, ['PID' => $pid]);
+                if ($process && !empty($process)) {
+                    $process = explode("\n", $process);
+                    posix_kill((integer) $process[0], KILL_SIGNAL);
+                    ProcessExecutor::stop($pid, 'killed');
                     return ['kill' => $pid];
                 }
             }
