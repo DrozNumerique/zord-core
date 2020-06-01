@@ -522,11 +522,7 @@ class Controler {
 	    foreach($headers as $key => $value) {
 	        header($key.': '.$value);
 	    }
-	    if (isset($this->user->session)) {
-	        setcookie(User::$ZORD_SESSION, $this->user->session, time() + 1200, '/');
-	    } else {
-	        setcookie(User::$ZORD_SESSION, '', time() - 1200, '/');
-	    }
+	    Zord::cookie(User::$ZORD_SESSION, $this->user->session ?? '', 0, '/');
 	}
 	
 	private function sendDownloadHeaders($status, $filename, $headers) {

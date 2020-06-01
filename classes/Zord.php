@@ -888,8 +888,8 @@ class Zord {
 	    return $mailer->Send() === false ? $mailer->ErrorInfo : true;
 	}
 	
-	public static function mark($content) {
-	    return VIEW_MARK_BEGIN.$content.VIEW_MARK_END;
+	public static function mark($content, $begin, $end) {
+	    return $begin.$content.$end;
 	}
 	
 	public static function text($html) {
@@ -983,5 +983,17 @@ class Zord {
             }
         }
         return $first;
+    }
+    
+    public static function cookie($name, $value = null, $expires = null, $path = null, $domain = null, $secure = null, $httponly = 0) {
+        if (version_compare(phpversion(), '7.3.0', 'ge')) {
+            setcookie($name, $value, [
+                'expires'  => $expires,
+                'path'     => $path,
+                'SameSite' => 'Lax'
+            ]);
+        } else {
+            setcookie($name, $value, $expires, $path, $domain, $secure, $httponly);
+        }
     }
 }

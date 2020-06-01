@@ -55,9 +55,17 @@ class View {
         $this->viewPlugin($template, $models, 'before', $page);
         if (!$this->viewPlugin($template, $models, 'instead', $page)) {
             $file = Zord::template($template, $context, $lang);
+            $begin = VIEW_MARK_BEGIN;
+            $end = VIEW_MARK_END;
+            if (strpos($template, '/script/') > 0 || strpos($template, '/style/') > 0) {
+                $begin = '/*# ';
+                $end = ' #*/';
+            }
+            $this->mark('BEGIN '.$template, $begin, $end);
             if ($file) {
                 include($file);
             }
+            $this->mark('END '.$template, $begin, $end);
             $this->viewPlugin($template, $models, 'after', $page);
         }
         array_pop($this->locales);
@@ -73,8 +81,8 @@ class View {
         return Zord::resolve($raw, $models, $locale);
     }
     
-    public function mark($content) {
-        echo Zord::mark($content)."\n";
+    public function mark($content, $begin = VIEW_MARK_BEGIN, $end = VIEW_MARK_END) {
+        echo Zord::mark($content, $begin, $end)."\n";
     }
     
     private function viewPlugin($template, $models, $point, $page = null) {

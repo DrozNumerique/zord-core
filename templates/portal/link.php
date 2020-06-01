@@ -10,7 +10,7 @@ if (isset($skin->styles)) {
 <?php
     } else if (isset($style->template)) {
 ?>
-	<<style type="<?php echo $style->type; ?>" media="<?php echo $style->media; ?>">
+	<style type="<?php echo $style->type; ?>" media="<?php echo $style->media; ?>">
 <!--
 <?php
         $this->render($style->template);
