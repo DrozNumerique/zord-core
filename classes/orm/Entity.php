@@ -138,6 +138,12 @@ abstract class Entity
                 }
             }
         }
+        if (isset($criteria['limit'])) {
+            $this->engine()->limit($criteria['limit']);
+        }
+        if (isset($criteria['offset'])) {
+            $this->engine()->offset($criteria['offset']);
+        }
         if (isset($criteria['order'])) {
             if (isset($criteria['order']['asc'])) {
                 $this->engine()->order_by_asc($criteria['order']['asc']);

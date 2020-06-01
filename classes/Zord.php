@@ -985,11 +985,14 @@ class Zord {
         return $first;
     }
     
-    public static function cookie($name, $value = null, $expires = null, $path = null, $domain = null, $secure = null, $httponly = 0) {
+    public static function cookie($name, $value = null, $expires = null, $path = null, $domain = null, $secure = null, $httponly = null) {
         if (version_compare(phpversion(), '7.3.0', 'ge')) {
             setcookie($name, $value, [
                 'expires'  => $expires,
                 'path'     => $path,
+                'domain'   => $domain,
+                'secure'   => $secure,
+                'httponly' => $httponly,
                 'SameSite' => 'Lax'
             ]);
         } else {
