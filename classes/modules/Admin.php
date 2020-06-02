@@ -5,11 +5,11 @@ class Admin extends Module {
     public function index($current = null, $models = null) {
         $tabs = Zord::getConfig('admin');
         $scopes = [
-            'zord'    => '*',
+            'global'  => '*',
             'context' => $this->context
         ];
         foreach ($tabs as $name => $tab) {
-            if (!$this->user->hasRole('admin', $scopes[$tab['scope']])) {
+            if (!$this->user->hasRole('admin', $scopes[$tab['scope'] ?? 'global'])) {
                 unset($tabs[$name]);
             }
         }
