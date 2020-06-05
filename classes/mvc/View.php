@@ -8,6 +8,7 @@ class View {
     private $context   = null;
     private $lang      = DEFAULT_LANG;
     private $locales   = [];
+    private $mark      = true;
     
     public function __construct($template, $models, $controler = null, $locale = null) {
         $this->template  = $template;
@@ -81,8 +82,14 @@ class View {
         return Zord::resolve($raw, $models, $locale);
     }
     
+    public function setMark($mark = true) {
+        $this->mark = $mark;
+    }
+    
     public function mark($content, $begin = VIEW_MARK_BEGIN, $end = VIEW_MARK_END) {
-        echo Zord::mark($content, $begin, $end)."\n";
+        if ($this->mark) {
+            echo Zord::mark($content, $begin, $end)."\n";
+        }
     }
     
     private function viewPlugin($template, $models, $point, $page = null) {

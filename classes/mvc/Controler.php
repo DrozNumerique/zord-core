@@ -499,8 +499,9 @@ class Controler {
 	            break;
 	        }
 	        case 'VIEW': {
+	            $content = $result['__type__'] ?? 'text/html;charset=UTF-8';
 	            $this->sendHeaders($status, [
-	                'Content-Type' => isset($result['__type__']) ? $result['__type__'] : 'text/html;charset=UTF-8',
+	                'Content-Type' => $content,
 	                'Vary'         => 'Accept'
 	            ]);
 	            $view = Zord::value('target', [get_class($this->module), $this->action, 'view']);
@@ -511,7 +512,11 @@ class Controler {
 	            $models   = $result['__models__'];
 	            $models   = $this->module->models($models);
     	        $models   = $this->modelsPlugin($models);
-    	        echo (new $view($template, $models, $this))->render();
+    	        $view     = (new $view($template, $models, $this));
+    	        if (substr($content, 0, strlen('text/html')) !== 'text/html') {
+    	            $view->setMark(false);
+    	        }
+    	        echo $view->render();
 	            break;
 	        }
 	    }
