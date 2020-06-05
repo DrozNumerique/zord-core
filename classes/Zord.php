@@ -999,4 +999,20 @@ class Zord {
             setcookie($name, $value, $expires, $path, $domain, $secure, $httponly);
         }
     }
+    
+    public static function handleError($try, $catch) {
+        set_error_handler(function($errno, $errstr, $errfile, $errline, $errcontext) {
+            if (0 === error_reporting()) {
+                return false;
+            }
+            throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+        });
+        try {
+            return call_user_func($try);
+        } catch (ErrorException $exception) {
+            return call_user_func($catch);
+        } finally {
+            restore_error_handler();
+        }
+    }
 }
