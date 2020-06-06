@@ -26,7 +26,9 @@ function invokeZord(params) {
 		request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 		query = ['xhr=true'];
 		for (var key in params) {
-			query.push(encodeURIComponent(key) + '=' + encodeURIComponent(params[key]));
+			if (!['before','after','success','failure','uploading','uploaded'].includes(key)) {
+				query.push(encodeURIComponent(key) + '=' + encodeURIComponent(params[key]));
+			}
 		}
 		query = query.join("&").replace( /%20/g , "+");
 	}
