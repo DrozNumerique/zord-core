@@ -57,7 +57,7 @@ function invokeZord(params) {
 						document.write(this.responseText);
 						document.close();
 					}
-				} else if (type.startsWith('application/error')) {
+				} else if (type.startsWith('download/error')) {
 					var error = JSON.parse(this.responseText);
 					if (failure !== null) {
 						failure(error);

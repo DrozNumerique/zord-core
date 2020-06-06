@@ -425,15 +425,13 @@ class Controler {
 	private function error($result, $type) {
 	    $status = $this->status($result['__code__']);
 	    switch ($type) {
-	        case 'DATA': {
+	        case 'DATA':
+	        case 'DOWNLOAD': {
 	            if (isset($result['__message__'])) {
 	                $status['message'] = $result['__message__'];
 	            }
-	            $this->output($status, $type, $result['__code__']);
+	            $this->output($status, 'DATA', $result['__code__']);
 	            break;
-	        }
-	        case 'DOWNLOAD': {
-	            $status['alert'] = $result['__message__'];
 	        }
 	        case 'VIEW': {
 	            $this->output([
@@ -473,7 +471,7 @@ class Controler {
 	                    ], $type);
 	                    break;
 	                } else {
-    	                $headers['Content-Type'] = 'application/error';
+    	                $headers['Content-Type'] = 'download/error';
     	                $output = Zord::json_encode([
     	                    'code' => $result['code'],
     	                    'message' => $message
