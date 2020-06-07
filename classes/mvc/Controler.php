@@ -269,7 +269,8 @@ class Controler {
                 'scheme'   => $this->scheme,
                 'context'  => $this->context,
                 'indexURL' => $this->indexURL,
-                'baseURL'  => $this->baseURL
+                'baseURL'  => $this->baseURL,
+                'base'     => $this->base
             );
         }
         if (defined("DEFAULT_PAGE")) {
