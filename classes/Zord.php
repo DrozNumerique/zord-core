@@ -888,7 +888,7 @@ class Zord {
 	    return $mailer->Send() === false ? $mailer->ErrorInfo : true;
 	}
 	
-	public static function mark($content, $begin, $end) {
+	public static function mark($content, $begin = VIEW_MARK_BEGIN, $end = VIEW_MARK_END) {
 	    return $begin.$content.$end;
 	}
 	
