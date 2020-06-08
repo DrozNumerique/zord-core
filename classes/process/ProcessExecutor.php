@@ -45,7 +45,7 @@ abstract class ProcessExecutor {
     }
     
     public static function indent($indent) {
-        return Zord::str_pad('', 2 * $indent, ' ');
+        return Zord::str_pad('', PROCESS_REPORT_INDENT_LENGTH * $indent, ' ');
     }
     
     public static function style($style) {
@@ -97,13 +97,16 @@ abstract class ProcessExecutor {
         }
     }
     
-    public function report($indent = 0, $style = 'default', $message = '', $newline = true) {
+    public function report($indent = 0, $style = 'default', $message = '', $newline = true, $pad = false) {
         if ($message instanceof Throwable) {
             $this->report($indent, $style, $message->getMessage());
             foreach (explode("\n", $message->getTraceAsString()) as $trace) {
                 $this->report($indent, $style, $trace);
             }
         } else {
+            if ($pad) {
+                $message = Zord::str_pad($message, PROCESS_REPORT_PAD_LENGTH - PROCESS_REPORT_INDENT_LENGTH * $indent, PROCESS_REPORT_PAD_STRING);
+            }
             if ($this->pid) {
                 (new ProcessHasReportEntity())->create([
                     'process' => $this->pid,
@@ -120,16 +123,16 @@ abstract class ProcessExecutor {
         }
     }
     
-    public function info($indent = 0, $message = '', $newline = true) {
-        $this->report($indent, 'info', $message, $newline);
+    public function info($indent = 0, $message = '', $newline = true, $pad = false) {
+        $this->report($indent, 'info', $message, $newline, $pad);
     }
     
-    public function warn($indent = 0, $message = '', $newline = true) {
-        $this->report($indent, 'warn', $message, $newline);
+    public function warn($indent = 0, $message = '', $newline = true, $pad = false) {
+        $this->report($indent, 'warn', $message, $newline, $pad);
     }
     
-    public function error($indent = 0, $message = '', $newline = true) {
-        $this->report($indent, 'error', $message, $newline);
+    public function error($indent = 0, $message = '', $newline = true, $pad = false) {
+        $this->report($indent, 'error', $message, $newline, $pad);
     }
     
     public abstract function execute($parameters = []);
