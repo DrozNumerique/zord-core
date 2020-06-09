@@ -12,7 +12,7 @@
 			"secure": "Sécurisé",
 			"host": "Domaine",
 			"path": "Chemin",
-			"submit": "Valider"
+			"submit": "Enregistrer les modifications"
 		},
 		"users": {
 			"title": "Gestion des utilisateurs",
@@ -31,7 +31,7 @@
 			"mask": "Masque",
 			"include": "Inclure",
 			"exclude": "Exclure",
-			"submit": "Valider",
+			"submit": "Enregistrer les modifications",
 			"match": "correspond déjà à l'adresse IP",
 			"mail": {
 				"error": "Echec de l'envoi du mail d'activation",

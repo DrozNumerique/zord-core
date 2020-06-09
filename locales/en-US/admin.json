@@ -12,7 +12,7 @@
 			"label": "Title",
 			"host": "Host",
 			"path": "Path",
-			"submit": "OK"
+			"submit": "Save changes"
 		},
 		"users": {
 			"title": "Accounts management",
@@ -36,7 +36,7 @@
 			"exclude": "Exclude",
 			"add": "Add",
 			"remove": "Remove",
-			"submit": "OK",
+			"submit": "Save changes",
 			"match": "already matches IP address",
 			"mail": {
 				"error": "Fail to send activation e-mail",
