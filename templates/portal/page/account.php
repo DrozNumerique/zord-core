@@ -1,5 +1,8 @@
 <?php $action = $models['action'] ?? ($user->isConnected() ? 'identity' : 'connect'); ?>
 <form class="account" method="post" action="<?php echo $baseURL; ?>">
+<?php if ($action == 'connect') { ?>
+	<div class="advert"><?php echo ACCOUNT_AUTO_CREATE ? $locale->messages->create_account : $locale->messages->forgot_password ; ?></div>
+<?php } ?>
 	<input type="hidden" name="module" value="Account"/>
 	<input type="hidden" name="action" value="<?php echo $action; ?>"/>
 <?php if (isset($models['success']) && $models['success']) { ?>
@@ -17,7 +20,4 @@
 	<div>
 		<input type="submit" name="submit" value="<?php echo $locale->actions->$action ?>"/>
 	</div>
-<?php if ($action == 'connect') { ?>
-	<div><?php echo ACCOUNT_AUTO_CREATE ? $locale->messages->create_account : $locale->messages->forgot_password ; ?></div>
-<?php } ?>
 </form>
