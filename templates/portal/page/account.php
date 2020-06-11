@@ -1,4 +1,4 @@
-<ul>
+<ul class="account">
 <?php foreach (($models['actions'] ?? ['profile']) as $action) { ?>
 	<li class="account <?php echo $action; ?><?php echo $action == ($models['action'] ?? 'profile') ? ' active' : '' ?>">
 		<form class="account" method="post" action="<?php echo $baseURL; ?>">

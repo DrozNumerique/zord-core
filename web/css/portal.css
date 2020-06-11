@@ -116,15 +116,64 @@ div.loading {
 }
 
 /* ---------------------------------- account ----------------------------------- */
-li.account {
+ul.account {
 	list-style: none;
+}
+
+ul.account > li {
 	display: none;
 }
 
-li.account.active {
+ul.account > li.active {
 	display: block;
 }
 
-li.account div.switch {
+ul.account > li.account div.switch {
 	cursor: pointer;
+}
+
+form.account  {
+	text-transform: uppercase;
+	background: #999;
+	color: black;
+	border-radius: 3px;
+	width:450px;
+	margin:70px auto;
+	text-align:center;
+	padding:30px;
+}
+
+form.account label {
+	width:150px;
+	display: inline-block;
+	text-align: right;
+}
+
+form.account input {
+	background:#EEE;
+	width: 250px;
+	height: 25px;
+	margin-left: 20px;
+	margin-bottom: 15px;
+	padding:5px;
+	border:0;
+}
+
+form.account input[type='submit'] {
+	background:#CCC;
+	color:#999;
+	margin:10px;
+	width:10em;
+	height:3em;
+	cursor:pointer;
+	text-transform: uppercase;
+}
+
+form.account input[type='submit']:hover {
+	background:black;
+	color:white;
+}
+
+form.account div {
+	text-align:center;
 }
