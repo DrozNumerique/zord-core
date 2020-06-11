@@ -36,7 +36,7 @@ class Account extends Module {
         $checked = true;
         foreach ($properties as $property) {
             if (empty($models[$property])) {
-                $checked =  Zord::resolve($this->locale->messages->missing, ['property' => $property], $this->locale);
+                $checked = Zord::resolve($this->locale->messages->missing, ['property' => $property], $this->locale);
                 break;
             }
             switch ($property) {
@@ -77,11 +77,11 @@ class Account extends Module {
         if ($checked === true) {
             $checked = [];
             foreach ($properties as $property) {
-                if ($models[$property] !== $this->user->$property) {
-                    $checked[$property] = ($property === 'password') ? User::crypt($models['password']) : $models[$property];
+                $value = ($property === 'password') ? User::crypt($models['password']) : $models[$property];
+                if ($value !== $this->user->$property) {
+                    $checked[$property] = $models[$property];
                 }
             }
-            return $checked;
         }
         return $checked;
     }
