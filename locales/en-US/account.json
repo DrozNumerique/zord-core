@@ -1,27 +1,44 @@
 {
 	"fields": {
-		"login": "Login:",
-		"name": "Full name:",
-		"password": "Password:",
-		"confirm" : "Confirm:"
+		"login": "Login",
+		"name": "Full name",
+		"email": "E-mail address",
+		"password": "Password",
+		"confirm" : "Confirm"
 	},
 	"actions": {
 		"connect": "Connect",
-		"identity" : "Update"
+		"reset": "Reset",
+		"profile" : "Update",
+		"create"  : "Create"
 	},
 	"messages": {
 		"profile_updated": "Profile updated",
+		"profile_unchanged": "Profile unchanged",
+		"account_created": "Account created",
 		"wrong_confirm": "Wrong password confirmation",
+		"already_login": "Login is already used",
+		"already_email": "E-mail address is already used",
+		"notvalid_email": "E-mail address is not valid",
 		"auth_failed": "Authentication failed",
 		"mail_sent": "Activation mail sent",
 		"mail_error": "Failed to sent activation mail",
+		"encryption_error": "Failed to sent activation token",
 		"unknown_user": "Unknown user",
-		"forgot_password": "To change your password, complete login field with your email address and leave password field blank, then click connect button",
-		"create_account": "To create an account or change your password, complete login field with your email address and leave password field blank, then click connect button"
+		"missing": "Field '$[fields.${property}]' must be completed",
+		"password_length": "Password length must be at least ${min} characters"
 	},
 	"mail": {
-		"activate": "Activate account",
-		"click_here": "Click here to activate your account",
-		"copy_paste": "Copy/Paste folowing URL in your browser to activate your account"
+		"reset_password": {
+			"subject": "Reset password",
+			"click_here": "Click here to reset your password",
+			"copy_paste": "Copy/Paste following URL in your browser to reset your password"
+		}
+	},
+	"switch": {
+		"connect": "Back to log in",
+		"reset": "Forgot password ?",
+		"profile": "Update profile",
+		"create": "Create account"
 	}
 }

@@ -1,2 +1,7 @@
-	<label><?php echo $locale->fields->login ?></label><input type="text" name="login" /><br/>
-	<label><?php echo $locale->fields->password ?></label><input type="password" name="password" /><br/>
+<?php $this->render('/portal/page/account/fields/login'); ?>
+<?php $this->render('/portal/page/account/fields/password'); ?>
+<?php foreach ($models['actions'] as $action) { ?>
+<?php   if ($action !== 'connect') { ?>
+<div class="switch" data-action="<?php echo $action; ?>"><?php echo $locale->switch->$action; ?></div>
+<?php   } ?>
+<?php } ?>

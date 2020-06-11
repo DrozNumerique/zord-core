@@ -2,137 +2,185 @@
 
 class Account extends Module {
     
-    public static $FAKE_PASSWORD = '************'; 
-    
-    public function identity() {
-        $update   = isset($this->params['update'])   ? $this->params['update'] === 'true' : false;
-        $token    = isset($this->params['token'])    ? trim($this->params['token'])       : null;
-        $name     = isset($this->params['name'])     ? trim($this->params['name'])        : null;
-        $password = isset($this->params['password']) ? trim($this->params['password'])    : null;
-        $confirm  = isset($this->params['confirm'])  ? trim($this->params['confirm'])     : null;
-        $message  = null;
-        if ($update) {
-            $login = null;
-            $activated = false;
-            if ($this->user->isConnected()) {
-                $login = $this->user->login;
-            } else if ($token) {
-                $user = (new UserEntity())->retrieve(['where' => ['activate' => $token]]);
-                if ($user) {
-                    $login = $user->login;
-                    $activated = isset($user->password);
-                }
-            }
-            if ($login) {
-                if ($password == $confirm) {
-                    $data = ['name' => $name, 'activate' => ''];
-                    if (!empty($password) && $password !== self::$FAKE_PASSWORD) {
-                        $data['password'] = $password;
-                        $activated = true;
-                    }
-                    (new UserEntity())->update(['where' => ['login' => $login]], $data);
-                    if (!$this->user->isConnected() && $activated) {
-                        $this->controler->setUser(User::bind($login));
-                    } else {
-                        $this->controler->setUser(User::get($login, $this->user->session));
-                    }
-                    $message = $this->locale->messages->profile_updated;
-                } else {
-                    $message = $this->locale->messages->wrong_confirm;
-                }
-            } else {
-                return $this->error(404);
+    protected function form($action = null, $models = []) {
+        $models['action']  = $action ?? 'connect';
+        $models['actions'] = [];
+        if (!$this->user->isConnected()) {
+            $models['actions'][] = 'connect';
+            $models['actions'][] = 'reset';
+            if (ACCOUNT_AUTO_CREATE) {
+                $models['actions'][] = 'create';
             }
         } else {
-            if ($this->user->isConnected()) {
-                $name     = $this->user->name;
-                $password = self::$FAKE_PASSWORD;
-            } else if ($token) {
-                $user = (new UserEntity())->retrieve(['where' => ['activate' => $token]]);
-                if ($user) {
-                    if (isset($user->name)) {
-                        $name = $user->name;
+            $models['actions'][] = 'profile';
+        }
+        return $this->page('account', $models);
+    }
+    
+    protected function userdata() {
+        $login    = isset($this->params['login'])    ? trim($this->params['login'])    : $this->user->login;
+        $name     = isset($this->params['name'])     ? trim($this->params['name'])     : $this->user->name;
+        $email    = isset($this->params['email'])    ? trim($this->params['email'])    : $this->user->email;
+        $password = isset($this->params['password']) ? trim($this->params['password']) : $this->user->password;
+        $confirm  = isset($this->params['confirm'])  ? trim($this->params['confirm'])  : $this->user->password;
+        return [
+            'login'    => $login,
+            'name'     => $name,
+            'email'    => $email,
+            'password' => $password,
+            'confirm'  => $confirm
+        ];
+    }
+    
+    protected function check($models, $properties = []) {
+        $checked = true;
+        foreach ($properties as $property) {
+            if (empty($models[$property])) {
+                $checked =  Zord::resolve($this->locale->messages->missing, ['property' => $property], $this->locale);
+                break;
+            }
+            switch ($property) {
+                case 'login': {
+                    $user = (new UserEntity())->retrieve($models['login']);
+                    if ($user !== false) {
+                        $checked = $this->locale->messages->already_login;
                     }
-                    if (isset($user->password)) {
-                        $password = self::$FAKE_PASSWORD;
-                    }
-                    $token = User::crypt($user->login.microtime());
-                    (new UserEntity())->update(
-                        ['where' => ['login' => $user->login]],
-                        ['activate' => $token]
-                    );
-                } else {
-                    return $this->error(404);
+                    break;
                 }
-            } else {
-                return $this->error(404);
+                case 'email': {
+                    $user = (new UserEntity())->retrieve([
+                        'where' => ['email' => $models['email']]
+                    ]);
+                    if ($user !== false && $user->login !== $this->user->login) {
+                        $checked = $this->locale->messages->already_email;
+                    } else if (filter_var($models['email'], FILTER_VALIDATE_EMAIL) === false) {
+                        $checked = $this->locale->messages->notvalid_email;
+                    }
+                    break;
+                }
+                case 'name': {
+                    break;
+                }
+                case 'password': {
+                    if (strlen($models['password']) < PASSWORD_MIN_LENGTH) {
+                        $checked = Zord::substitute($this->locale->messages->password_length, ['min' => PASSWORD_MIN_LENGTH]);
+                    } else if ($models['password'] !== $models['confirm']) {
+                        $checked = $this->locale->messages->wrong_confirm;
+                    }
+                    break;
+                }
+            }
+            if ($checked !== true) {
+                break;
             }
         }
-        return $this->page('account', [
-            'action'   => 'identity',
-            'name'     => $name,
-            'password' => $password,
-            'message'  => $message,
-            'token'    => $token
-        ]);
+        if ($checked === true) {
+            $checked = [];
+            foreach ($properties as $property) {
+                if ($models[$property] !== $this->user->$property) {
+                    $checked[$property] = ($property === 'password') ? User::crypt($models['password']) : $models[$property];
+                }
+            }
+            return $checked;
+        }
+        return $checked;
     }
     
     public function connect($success = null, $failure = null) {
-        $login    = isset($this->params['login'])    ? trim($this->params['login'])    : '';
-        $password = isset($this->params['password']) ? trim($this->params['password']) : null;
-        $success = isset($this->params['success'])   ? $this->params['success']        : $success;
-        $failure = isset($this->params['failure'])   ? $this->params['failure']        : $failure;
-        $message = null;
-        if (!empty($login)) {
-            if (!empty($password)) {
-                $user = User::authenticate($login, $password);
-                if ($user) {
-                    $this->controler->setUser($user);
-                    return $this->redirect($success ?? $this->baseURL, true);
-                } else {
-                    $message = $this->locale->messages->auth_failed;
-                }
-            } else {
-                $token = User::crypt($login.microtime());
-                $user = (new UserEntity())->retrieve(
-                    ['where' => ['email' => $login]]
-                );
-                if ($user === false) {
-                    if (ACCOUNT_AUTO_CREATE) {
-                        $user = (new UserEntity())->create([
-                            'login'    => $login,
-                            'email'    => $login,
-                            'name'     => $login,
-                            'activate' => $token
-                        ]);
-                    }
-                } else {
-                    $user = (new UserEntity())->update(
-                        ['where' => ['email' => $login]],
-                        ['activate' => $token]
-                    );
-                }
-                if ($user) {
-                    $result = $this->sendActivation($user, $token);
-                    if (isset($result['error'])) {
-                        $message = $this->locale->messages->mail_error.'|('.$result['error'].')';
-                    } else {
-                        $message = $this->locale->messages->mail_sent;
-                    }
-                } else {
-                    $message = $this->locale->messages->unknown_user;
-                }
-            }
-        }
-        if (isset($failure)) {
-            return $this->redirect($failure.(isset($message) ? '?message='.$message : ''));
-        }
-        return $this->page('account', [
-            'action'  => 'connect',
+        $login    = trim($this->params['login']    ?? '');
+        $password = trim($this->params['password'] ?? null);
+        $success = $this->params['success'] ?? null;
+        $failure = $this->params['failure'] ?? null;
+        $message = $this->params['message'] ?? null;
+        $models = [
             'success' => $success,
             'failure' => $failure,
             'message' => $message
-        ]);
+        ];
+        if (!empty($login) && !empty($password)) {
+            $user = User::authenticate($login, $password);
+            if ($user) {
+                $this->controler->setUser($user);
+                return $this->redirect($success ?? $this->baseURL, true);
+            } else {
+                if (isset($failure)) {
+                    return $this->redirect($failure.'?message='.$this->locale->messages->auth_failed);
+                }
+            }
+        }
+        return $this->form('connect', $models);
+    }
+    
+    public function profile() {
+        $token = $this->params['token'] ?? null;
+        if (isset($token)) {
+            $decrypted = null;
+            if (openssl_private_decrypt(base64_decode(str_replace(' ', '+', $token)), $decrypted, openssl_pkey_get_private(file_get_contents(Zord::realpath(OPENSSL_PRIVATE_KEY))))) {
+                $data = Zord::objectToArray(json_decode($decrypted));
+                if (is_array($data) && isset($data['login'])) {
+                    $login = $data['login'];
+                    $user = (new UserEntity())->retrieve($login);
+                    if ($user !== false) {
+                        $this->controler->setUser(User::bind($login));
+                        $this->user = $this->controler->getUser();
+                    } else {
+                        return $this->error(404);
+                    }
+                } else {
+                    return $this->error(400);
+                }
+            } else {
+                return $this->error(500);
+            }
+        }
+        if (!$this->user->isConnected()) {
+            return $this->redirect($this->baseURL.'/connect');
+        }
+        $models = $this->userdata();
+        if (!isset($token)) {
+            $data = $this->check($models, ['name','email','password']);
+            if (is_string($data)) {
+                $models['message'] = $data;
+            } else if (!empty($data)) {
+                (new UserEntity())->update($this->user->login, $data);
+                $models['message'] = $this->locale->messages->profile_updated;
+            } else {
+                $models['message'] = $this->locale->messages->profile_unchanged;
+            }
+        }
+        return $this->form('profile', $models);
+    }
+    
+    public function create() {
+        if ($this->user->isConnected()) {
+            return $this->redirect($this->baseURL);
+        }
+        $models = $this->userdata();
+        $data = $this->check($models, ['login','name','email']);
+        if (is_string($data)) {
+            $models['message'] = $data;
+        } else {
+            $result = $this->resetPassword((new UserEntity())->create($data));
+            $models['message'] = $result['error'] ?? $this->locale->messages->account_created;
+        }
+        return $this->form('create', $models);
+    }
+    
+    public function reset() {
+        $email = $this->params['email'] ?? null;
+        $models = [];
+        if (isset($email)) {
+            $user = (new UserEntity())->retrieve([
+                'where' => ['email' => $email]
+            ]);
+            if ($user !== false) {
+                $result = $this->resetPassword($user);
+                $models['message'] = $result['error'] ?? $this->locale->messages->mail_sent;
+            } else {
+                $models['message'] = $this->locale->messages->unknown_user;
+            }
+        }
+        return $this->form('reset', $models);
     }
     
     public function disconnect() {
@@ -140,30 +188,37 @@ class Account extends Module {
         return $this->redirect($this->baseURL, true);
     }
     
-    public function sendActivation($user, $code) {
-        $url = $this->baseURL.'/identity?token='.$code;
-        $send = $this->sendMail([
-            'category'   => 'identity'.DS.$user->login,
-            'principal'  => ['email' => $user->email, 'name' => $user->name],
-            'recipients' => [
-                'bcc' => [
-                    WEBMASTER_MAIL_ADDRESS => WEBMASTER_MAIL_NAME
+    public function resetPassword($user) {
+        $now = date('Y-m-d H:i:s');
+        (new UserEntity())->update($user->login, ['reset' => $now]);
+        $data = Zord::json_encode(['login' => $user->login, 'reset' => $now]);
+        $crypted = null;
+        if (openssl_public_encrypt($data, $crypted, openssl_pkey_get_public(file_get_contents(Zord::realpath(OPENSSL_PUBLIC_KEY))))) {
+            $url = $this->baseURL.'/profile?token='.base64_encode($crypted);
+            $send = $this->sendMail([
+                'category'   => 'account'.DS.$user->login,
+                'principal'  => ['email' => $user->email, 'name' => $user->name],
+                'recipients' => [
+                    'bcc' => [
+                        WEBMASTER_MAIL_ADDRESS => WEBMASTER_MAIL_NAME
+                    ]
+                ],
+                'subject'    => $this->locale->mail->reset_password->subject,
+                'text'       => $this->locale->mail->reset_password->copy_paste."\n".$url,
+                'content'    => '/mail/account/reset',
+                'models'     => [
+                    'url' => $url
                 ]
-            ],
-            'subject'    => $this->locale->mail->activate,
-            'text'       => $this->locale->mail->copy_paste."\n".$url,
-            'content'    => '/mail/activation',
-            'models'     => [
-                'url' => $url
-            ]
-        ]);
-        $result = [
-            'activation' => $url,
-            'account'    => htmlspecialchars($user->name.' <'.$user->email.'>')
-        ];
-        if ($send !== true) {
-            $result['error'] = $send;
+            ]);
+            $result = [
+                'activation' => $url,
+                'account'    => htmlspecialchars($user->name.' <'.$user->email.'>')
+            ];
+            if ($send !== true) {
+                $result['error'] = $this->locale->messages->mail_error.$send;
+            }
+            return $result;
         }
-        return $result;
+        return ['error' => $this->locale->messages->encryption_error];
     }
 }

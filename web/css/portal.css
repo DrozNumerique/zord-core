@@ -115,3 +115,16 @@ div.loading {
 	background: no-repeat center url("/img/wait.gif");
 }
 
+/* ---------------------------------- account ----------------------------------- */
+li.account {
+	list-style: none;
+	display: none;
+}
+
+li.account.active {
+	display: block;
+}
+
+li.account div.switch {
+	cursor: pointer;
+}

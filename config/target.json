@@ -1,19 +1,33 @@
 {
 	"Account": {
 		"response": "VIEW",
-		"identity": {
-			"shortcut": "identity",
-			"parameters": {
-				"token": "FILTER_SANITIZE_STRING"
-			}
-		},
 		"connect": {
 			"shortcut": "connect",
 			"parameters": {
 				"login": "FILTER_DEFAULT",
-				"password": "FILTER_FLAG_NONE",
-				"success": "FILTER_VALIDATE_URL",
-				"failure": "FILTER_VALIDATE_URL"
+				"password": "FILTER_FLAG_NONE"
+			}
+		},
+		"reset": {
+			"shortcut": "reset",
+			"parameters": {
+				"token": "FILTER_SANITIZE_STRING"
+			}
+		},
+		"profile": {
+			"shortcut": "profile",
+			"parameters": {
+				"name": "FILTER_SANITIZE_STRING",
+				"email": "FILTER_SANITIZE_STRING",
+				"password": "FILTER_SANITIZE_STRING",
+				"confirm": "FILTER_SANITIZE_STRING"
+			}
+		},
+		"create": {
+			"parameters": {
+				"login": "FILTER_SANITIZE_STRING",
+				"email": "FILTER_SANITIZE_STRING",
+				"name": "FILTER_SANITIZE_STRING"
 			}
 		},
 		"disconnect": {

@@ -1,27 +1,44 @@
 {
 	"fields": {
-		"login" : "Identifiant : ",
-		"name": "Nom complet : ",
-		"password" : "Mot de passe : ",
-		"confirm" : "Confirmation : "
+		"login" : "Identifiant",
+		"name": "Nom complet",
+		"email": "Adresse e-mail",
+		"password" : "Mot de passe",
+		"confirm" : "Confirmation"
 	},
 	"actions": {
 		"connect" : "Connexion",
-		"identity" : "Mise à jour"
+		"reset": "Envoi d'un mail",
+		"profile" : "Mise à jour",
+		"create"  : "Création"
 	},
 	"messages": {
 		"profile_updated": "Profil mis à jour",
+		"profile_unchanged": "Profil inchangé",
+		"account_created": "Compte créé",
 		"wrong_confirm": "Mauvaise confirmation du mot de passe",
+		"already_login": "Identifiant déjà attribué",
+		"already_email": "Adresse e-mail déjà attribuée",
+		"notvalid_email": "Adresse e-mail invalide",
 		"auth_failed": "Echec de l'authentification",
 		"mail_sent": "Message d'activation envoyé",
 		"mail_error": "Erreur lors de l'envoi du message d'activation",
+		"encryption_error": "Erreur lors du chiffrement du d'activation",
 		"unknown_user": "Utilisateur inconnu",
-		"forgot_password": "Pour modifier votre mot de passe, renseigner l'identifiant avec votre adresse courriel et laisser vide le mot de passe, puis cliquer sur connexion",
-		"create_account": "Pour créer un compte ou modifier votre mot de passe, renseigner l'identifiant avec votre adresse courriel et laisser vide le mot de passe, puis cliquer sur connexion"
+		"missing": "Le champ '$[fields.${property}]' doit être renseigné",
+		"password_length": "Le mot de passe doit faire au moins ${min} caractères"
 	},
 	"mail": {
-		"activate": "Activation du compte",
-		"click_here": "Cliquer ici pour renseigner votre compte",
-		"copy_paste": "Copier/coller le lien ci-dessous dans votre navigateur pour renseigner votre compte"
+		"reset_password": {
+			"subject": "Changement de mot de passe",
+			"click_here": "Cliquer ici pour changer votre mot de passe",
+			"copy_paste": "Copier/coller le lien ci-dessous dans votre navigateur pour changer votre mot de passe"
+		}
+	},
+	"switch": {
+		"connect": "Retour à la connexion",
+		"reset": "Mot de passe oublié ?",
+		"profile": "Mettre à jour vos informations personnelles",
+		"create": "Créer un compte"
 	}
 }

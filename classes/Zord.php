@@ -809,6 +809,10 @@ class Zord {
 	    return mb_substr($string, 0, $maxlength).(mb_strlen($string) > $maxlength ? "…" : '');
 	}
 	
+	public static function trim($string) {
+	    return isset($string) ? trim($string) : null;
+	}
+	
 	public static function sendMail($mail) {
 	    $category  = $mail['category']  ?? null;
 	    $textonly  = $mail['textonly']  ?? false;

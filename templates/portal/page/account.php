@@ -1,23 +1,31 @@
-<?php $action = $models['action'] ?? ($user->isConnected() ? 'identity' : 'connect'); ?>
-<form class="account" method="post" action="<?php echo $baseURL; ?>">
-<?php if ($action == 'connect') { ?>
-	<div class="advert"><?php echo ACCOUNT_AUTO_CREATE ? $locale->messages->create_account : $locale->messages->forgot_password ; ?></div>
+<ul>
+<?php foreach (($models['actions'] ?? ['profile']) as $action) { ?>
+	<li class="account <?php echo $action; ?><?php echo $action == ($models['action'] ?? 'profile') ? ' active' : '' ?>">
+		<form class="account" method="post" action="<?php echo $baseURL; ?>">
+			<input type="hidden" name="module" value="Account"/>
+			<input type="hidden" name="action" value="<?php echo $action; ?>"/>
+<?php if (!empty($models['success'])) { ?>
+			<input type="hidden" name="success" value="<?php echo $models['success'] ?>"/>
 <?php } ?>
-	<input type="hidden" name="module" value="Account"/>
-	<input type="hidden" name="action" value="<?php echo $action; ?>"/>
-<?php if (isset($models['success']) && $models['success']) { ?>
-	<input type="hidden" name="success" value="<?php echo $models['success'] ?>"/>
+<?php if (!empty($models['failure'])) { ?>
+			<input type="hidden" name="failure" value="<?php echo $models['failure'] ?>"/>
 <?php } ?>
-<?php if (isset($models['failure']) && $models['failure']) { ?>
-	<input type="hidden" name="failure" value="<?php echo $models['failure'] ?>"/>
+<?php if (!empty($models['token'])) { ?>
+			<input type="hidden" name="token" value="<?php echo $models['token'] ?>"/>
 <?php } ?>
-<?php if (isset($models['message']) && $models['message']) { ?>
+<?php if (!empty($models['message'])) { ?>
 <?php   foreach (explode('|', $models['message']) as $message) { ?>	
-	<div><?php echo $message; ?></div><br/>
+			<div><?php echo $message; ?></div><br/>
 <?php   } ?>
 <?php } ?>
 <?php $this->render($action); ?>
-	<div>
-		<input type="submit" name="submit" value="<?php echo $locale->actions->$action ?>"/>
-	</div>
-</form>
+<?php if (!in_array($action, ['connect','profile'])) { ?>
+			<div class="switch" data-action="connect"><?php echo $locale->switch->connect; ?></div>
+<?php } ?>
+			<div>
+				<input type="submit" name="submit" value="<?php echo $locale->actions->$action ?>"/>
+			</div>
+		</form>
+	</li>
+<?php } ?>
+</ul>

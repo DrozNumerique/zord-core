@@ -163,6 +163,15 @@ var activateStates = function(element) {
 	}
 }
 
+var displayAccount = function(action) {
+	[].forEach.call(document.querySelectorAll('li.account'), function(element) {
+		element.classList.remove('active');
+		if (element.classList.contains(action)) {
+			element.classList.add('active');
+		}
+	});
+}
+
 document.addEventListener("DOMContentLoaded", function(event) {
 
 	if (PORTAL == undefined) {
@@ -214,6 +223,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		el.addEventListener("click", function(event) {
 			window.location.href = 'mailto:' + this.dataset.name + '@' + this.dataset.domain + '.' + this.dataset.tld;
 			return false;
+		});
+	});
+	
+	[].forEach.call(document.querySelectorAll('li.account div.switch'), function(element) {
+		element.addEventListener("click", function(event) {
+			displayAccount(element.dataset.action);
 		});
 	});
 	
