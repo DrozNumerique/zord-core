@@ -2,18 +2,23 @@
 
 class Account extends Module {
     
+    public static function actions($connected) {
+        $actions = [];
+        if ($connected) {
+            $actions[] = 'profile';
+        } else {
+            $actions[] = 'connect';
+            $actions[] = 'reset';
+            if (ACCOUNT_AUTO_CREATE) {
+                $actions[] = 'create';
+            }
+        }
+        return $actions;
+    }
+    
     protected function form($action = null, $models = []) {
         $models['action']  = $action ?? 'connect';
-        $models['actions'] = [];
-        if (!$this->user->isConnected()) {
-            $models['actions'][] = 'connect';
-            $models['actions'][] = 'reset';
-            if (ACCOUNT_AUTO_CREATE) {
-                $models['actions'][] = 'create';
-            }
-        } else {
-            $models['actions'][] = 'profile';
-        }
+        $models['actions'] = self::actions($this->user->isConnected());
         return $this->page('account', $models);
     }
     
