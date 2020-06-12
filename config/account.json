@@ -1,0 +1,6 @@
+{
+	"properties": {
+		"create": ["login","name","email"],
+		"profile": ["name","email","password"]
+	}
+}

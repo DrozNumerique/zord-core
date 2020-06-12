@@ -78,7 +78,7 @@ class Admin extends Module {
                             'name'     => $name,
                             'email'    => $email
                         ];
-                        $result = (new Account($this->controler))->resetPassword($entity->create($data));
+                        $result = (new Account($this->controler))->notifyReset($entity->create($data));
                         break;
                     }
                     case 'update': {

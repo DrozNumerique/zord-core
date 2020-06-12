@@ -32,44 +32,51 @@ class Account extends Module {
         ];
     }
     
-    protected function check($models, $properties = []) {
+    protected function valid($data, $property) {
+        $checked = true;
+        switch ($property) {
+            case 'login': {
+                $user = (new UserEntity())->retrieve($data['login']);
+                if ($user !== false) {
+                    $checked = $this->locale->messages->already_login;
+                }
+                break;
+            }
+            case 'email': {
+                $user = (new UserEntity())->retrieve([
+                    'where' => ['email' => $data['email']]
+                ]);
+                if ($user !== false && $user->login !== $this->user->login) {
+                    $checked = $this->locale->messages->already_email;
+                } else if (filter_var($data['email'], FILTER_VALIDATE_EMAIL) === false) {
+                    $checked = $this->locale->messages->notvalid_email;
+                }
+                break;
+            }
+            case 'password': {
+                if (strlen($data['password']) < PASSWORD_MIN_LENGTH) {
+                    $checked = Zord::substitute($this->locale->messages->password_length, ['min' => PASSWORD_MIN_LENGTH]);
+                } else if ($data['password'] !== $data['confirm']) {
+                    $checked = $this->locale->messages->wrong_confirm;
+                }
+                break;
+            }
+        }
+        return $checked;
+    }
+    
+    protected function value($data, $property) {
+        return ($property === 'password') ? User::crypt($data['password']) : $data[$property];
+    }
+    
+    protected function check($data, $properties = []) {
         $checked = true;
         foreach ($properties as $property) {
-            if (empty($models[$property])) {
+            if (empty($data[$property])) {
                 $checked = Zord::resolve($this->locale->messages->missing, ['property' => $property], $this->locale);
                 break;
             }
-            switch ($property) {
-                case 'login': {
-                    $user = (new UserEntity())->retrieve($models['login']);
-                    if ($user !== false) {
-                        $checked = $this->locale->messages->already_login;
-                    }
-                    break;
-                }
-                case 'email': {
-                    $user = (new UserEntity())->retrieve([
-                        'where' => ['email' => $models['email']]
-                    ]);
-                    if ($user !== false && $user->login !== $this->user->login) {
-                        $checked = $this->locale->messages->already_email;
-                    } else if (filter_var($models['email'], FILTER_VALIDATE_EMAIL) === false) {
-                        $checked = $this->locale->messages->notvalid_email;
-                    }
-                    break;
-                }
-                case 'name': {
-                    break;
-                }
-                case 'password': {
-                    if (strlen($models['password']) < PASSWORD_MIN_LENGTH) {
-                        $checked = Zord::substitute($this->locale->messages->password_length, ['min' => PASSWORD_MIN_LENGTH]);
-                    } else if ($models['password'] !== $models['confirm']) {
-                        $checked = $this->locale->messages->wrong_confirm;
-                    }
-                    break;
-                }
-            }
+            $checked = $this->valid($data, $property);
             if ($checked !== true) {
                 break;
             }
@@ -77,9 +84,8 @@ class Account extends Module {
         if ($checked === true) {
             $checked = [];
             foreach ($properties as $property) {
-                $value = ($property === 'password') ? User::crypt($models['password']) : $models[$property];
-                if ($value !== $this->user->$property) {
-                    $checked[$property] = $models[$property];
+                if ($this->value($data, $property) !== $this->user->$property) {
+                    $checked[$property] = $data[$property];
                 }
             }
         }
@@ -138,7 +144,7 @@ class Account extends Module {
         }
         $models = $this->userdata();
         if (!isset($token)) {
-            $data = $this->check($models, ['name','email','password']);
+            $data = $this->check($models, Zord::value('account', ['properties','profile']));
             if (is_string($data)) {
                 $models['message'] = $data;
             } else if (!empty($data)) {
@@ -156,11 +162,11 @@ class Account extends Module {
             return $this->redirect($this->baseURL);
         }
         $models = $this->userdata();
-        $data = $this->check($models, ['login','name','email']);
+        $data = $this->check($models, Zord::value('account', ['properties','create']));
         if (is_string($data)) {
             $models['message'] = $data;
         } else {
-            $result = $this->resetPassword((new UserEntity())->create($data));
+            $result = $this->notifyReset((new UserEntity())->create($data));
             $models['message'] = $result['error'] ?? $this->locale->messages->account_created;
         }
         return $this->form('create', $models);
@@ -174,7 +180,7 @@ class Account extends Module {
                 'where' => ['email' => $email]
             ]);
             if ($user !== false) {
-                $result = $this->resetPassword($user);
+                $result = $this->notifyReset($user);
                 $models['message'] = $result['error'] ?? $this->locale->messages->mail_sent;
             } else {
                 $models['message'] = $this->locale->messages->unknown_user;
@@ -188,7 +194,7 @@ class Account extends Module {
         return $this->redirect($this->baseURL, true);
     }
     
-    public function resetPassword($user) {
+    public function notifyReset($user) {
         $now = date('Y-m-d H:i:s');
         (new UserEntity())->update($user->login, ['reset' => $now]);
         $data = Zord::json_encode(['login' => $user->login, 'reset' => $now]);
