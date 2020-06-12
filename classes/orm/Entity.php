@@ -270,7 +270,7 @@ abstract class Entity
             foreach ($deleted as $key) {
                 foreach ($this->elements as $element => $fields) {
                     $result &= (new $element())->delete([
-                        'many'   => true,
+                        'many'  => true,
                         'where' => [$fields[1] => $key]
                     ], true);
                 }
