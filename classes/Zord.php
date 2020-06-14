@@ -805,6 +805,10 @@ class Zord {
 	    return implode('<br>', explode($br, $escape ? htmlspecialchars($text) : $text));
 	}
 	
+	public static function md2html($content, $breaks = true) {
+	    return Parsedown::instance()->setBreaksEnabled($breaks)->line($content);
+	}
+	
 	public static function trunc($string, $maxlength) {
 	    return mb_substr($string, 0, $maxlength).(mb_strlen($string) > $maxlength ? "…" : '');
 	}
