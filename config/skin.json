@@ -4,15 +4,20 @@
 		"href": "/img/favicon.ico"
 	},
 	"styles": {
+		"portal": {
+			"media": "screen",
+			"type": "text/css",
+			"href": "/css/portal.css"
+		},
 		"font-awesome": {
 			"media": "screen",
 			"type": "text/css",
 			"href": "/css/font-awesome.css"
 		},
-		"portal": {
+		"fancybox": {
 			"media": "screen",
 			"type": "text/css",
-			"href": "/css/portal.css"
+			"href": "/css/fancybox.css"
 		},
 		"chosen": {
 			"media": "screen",
@@ -32,6 +37,14 @@
 		"jquery": {
 			"type": "text/javascript",
 			"src": "/js/jquery.js"
+		},
+		"jquery-ui": {
+			"type": "text/javascript",
+			"src": "/js/jquery-ui.js"
+		},
+		"fancybox": {
+			"type": "text/javascript",
+			"src": "/js/fancybox.js"
 		},
 		"chosen": {
 			"type": "text/javascript",
