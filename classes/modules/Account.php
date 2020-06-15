@@ -164,10 +164,12 @@ class Account extends Module {
                 $data = Zord::objectToArray(json_decode($decrypted));
                 if (is_array($data) && isset($data['login'])) {
                     $login = $data['login'];
+                    $reset = $data['reset'];
                     $user = (new UserEntity())->retrieve($login);
-                    if ($user !== false) {
+                    if ($user !== false && $reset == $user->reset) {
                         $this->controler->setUser(User::bind($login));
                         $this->user = $this->controler->getUser();
+                        (new UserEntity())->update($login, ['reset' => null]);
                     } else {
                         return $this->error(404);
                     }
