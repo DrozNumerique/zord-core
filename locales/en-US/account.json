@@ -14,9 +14,17 @@
 		"create"  : "Create"
 	},
 	"messages": {
+		"profile": {
+			"updated": "Profile updated",
+			"unchanged": "Profile unchanged"
+		},
+		"password": {
+			"updated": "Password updated",
+			"unchanged": "Password unchanged"
+		},
 		"profile_updated": "Profile updated",
 		"profile_unchanged": "Profile unchanged",
-		"account_created": "Account created",
+		"account_created": "Account created|An e-mail is sent with a link to activate your password",
 		"wrong_confirm": "Wrong password confirmation",
 		"already_login": "Login is already used",
 		"already_email": "E-mail address is already used",

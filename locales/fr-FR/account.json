@@ -14,9 +14,15 @@
 		"create"  : "Création"
 	},
 	"messages": {
-		"profile_updated": "Profil mis à jour",
-		"profile_unchanged": "Profil inchangé",
-		"account_created": "Compte créé",
+		"profile": {
+			"updated": "Profil mis à jour",
+			"unchanged": "Profil inchangé"
+		},
+		"password": {
+			"updated": "Mot de passe mis à jour",
+			"unchanged": "Mot de passe inchangé"
+		},
+		"account_created": "Compte créé|Vous allez recevoir un mail avec un lien pour activer votre mot de passe",
 		"wrong_confirm": "Mauvaise confirmation du mot de passe",
 		"already_login": "Identifiant déjà attribué",
 		"already_email": "Adresse e-mail déjà attribuée",

@@ -28,7 +28,7 @@ class Account extends Module {
         if (isset($this->params[$property])) {
             $submit = true;
             $value = trim($this->params[$property]);
-            if (in_array($property, ['password','confirm'])) {
+            if (in_array($property, ['password','confirm']) && $value !== $this->user->password) {
                 $value = User::crypt($value);
             }
         }
@@ -76,7 +76,7 @@ class Account extends Module {
                 break;
             }
             case 'password': {
-                if (strlen($data['password']) < PASSWORD_MIN_LENGTH) {
+                if (strlen($this->params['password']) < PASSWORD_MIN_LENGTH) {
                     $checked = Zord::substitute($this->locale->messages->password_length, ['min' => PASSWORD_MIN_LENGTH]);
                 } else if ($data['password'] !== $data['confirm']) {
                     $checked = $this->locale->messages->wrong_confirm;
@@ -123,9 +123,9 @@ class Account extends Module {
             } else if (!empty($data)) {
                 $data['password.crypted'] = true;
                 (new UserEntity())->update($this->user->login, $data);
-                $models['message'] = $this->locale->messages->profile_updated;
+                $models['message'] = $this->locale->messages->$scope->updated;
             } else {
-                $models['message'] = $this->locale->messages->profile_unchanged;
+                $models['message'] = $this->locale->messages->$scope->unchanged;
             }
         }
         return $this->form($scope, $models);
