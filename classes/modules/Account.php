@@ -38,7 +38,15 @@ class Account extends Module {
     protected function userdata() {
         $data = [];
         $update = false;
-        foreach (Zord::value('account', ['properties','user']) as $property) {
+        $properties = [];
+        foreach (Zord::value('account', 'properties') as $list) {
+            foreach ($list as $property) {
+                if (!in_array($property, $properties)) {
+                    $properties[] = $property;
+                }
+            }
+        }
+        foreach ($properties as $property) {
             list($value, $submit) = $this->value($property);
             $update = $update || $submit;
             $data[$property] = $value;
@@ -79,8 +87,9 @@ class Account extends Module {
         return $checked;
     }
     
-    protected function check($data, $properties = []) {
+    protected function check($data, $scope) {
         $checked = true;
+        $properties = Zord::value('account', ['properties',$scope]);
         foreach ($properties as $property) {
             if (empty($data[$property])) {
                 $checked = Zord::resolve($this->locale->messages->missing, ['property' => $property], $this->locale);
@@ -108,7 +117,7 @@ class Account extends Module {
         }
         list($models, $update) = $this->userdata();
         if ($update) {
-            $data = $this->check($models, Zord::value('account', ['properties',$scope]));
+            $data = $this->check($models, $scope);
             if (is_string($data)) {
                 $models['message'] = $data;
             } else if (!empty($data)) {
@@ -181,7 +190,7 @@ class Account extends Module {
             return $this->redirect($this->baseURL.'/home');
         }
         list($models, ) = $this->userdata();
-        $data = $this->check($models, Zord::value('account', ['properties','create']));
+        $data = $this->check($models, 'create');
         if (is_string($data)) {
             $models['message'] = $data;
         } else {
