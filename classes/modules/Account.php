@@ -107,8 +107,6 @@ class Account extends Module {
             return $this->redirect($this->baseURL.'/connect');
         }
         list($models, $update) = $this->userdata();
-        Zord::log($models);
-        Zord::log($update);
         if ($update) {
             $data = $this->check($models, Zord::value('account', ['properties',$scope]));
             if (is_string($data)) {
