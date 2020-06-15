@@ -10,6 +10,7 @@
 		"connect" : "Connexion",
 		"reset": "Envoi d'un mail",
 		"profile" : "Mise à jour",
+		"password" : "Mise à jour",
 		"create"  : "Création"
 	},
 	"messages": {
@@ -30,9 +31,9 @@
 	},
 	"mail": {
 		"reset_password": {
-			"subject": "Changement de mot de passe",
-			"click_here": "Cliquer ici pour changer votre mot de passe",
-			"copy_paste": "Copier/coller le lien ci-dessous dans votre navigateur pour changer votre mot de passe"
+			"subject": "Modification du mot de passe",
+			"click_here": "Cliquer ici pour modifier votre mot de passe",
+			"copy_paste": "Copier/coller le lien ci-dessous dans votre navigateur pour modifier votre mot de passe"
 		}
 	},
 	"switch": {

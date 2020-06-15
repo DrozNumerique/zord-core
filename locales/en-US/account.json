@@ -10,6 +10,7 @@
 		"connect": "Connect",
 		"reset": "Reset",
 		"profile" : "Update",
+		"password" : "Update",
 		"create"  : "Create"
 	},
 	"messages": {

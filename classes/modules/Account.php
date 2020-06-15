@@ -5,7 +5,7 @@ class Account extends Module {
     public static function actions($connected) {
         $actions = [];
         if ($connected) {
-            $actions[] = 'profile';
+            $actions[] = $connected;
         } else {
             $actions[] = 'connect';
             $actions[] = 'reset';
@@ -18,23 +18,32 @@ class Account extends Module {
     
     protected function form($action = null, $models = []) {
         $models['action']  = $action ?? 'connect';
-        $models['actions'] = self::actions($this->user->isConnected());
+        $models['actions'] = self::actions($this->user->isConnected() ? $action : false);
         return $this->page('account', $models);
     }
     
+    protected function value($property) {
+        $value = ($property !== 'confirm') ? $this->user->$property : $this->user->password;
+        $submit = false;
+        if (isset($this->params[$property])) {
+            $submit = true;
+            $value = trim($this->params[$property]);
+            if (in_array($property, ['password','confirm'])) {
+                $value = User::crypt($value);
+            }
+        }
+        return [$value, $submit];
+    }
+    
     protected function userdata() {
-        $login    = isset($this->params['login'])    ? trim($this->params['login'])    : $this->user->login;
-        $name     = isset($this->params['name'])     ? trim($this->params['name'])     : $this->user->name;
-        $email    = isset($this->params['email'])    ? trim($this->params['email'])    : $this->user->email;
-        $password = isset($this->params['password']) ? trim($this->params['password']) : $this->user->password;
-        $confirm  = isset($this->params['confirm'])  ? trim($this->params['confirm'])  : $this->user->password;
-        return [
-            'login'    => $login,
-            'name'     => $name,
-            'email'    => $email,
-            'password' => $password,
-            'confirm'  => $confirm
-        ];
+        $data = [];
+        $update = false;
+        foreach (Zord::value('account', ['properties','user']) as $property) {
+            list($value, $submit) = $this->value($property);
+            $update |= $submit;
+            $data[$property] = $value;
+        }
+        return [$data, $update];
     }
     
     protected function valid($data, $property) {
@@ -70,10 +79,6 @@ class Account extends Module {
         return $checked;
     }
     
-    protected function value($data, $property) {
-        return ($property === 'password') ? User::crypt($data['password']) : $data[$property];
-    }
-    
     protected function check($data, $properties = []) {
         $checked = true;
         foreach ($properties as $property) {
@@ -89,12 +94,32 @@ class Account extends Module {
         if ($checked === true) {
             $checked = [];
             foreach ($properties as $property) {
-                if ($this->value($data, $property) !== $this->user->$property) {
+                if ($data[$property] !== $this->user->$property) {
                     $checked[$property] = $data[$property];
                 }
             }
         }
         return $checked;
+    }
+    
+    protected function user($scope) {
+        if (!$this->user->isConnected()) {
+            return $this->redirect($this->baseURL.'/connect');
+        }
+        list($models, $update) = $this->userdata();
+        if ($update) {
+            $data = $this->check($models, Zord::value('account', ['properties',$scope]));
+            if (is_string($data)) {
+                $models['message'] = $data;
+            } else if (!empty($data)) {
+                $data['password.crypted'] = true;
+                (new UserEntity())->update($this->user->login, $data);
+                $models['message'] = $this->locale->messages->profile_updated;
+            } else {
+                $models['message'] = $this->locale->messages->profile_unchanged;
+            }
+        }
+        return $this->form($scope, $models);
     }
     
     public function connect($success = null, $failure = null) {
@@ -122,7 +147,7 @@ class Account extends Module {
         return $this->form('connect', $models);
     }
     
-    public function profile() {
+    public function password() {
         $token = $this->params['token'] ?? null;
         if (isset($token)) {
             $decrypted = null;
@@ -144,29 +169,18 @@ class Account extends Module {
                 return $this->error(500);
             }
         }
-        if (!$this->user->isConnected()) {
-            return $this->redirect($this->baseURL.'/connect');
-        }
-        $models = $this->userdata();
-        if (!isset($token)) {
-            $data = $this->check($models, Zord::value('account', ['properties','profile']));
-            if (is_string($data)) {
-                $models['message'] = $data;
-            } else if (!empty($data)) {
-                (new UserEntity())->update($this->user->login, $data);
-                $models['message'] = $this->locale->messages->profile_updated;
-            } else {
-                $models['message'] = $this->locale->messages->profile_unchanged;
-            }
-        }
-        return $this->form('profile', $models);
+        return $this->user('password');
+    }
+    
+    public function profile() {
+        return $this->user('profile');
     }
     
     public function create() {
         if ($this->user->isConnected()) {
-            return $this->redirect($this->baseURL);
+            return $this->redirect($this->baseURL.'/home');
         }
-        $models = $this->userdata();
+        list($models, ) = $this->userdata();
         $data = $this->check($models, Zord::value('account', ['properties','create']));
         if (is_string($data)) {
             $models['message'] = $data;
@@ -178,6 +192,9 @@ class Account extends Module {
     }
     
     public function reset() {
+        if ($this->user->isConnected()) {
+            return $this->redirect($this->baseURL.'/home');
+        }
         $email = $this->params['email'] ?? null;
         $models = [];
         if (isset($email)) {
@@ -205,7 +222,7 @@ class Account extends Module {
         $data = Zord::json_encode(['login' => $user->login, 'reset' => $now]);
         $crypted = null;
         if (openssl_public_encrypt($data, $crypted, openssl_pkey_get_public(file_get_contents(Zord::realpath(OPENSSL_PUBLIC_KEY))))) {
-            $url = $this->baseURL.'/profile?token='.base64_encode($crypted);
+            $url = $this->baseURL.'/password?token='.base64_encode($crypted);
             $send = $this->sendMail([
                 'category'   => 'account'.DS.$user->login,
                 'principal'  => ['email' => $user->email, 'name' => $user->name],

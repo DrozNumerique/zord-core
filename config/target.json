@@ -23,6 +23,13 @@
 				"confirm": "FILTER_SANITIZE_STRING"
 			}
 		},
+		"password": {
+			"shortcut": "password",
+			"parameters": {
+				"password": "FILTER_SANITIZE_STRING",
+				"confirm": "FILTER_SANITIZE_STRING"
+			}
+		},
 		"create": {
 			"parameters": {
 				"login": "FILTER_SANITIZE_STRING",

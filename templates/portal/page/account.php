@@ -19,7 +19,7 @@
 <?php   } ?>
 <?php } ?>
 <?php $this->render($action); ?>
-<?php if (!in_array($action, ['connect','profile'])) { ?>
+<?php if (in_array($action, ['create','reset'])) { ?>
 			<div class="switch" data-action="connect"><?php echo $locale->switch->connect; ?></div>
 <?php } ?>
 			<div>

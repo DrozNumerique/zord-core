@@ -1,6 +1,8 @@
 {
 	"properties": {
+		"user": ["login","name","email","password","confirm"],
 		"create": ["login","name","email"],
-		"profile": ["name","email","password"]
+		"profile": ["name","email","password"],
+		"password": ["password"]
 	}
 }
