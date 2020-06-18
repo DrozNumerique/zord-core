@@ -12,10 +12,14 @@ if (isset($_SERVER['argv']) && count($_SERVER['argv']) > 4) {
     $clientPrivateKeyFile = $_SERVER['argv'][3];
     $serverPublicKeyFile  = $_SERVER['argv'][4];
     try {
-        if (openssl_private_decrypt(base64_decode(@file_get_contents($tokenURL)), $token, openssl_pkey_get_private(file_get_contents($clientPrivateKeyFile)))) {
-            if (openssl_public_encrypt($token, $crypted, openssl_pkey_get_public(file_get_contents($serverPublicKeyFile)))) {
-                echo @file_get_contents($targetURL.'?__ZORD_TOKEN__='.base64_encode($crypted))."\n";
+        $token = Zord::decrypt(base64_decode(@file_get_contents($tokenURL)), $clientPrivateKeyFile);
+        if ($token !== false) {
+            $crypted = Zord::encrypt($token, $serverPublicKeyFile);
+            if ($crypted !== false) {
+                echo @file_get_contents($targetURL.'?'.User::$ZORD_TOKEN.'='.base64_encode($crypted))."\n";
                 exit(0);
+            } else {
+                exit(1);
             }
         }
     } catch(ErrorException $exception) {
@@ -34,6 +38,6 @@ if (isset($_SERVER['argv']) && count($_SERVER['argv']) > 4) {
     }
     restore_error_handler();
 } else {
-    exit(1);
+    exit(3);
 }
 ?>

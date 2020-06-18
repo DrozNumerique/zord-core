@@ -322,4 +322,9 @@ class Module {
 	    $mail['locale'] = $this->locale;
 	    return Zord::sendMail($mail);
 	}
+	
+	public function bind($login) {
+	    $this->controler->setUser(User::bind($login));
+	    $this->user = $this->controler->getUser();
+	}
 }

@@ -159,16 +159,15 @@ class Account extends Module {
     public function password() {
         $token = $this->params['token'] ?? null;
         if (isset($token)) {
-            $decrypted = null;
-            if (openssl_private_decrypt(base64_decode(str_replace(' ', '+', $token)), $decrypted, openssl_pkey_get_private(file_get_contents(Zord::realpath(OPENSSL_PRIVATE_KEY))))) {
+            $decrypted = Zord::decrypt(base64_decode(str_replace(' ', '+', $token)), Zord::realpath(OPENSSL_PRIVATE_KEY));
+            if ($decrypted !== false) {
                 $data = Zord::objectToArray(json_decode($decrypted));
                 if (is_array($data) && isset($data['login'])) {
                     $login = $data['login'];
                     $reset = $data['reset'];
                     $user = (new UserEntity())->retrieve($login);
                     if ($user !== false && $reset == $user->reset) {
-                        $this->controler->setUser(User::bind($login));
-                        $this->user = $this->controler->getUser();
+                        $this->bind($login);
                         (new UserEntity())->update($login, ['reset' => null]);
                     } else {
                         return $this->error(404);
@@ -231,8 +230,8 @@ class Account extends Module {
         $now = date('Y-m-d H:i:s');
         (new UserEntity())->update($user->login, ['reset' => $now]);
         $data = Zord::json_encode(['login' => $user->login, 'reset' => $now]);
-        $crypted = null;
-        if (openssl_public_encrypt($data, $crypted, openssl_pkey_get_public(file_get_contents(Zord::realpath(OPENSSL_PUBLIC_KEY))))) {
+        $crypted = Zord::encrypt($data, Zord::realpath(OPENSSL_PUBLIC_KEY));
+        if ($crypted !== false) {
             $url = $this->baseURL.'/password?token='.base64_encode($crypted);
             $send = $this->sendMail([
                 'category'   => 'account'.DS.$user->login,

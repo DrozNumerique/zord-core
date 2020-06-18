@@ -118,8 +118,8 @@ class User {
             }
         }
         if (isset($token)) {
-            $decrypted = null;
-            if (openssl_private_decrypt(base64_decode(str_replace(' ', '+', $token)), $decrypted, openssl_pkey_get_private(file_get_contents(Zord::realpath(OPENSSL_PRIVATE_KEY))))) {
+            $decrypted = Zord::decrypt(base64_decode(str_replace(' ', '+', $token)), Zord::realpath(OPENSSL_PRIVATE_KEY));
+            if ($decrypted !== false) {
                 $token = (new UserHasTokenEntity())->retrieve($decrypted);
                 if ($token) {
                     $login = $token->user;

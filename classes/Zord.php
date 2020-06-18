@@ -957,10 +957,26 @@ class Zord {
         return isset($locale->$code) ? $locale->$code : null;
     }
     
+    public static function encrypt($data, $keyfile) {
+        $crypted = null;
+        if (openssl_public_encrypt($data, $crypted, openssl_pkey_get_public(file_get_contents($keyfile)))) {
+            return $crypted;
+        }
+        return false;
+    }
+    
+    public static function decrypt($data, $keyfile) {
+        $decrypted = null;
+        if (openssl_private_decrypt($data, $decrypted, openssl_pkey_get_private(file_get_contents($keyfile)))) {
+            return $decrypted;
+        }
+        return false;
+    }
+    
     public static function token($keyfile, $user, $key = null) {
         $token = uniqid($user, true);
-        $crypted = null;
-        if (openssl_public_encrypt($token, $crypted, openssl_pkey_get_public(file_get_contents($keyfile)))) {
+        $crypted = self::encrypt($token, $keyfile);
+        if ($crypted !== false) {
             (new UserHasTokenEntity())->create([
                 'user'  => $user,
                 'key'   => $key,
