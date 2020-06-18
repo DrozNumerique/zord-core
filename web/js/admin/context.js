@@ -1,7 +1,4 @@
 function checkContext(operation, data) {
-	if (operation == 'delete') {
-		return confirm(PORTAL.locales[LANG].admin.context.delete.confirm);
-	}
 	if (data == undefined || data == null) {
 		return false;
 	}
@@ -10,6 +7,9 @@ function checkContext(operation, data) {
 	}
 	if (data.title == undefined || data.title == null || data.title.length == 0) {
 		return false;
+	}
+	if (operation == 'delete') {
+		return confirm(PORTAL.locales[LANG].admin.context.delete.confirm);
 	}
 	return true;
 }

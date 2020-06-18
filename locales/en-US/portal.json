@@ -17,6 +17,11 @@
 			"delete": {
 				"confirm": "Confirm context deletion"
 			}
+		},
+		"users": {
+			"delete": {
+				"confirm": "Confirm account deletion"
+			}
 		}
 	},
 	"zord" : "engined by ꓜꓳꓤꓷ"

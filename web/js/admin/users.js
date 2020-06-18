@@ -11,6 +11,9 @@ function checkAccount(operation, data) {
 	if (data.email == undefined || data.email == null || data.email.length == 0) {
 		return false;
 	}
+	if (operation == 'delete') {
+		return confirm(PORTAL.locales[LANG].admin.users.delete.confirm);
+	}
 	return true;
 }
 
