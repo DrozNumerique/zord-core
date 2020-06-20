@@ -73,12 +73,14 @@ abstract class Entity
     }
 
     private function query($criteria) {
+        $join = false;
         if (isset($criteria['join']) && isset($this->joins)) {
             if (!is_array($criteria['join'])) {
                 $criteria['join'] = [$criteria['join']];
             }
             $this->engine->distinct();
             foreach ($criteria['join'] as $type) {
+                $join = true;
                 $this->engine()->join(Zord::value($this->mapping, [$type,'table']), [$this->type.'.'.$this->joins[$type][0], '=', $type.'.'.$this->joins[$type][1]], $type);
             }
         }
@@ -101,6 +103,9 @@ abstract class Entity
                     $get = Zord::value($this->mapping, [$this->type,'expr',$key,'get']);
                     if ($get) {
                         $key = $get.'('.$key.'.)';
+                    }
+                    if ($join) {
+                        $key = $this->type.'.'.$key;
                     }
                     if (is_array($value)) {
                         foreach ($value as $op => $comp) {
@@ -145,10 +150,15 @@ abstract class Entity
             $this->engine()->offset($criteria['offset']);
         }
         if (isset($criteria['order'])) {
-            if (isset($criteria['order']['asc'])) {
-                $this->engine()->order_by_asc($criteria['order']['asc']);
-            } else if (isset($criteria['order']['desc'])) {
-                $this->engine()->order_by_desc($criteria['order']['desc']);
+            if (Zord::is_associative($criteria['order'])) {
+                $criteria['order'] = [$criteria['order']];
+            }
+            foreach ($criteria['order'] as $order) {
+                if (isset($order['asc'])) {
+                    $this->engine()->order_by_asc($order['asc']);
+                } else if (isset($order['desc'])) {
+                    $this->engine()->order_by_desc($order['desc']);
+                }
             }
         }
     }
