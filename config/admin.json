@@ -14,5 +14,17 @@
 				"type": "text/javascript"
 			}
 		]
+	},
+	"content": {
+		"scripts": [
+			{
+				"src": "/js/admin/content.js",
+				"type": "text/javascript"
+			},
+			{
+				"src": "/js/admin/showdown.js",
+				"type": "text/javascript"
+			}
+		]
 	}
 }

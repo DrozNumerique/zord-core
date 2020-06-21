@@ -143,6 +143,12 @@
 				"context": "FILTER_SANITIZE_STRING",
 				"urls": "FILTER_SANITIZE_STRING"
 			}
+		},
+		"content": {
+			"response": "DATA",
+			"parameters": {
+				"content": "FILTER_SANITIZE_STRING"
+			}
 		}
 	}
 }

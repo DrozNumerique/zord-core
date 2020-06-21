@@ -88,6 +88,38 @@
 	background:black;
 }
 
+.admin-select {
+	display: inline-block;
+}
+
+.admin-select ul.list {
+	list-style: none;
+	display: block;
+	position: absolute;
+	padding: 7px 0 0 0;
+	margin: 0 0 0 0;
+}
+
+.admin-select ul.list li.item {
+	display:none;
+	color: black;
+	background: white;
+	border: 1px solid black;
+	margin: 1px;
+	padding: 2px;
+	position: relative;
+	left: -20px;
+}
+
+.admin-select ul.list li.item:hover {
+	color: white;
+	background: black;
+}
+
+.admin-select:hover ul.list li.item {
+	display:block !important;
+}
+
 .admin-button {
 	color:white;
 	background:black;
@@ -320,4 +352,42 @@
 
 #import-notify {
 	line-height: 1 !important;
+}
+
+div#wrapper {
+	text-align: left ! important;
+	margin: 0 20px;
+}
+
+div#wrapper > div#actions {
+	margin: 0;
+	text-align: center;
+}
+
+div#wrapper > div.date {
+	margin-left: 10px;
+	margin-bottom: 10px;
+}
+
+div#wrapper > textarea {
+	width: calc(100% - 40px);
+	height: 200px;
+	overflow: auto;
+	resize: none;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    padding: 20px;
+	margin-top: 10px;
+}
+
+div#wrapper > div#save {
+	text-align: center;
+	margin-top: 10px;
+}
+
+div#wrapper > div.content {
+	padding: 20px;
+	background: white;
+	margin-top: 10px;
 }

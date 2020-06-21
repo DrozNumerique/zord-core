@@ -1,7 +1,8 @@
 {
 	"menu": {
 		"context": "Context",
-		"users": "Accounts"
+		"users": "Accounts",
+		"content": "Contents"
 	},
 	"tab": {
 		"context": {
@@ -42,6 +43,15 @@
 				"error": "Fail to send activation e-mail",
 				"to": "To",
 				"activation": "Activation link "
+			}
+		},
+		"content": {
+			"title": "Contents edition",
+			"save": "Save",
+			"content": {
+				"saved": "Content '${name}' saved on ${date}",
+				"missing": "Missing content or name",
+				"unsaved": "Content not saved"
 			}
 		}
 	},

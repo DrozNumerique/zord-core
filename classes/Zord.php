@@ -805,8 +805,8 @@ class Zord {
 	    return implode('<br>', explode($br, $escape ? htmlspecialchars($text) : $text));
 	}
 	
-	public static function md2html($content, $breaks = true) {
-	    return Parsedown::instance()->setBreaksEnabled($breaks)->line($content);
+	public static function md2html($content, $breaks = false) {
+	    return Parsedown::instance()->setBreaksEnabled($breaks)->text($content);
 	}
 	
 	public static function trunc($string, $maxlength) {
@@ -1038,5 +1038,26 @@ class Zord {
         } finally {
             restore_error_handler();
         }
+    }
+    
+    public static function content($name, $lang, $content = null) {
+        $folder = Zord::liveFolder('contents'.DS.$name.DS.$lang);
+        if (isset($content)) {
+            $date = date('YmdHis');
+            return file_put_contents($folder.$date.'.md', $content) ? Zord::date($date, $lang) : null;
+        }
+        $contents = glob($folder.'*.md');
+        if (!empty($contents)) {
+            $file = max($contents);
+            $content = file_get_contents($file);
+            $html = Zord::md2html($content);
+            $date = date('YmdHis', filemtime($file));
+            return [
+                'content' => $content,
+                'html'    => $html,
+                'date'    => $date
+            ];
+        }
+        return null;
     }
 }

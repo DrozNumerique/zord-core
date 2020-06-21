@@ -192,6 +192,26 @@ class Admin extends Module {
         return $this->index('context', $result);
     }
     
+    public function content() {
+        $name    = $this->params['name']    ?? null;
+        $content = $this->params['content'] ?? null;
+        if (isset($content) && isset($name)) {
+            $result = null;
+            $date = Zord::content($name, $this->lang, $content);
+            if (isset($date)) {
+                $result = [
+                    'date'    => $date,
+                    'message' => Zord::resolve(
+                        $this->locale->tab->content->message->saved,
+                        ['name' => $name, 'date' => $date],
+                        Zord::getLocale('portal', $this->lang)
+                        )
+                ];
+            }
+            return $result ?? $this->error(500, $this->locale->tab->content->message->unsaved);
+        }
+        return $this->error(400, $this->locale->tab->content->message->missing);
+    }
     
     public function urls() {
         $result = [];
