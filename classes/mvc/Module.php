@@ -198,6 +198,15 @@ class Module {
 	    }
 	}
 	
+	public function content($name = null) {
+	    $name = $this->either($name, 'name');
+	    if (isset($name)) {
+	        return $this->page('content', ['name' => $name]);
+	    } else {
+	        return $this->error(404);
+	    }
+	}
+	
 	public function send($path, $role = null) {
 	    $file = $this->file($path, $role);
 	    if ($file['code'] == 200) {
