@@ -834,7 +834,7 @@ class Zord {
 	        $host = $config['host'];
 	        $scheme = ($config['secure'] ?? false) ? 'https' : 'http';
 	        $baseURL = $scheme.'://'.$host.($config['path'] == '/' ? '' : $config['path']);
-	        $models['view'] = array_merge($models['view'] ?? [], [
+	        $models = array_merge($models, [
 	            'context'  => $models['context'],
 	            'host'     => $host,
 	            'scheme'   => $scheme,

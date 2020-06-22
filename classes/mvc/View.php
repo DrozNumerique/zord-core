@@ -3,7 +3,7 @@
 class View {
     
     private $template  = null;
-    private $models    = null;
+    private $models    = [];
     private $controler = null;
     private $context   = null;
     private $lang      = DEFAULT_LANG;
@@ -35,7 +35,9 @@ class View {
         $context = $this->context;
         $lang    = $this->lang;
         $locale  = is_string($locale) ? Zord::getLocale($locale, $this->lang) : $locale;
-        $page    = isset($models['page']) ? $models['page'] : null;
+        foreach ($models as $name => $model) {
+            $$name = json_decode(Zord::json_encode($model));
+        }
         if ($this->controler) {
             $controler = $this->controler;
             $host      = $this->controler->getHost();
@@ -48,13 +50,8 @@ class View {
                 $skin   = Zord::getSkin($context);
             }
         }
-        if (isset($models['view'])) {
-            foreach ($models['view'] as $name => $value) {
-                $$name = $value;
-            }
-        }
-        $this->viewPlugin($template, $models, 'before', $page);
-        if (!$this->viewPlugin($template, $models, 'instead', $page)) {
+        $this->viewPlugin($template, $models, 'before', $page ?? null);
+        if (!$this->viewPlugin($template, $models, 'instead', $page ?? null)) {
             $file = Zord::template($template, $context, $lang);
             $begin = VIEW_MARK_BEGIN;
             $end = VIEW_MARK_END;
@@ -67,7 +64,7 @@ class View {
                 include($file);
             }
             $this->mark('END '.$template, $begin, $end);
-            $this->viewPlugin($template, $models, 'after', $page);
+            $this->viewPlugin($template, $models, 'after', $page ?? null);
         }
         array_pop($this->locales);
         if ($template == $this->template) {

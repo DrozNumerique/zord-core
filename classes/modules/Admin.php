@@ -205,7 +205,7 @@ class Admin extends Module {
                         $this->locale->tab->content->message->saved,
                         ['name' => $name, 'date' => $date],
                         Zord::getLocale('portal', $this->lang)
-                        )
+                    )
                 ];
             }
             return $result ?? $this->error(500, $this->locale->tab->content->message->unsaved);

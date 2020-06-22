@@ -6,6 +6,15 @@ class Portal extends Module {
         return $this->page('home');
     }
     
+    public function content() {
+        $name = $this->params['name'] ?? null;
+        if (isset($name)) {
+            return $this->page('content', ['name' => $name]);
+        } else {
+            return $this->error(404);
+        }
+    }
+    
     public function token() {
         (new UserHasTokenEntity())->delete([
             'many' => true,
