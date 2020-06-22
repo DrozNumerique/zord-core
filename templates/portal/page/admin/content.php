@@ -10,9 +10,9 @@
    	    </ul>
    	</div>
 <?php foreach ($contents as $name) { ?>
-<?php   $data = Zord::content($name, $lang); ?>
-	<div class="date" data-page="<?php echo $name; ?>"><?php echo isset($data) ? Zord::date($data['date'], $lang) : ''; ?></div>
-    <textarea class="editor" data-page="<?php echo $name; ?>"><?php echo isset($data) ? $data['content'] : ''; ?></textarea>
+<?php   $content = Zord::content($name, $lang); ?>
+	<div class="date" data-page="<?php echo $name; ?>"><?php echo isset($content) ? Zord::date(date('YmdHis', filemtime($content)), $lang) : ''; ?></div>
+    <textarea class="editor" data-page="<?php echo $name; ?>"><?php echo isset($content) ? Zord::md2html(file_get_contents($content)) : ''; ?></textarea>
 <?php } ?>
 	<div id="save" class="admin-button"><?php echo $locale->tab->content->save; ?></div>
     <div class="content" id="preview"></div>

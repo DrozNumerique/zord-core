@@ -1048,16 +1048,21 @@ class Zord {
         }
         $contents = glob($folder.'*.md');
         if (!empty($contents)) {
-            $file = max($contents);
-            $content = file_get_contents($file);
-            $html = Zord::md2html($content);
-            $date = date('YmdHis', filemtime($file));
-            return [
-                'content' => $content,
-                'html'    => $html,
-                'date'    => $date
-            ];
+            $content = max($contents);
+        } else {
+            foreach(array_reverse(COMPONENT_FOLDERS) as $folder) {
+                $content = $folder.'contents'.DS.$lang.DS.$name.'.md';
+                if (!file_exists($content)) {
+                    $content = $folder.'contents'.DS.$name.'.md';
+                }
+                if (!file_exists($content)) {
+                    $content = $folder.'contents'.DS.DEFAULT_LANG.DS.$name.'.md';
+                }
+                if (!file_exists($content)) {
+                    $content = null;
+                }
+            }
         }
-        return null;
+        return $content;
     }
 }
