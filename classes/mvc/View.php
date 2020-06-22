@@ -36,7 +36,10 @@ class View {
         $lang    = $this->lang;
         $locale  = is_string($locale) ? Zord::getLocale($locale, $this->lang) : $locale;
         foreach ($models as $name => $model) {
-            $$name = json_decode(Zord::json_encode($model));
+            if (!is_object($model)) {
+                $model = json_decode(Zord::json_encode($model));
+            }
+            $$name = $model;
         }
         if ($this->controler) {
             $controler = $this->controler;
