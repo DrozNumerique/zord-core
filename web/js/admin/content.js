@@ -39,6 +39,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		editor = getEditor(page);
 		if (editor) {
 			editor.style.display = 'block';
+			preview.classList = [];
+			preview.classList.add('content');
+			preview.classList.add(page);
 			preview.innerHTML = converter.makeHtml(editor.value);
 		}
 		date = getDate(page);

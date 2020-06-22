@@ -1044,6 +1044,9 @@ class Zord {
         $folder = Zord::liveFolder('contents'.DS.$name.DS.$lang);
         if (isset($content)) {
             $date = date('YmdHis');
+            if (!file_exists($folder)) {
+                mkdir($folder, 0777, true);
+            }
             return file_put_contents($folder.$date.'.md', $content) ? Zord::date($date, $lang) : null;
         }
         $contents = glob($folder.'*.md');
