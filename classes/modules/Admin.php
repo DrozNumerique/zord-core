@@ -228,7 +228,7 @@ class Admin extends Module {
             $contents = Zord::value('portal', 'contents') ?? [];
             foreach ($contents as $content) {
                 foreach (['styles','scripts'] as $type) {
-                    $entries = Zord::value('page', ['content',$content,$type]);
+                    $entries = Zord::value('page', ['content',$content,$type]) ?? [];
                     foreach ($entries as $model) {
                         $this->addModel($type, $model);
                     }
