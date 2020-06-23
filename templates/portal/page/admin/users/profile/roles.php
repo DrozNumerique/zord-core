@@ -17,7 +17,7 @@
              				</div>
              				<div class="column">
              					<select>
-<?php foreach($models['context'] as $name) { ?>
+<?php foreach($models['contexts'] as $name) { ?>
              						<option value="<?php echo $name; ?>"><?php echo $name; ?></option>
 <?php } ?>
              					</select>
@@ -38,7 +38,7 @@
 							</div>
              				<div class="column">
              					<select>
-<?php     foreach($models['context'] as $name) { ?>
+<?php     foreach($models['contexts'] as $name) { ?>
              						<option value="<?php echo $name; ?>" <?php if ($name == $entry->context) echo 'selected'; ?>><?php echo $name; ?></option>
 <?php     } ?>
              					</select>

@@ -248,7 +248,7 @@ class Admin extends Module {
         $result['name'] = $user->name;
         $result['ips'] = $user->explodeIP();
         $result['roles'] = array_merge(Zord::getConfig('role'), ['*']);
-        $result['context'] = array_merge(array_keys(Zord::getConfig('context')), ['*']);
+        $result['contexts'] = array_merge(array_keys(Zord::getConfig('context')), ['*']);
         return $result;
     }
     
