@@ -9,7 +9,15 @@ class Portal extends Module {
     public function content() {
         $name = $this->params['name'] ?? null;
         if (isset($name)) {
-            return $this->page('content', ['name' => $name]);
+            $page = $this->page('content', ['name' => $name]);
+            foreach (['styles','scripts'] as $type) {
+                if (!empty($this->models[$name][$type])) {
+                    foreach ($this->models[$name][$type] as $model) {
+                        $this->addModel($type, $model);
+                    }
+                }
+            }
+            return $page;
         } else {
             return $this->error(404);
         }

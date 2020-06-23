@@ -78,6 +78,18 @@ class Module {
         $this->models[$name][] = $model;
     }
     
+    public function addModels($name, $models) {
+        if (Zord::is_associative($models)) {
+            foreach ($models as $name => $model) {
+                $this->addModels($name, $model);
+            }
+        } else {
+            foreach ($models as $model) {
+                $this->addModel($name, $model);
+            }
+        }
+    }
+    
     public function addMeta($name, $content, $scheme = null, $lang = null) {
         $this->addModel('meta', [
             'name'    => $name,
@@ -187,9 +199,7 @@ class Module {
 	        $types = Zord::value('page', $page);
 	        if ($types) {
 	            foreach($types as $name => $type) {
-	                foreach ($type as $model) {
-	                    $this->addModel($name, $model);
-	                }
+	                $this->addModels($name, $type);
 	            }
 	        }
 	        return $this->view('/portal', $models);
