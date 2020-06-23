@@ -36,23 +36,14 @@ class Admin extends Module {
         $_SESSION['__ZORD__']['__ADMIN__']['__CURRENT__'] = $current;
         $_SESSION['__ZORD__']['__ADMIN__']['__MODELS__'] = $models;
         $tab = $tabs[$current];
-        if (isset($tab['scripts'])) {
-            foreach ($tab['scripts'] as $script) {
-                if (isset($script['src'])) {
-                    if (isset($script['type'])) {
-                        $this->addScript($script['src'], isset($script['type']) ? $script['type']: '');
-                    } else {
-                        $this->addScript($script['src']);
-                    }
-                } else if (isset($script['template'])) {
-                    if (isset($script['type'])) {
-                        $this->addTemplateScript($script['template'], isset($script['type']) ? $script['type']: '');
-                    } else {
-                        $this->addTemplateScript($script['template']);
-                    }
+        foreach (['styles','scripts'] as $type) {
+            if (isset($tab[$type])) {
+                foreach ($tab[$type] as $model) {
+                    $this->addModel($type, $model);
                 }
             }
         }
+        $this->prepareIndex($current);
         return $this->page('admin', array_merge($models, [
             'tabs'    => array_keys($tabs),
             'current' => $current
@@ -192,27 +183,6 @@ class Admin extends Module {
         return $this->index('context', $result);
     }
     
-    public function content() {
-        $name    = $this->params['name']    ?? null;
-        $content = $this->params['content'] ?? null;
-        if (isset($content) && isset($name)) {
-            $result = null;
-            $date = Zord::content($name, $this->lang, $content);
-            if (isset($date)) {
-                $result = [
-                    'date'    => $date,
-                    'message' => Zord::resolve(
-                        $this->locale->tab->content->message->saved,
-                        ['name' => $name, 'date' => $date],
-                        Zord::getLocale('portal', $this->lang)
-                    )
-                ];
-            }
-            return $result ?? $this->error(500, $this->locale->tab->content->message->unsaved);
-        }
-        return $this->error(400, $this->locale->tab->content->message->missing);
-    }
-    
     public function urls() {
         $result = [];
         if (isset($this->params['ctx']) &&
@@ -230,6 +200,41 @@ class Admin extends Module {
             $result['urls'] = $urls;
         }
         return $this->index('context', $result);
+    }
+    
+    public function content() {
+        $name    = $this->params['name']    ?? null;
+        $content = $this->params['content'] ?? null;
+        if (isset($content) && isset($name)) {
+            $result = null;
+            $date = Zord::content($name, $this->lang, $content);
+            if (isset($date)) {
+                $result = [
+                    'date'    => $date,
+                    'message' => Zord::resolve(
+                        $this->locale->tab->content->message->saved,
+                        ['name' => $name, 'date' => $date],
+                        Zord::getLocale('portal', $this->lang)
+                        )
+                ];
+            }
+            return $result ?? $this->error(500, $this->locale->tab->content->message->unsaved);
+        }
+        return $this->error(400, $this->locale->tab->content->message->missing);
+    }
+    
+    protected function prepareIndex($current) {
+        if ($current == 'content') {
+            $contents = Zord::value('portal', 'contents') ?? [];
+            foreach ($contents as $content) {
+                foreach (['styles','scripts'] as $type) {
+                    $entries = Zord::value('page', ['content',$content,$type]);
+                    foreach ($entries as $model) {
+                        $this->addModel($type, $model);
+                    }
+                }
+            }
+        }
     }
     
     protected function updateModels($models) {

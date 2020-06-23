@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	
 	function display(page) {
 		name.value = page;
+		setSessionProperty('content.name', page);
 		[].forEach.call(items, function(item) {
 			item.classList.remove('selected');
 		});
@@ -59,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	}
 	
 	if (name) {
-		display('home');
+		display(getSessionProperty('content.name', 'home'));
 		[].forEach.call(items, function(item) {
 			item.addEventListener('click', function(event) {
 				display(item.dataset.value);
