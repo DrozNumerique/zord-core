@@ -9,14 +9,16 @@ class View {
     private $lang      = DEFAULT_LANG;
     private $locales   = [];
     private $mark      = true;
+    private $implicits = [];
     
     public function __construct($template, $models, $controler = null, $locale = null) {
         $this->template  = $template;
         $this->models    = $models;
         $this->controler = $controler;
         if ($this->controler) {
-            $this->context = $this->controler->getContext();
-            $this->lang    = $this->controler->getLang();
+            $this->implicits = $this->controler->implicits();
+            $this->context   = $this->controler->getContext();
+            $this->lang      = $this->controler->getLang();
         }
         array_push($this->locales, $locale ?? $this->getLocale($template));
     }
@@ -27,34 +29,23 @@ class View {
             $template = $this->template;
         }
         $template = $this->getTemplate($template);
-        if ($models == null) {
-            $models = $this->models;
-        }
+        $models = $models ?? $this->models;
         array_push($this->locales, $locale ?? $this->getLocale($template));
         $locale  = $locale ?? end($this->locales);
         $context = $this->context;
         $lang    = $this->lang;
         $locale  = is_string($locale) ? Zord::getLocale($locale, $this->lang) : $locale;
-        foreach ($models as $name => $model) {
-            if (!is_object($model)) {
-                $model = json_decode(Zord::json_encode($model));
-            }
-            $$name = $model;
-        }
-        if ($this->controler) {
-            $controler = $this->controler;
-            $host      = $this->controler->getHost();
-            $scheme    = $this->controler->getScheme();
-            $baseURL   = $this->controler->getBaseURL();
-            $user      = $this->controler->getUser();
-            $base      = $this->controler->getBase();
-            if ($context !== 'unknown') {
-                $config = json_decode(Zord::json_encode(Zord::value('context', $context)));
-                $skin   = Zord::getSkin($context);
+        $page    = null;
+        foreach ([$this->implicits, $models] as $vars) {
+            foreach ($vars as $name => $value) {
+                if (!is_object($value)) {
+                    $value = json_decode(Zord::json_encode($value));
+                }
+                $$name = $value;
             }
         }
-        $this->viewPlugin($template, $models, 'before', $page ?? null);
-        if (!$this->viewPlugin($template, $models, 'instead', $page ?? null)) {
+        $this->viewPlugin($template, $models, 'before', $page);
+        if (!$this->viewPlugin($template, $models, 'instead', $page)) {
             $file = Zord::template($template, $context, $lang);
             $begin = VIEW_MARK_BEGIN;
             $end = VIEW_MARK_END;
@@ -67,7 +58,7 @@ class View {
                 include($file);
             }
             $this->mark('END '.$template, $begin, $end);
-            $this->viewPlugin($template, $models, 'after', $page ?? null);
+            $this->viewPlugin($template, $models, 'after', $page);
         }
         array_pop($this->locales);
         if ($template == $this->template) {

@@ -10,7 +10,6 @@ class Module {
     protected $user = null;
     protected $lang = null;
     protected $locale = null;
-    protected $models = [];
     protected $response = null;
     protected $type = null;
     
@@ -67,99 +66,51 @@ class Module {
     }
     
     public function models($models) {
-        $portal = $this->controler->models();
-        foreach ($this->models as $name => $model) {
-            $portal['portal'][$name] = $model;
-        }
-        return array_merge($portal, $models);
+        return $models;
     }
     
     public function addModel($name, $model) {
-        $this->models[$name][] = $model;
+        $this->controler->addModel($name, $model);
     }
     
     public function addModels($name, $models) {
-        if (Zord::is_associative($models)) {
-            foreach ($models as $name => $model) {
-                $this->addModels($name, $model);
-            }
-        } else {
-            foreach ($models as $model) {
-                $this->addModel($name, $model);
-            }
-        }
+        $this->controler->addModels($name, $models);
     }
     
     public function addMeta($name, $content, $scheme = null, $lang = null) {
-        $this->addModel('meta', [
-            'name'    => $name,
-            'content' => $content,
-            'scheme'  => $scheme,
-            'lang'    => $lang
-        ]);
+        $this->controler->addMeta($name, $content, $scheme, $lang);
     }
     
     public function addScript($src, $type = 'text/javascript') {
-        $this->addModel('scripts', [
-            'type' => $type,
-            'src'  => $src
-        ]);
+        $this->controler->addScript($src, $type);
     }
     
     public function addTemplateScript($template, $type = 'text/javascript') {
-        $this->addModel('scripts', [
-            'type'     => $type,
-            'template' => $template
-        ]);
+        $this->controler->addTemplateScript($template, $type);
     }
     
     public function addStyle($href, $media = 'screen', $type = 'text/css') {
-        $this->addModel('styles', [
-            'type'  => $type,
-            'media' => $media,
-            'href'  => $href
-        ]);
+        $this->controler->addStyle($href, $media, $type);
     }
     
     public function addTemplateStyle($template, $media = 'screen', $type = 'text/css') {
-        $this->addModel('styles', [
-            'type'     => $type,
-            'media'    => $media,
-            'template' => $template
-        ]);
+        $this->controler->addStyle($template, $media, $type);
     }
     
     public function updateGenerated($generated, $template, $sources, $models) {
-        $templateFile = Zord::template($template, $this->context, $this->lang);
-        if (is_string($sources)) {
-            $sources = [$sources];
-        }
-        if (is_array($sources)) {
-            $sources[] = $templateFile;
-        } else {
-            $sources = [$templateFile];
-        }
-        if (Zord::needsUpdate(BUILD_FOLDER.$generated, $sources)) {
-            file_put_contents(BUILD_FOLDER.$generated, (new View($template, $models))->render());
-        }
+        $this->controler->updateGenerated($generated, $template, $sources, $models);
     }
     
     public function addUpdatedModel($type, $generated, $template, $sources, $models, $pattern, $key) {
-        $this->updateGenerated($generated, $template, $sources, $models);
-        $pattern[$key] = '/build/'.$generated;
-        $this->addModel($type, $pattern);
+        $this->controler->addUpdatedModel($type, $generated, $template, $sources, $models, $pattern, $key);
     }
     
     public function addUpdatedScript($generated, $template, $sources, $models, $type = 'text/javascript') {
-        $pattern = ['type' => $type];
-        $key = 'src';
-        $this->addUpdatedModel('scripts', $generated, $template, $sources, $models, $pattern, $key);
+        $this->controler->addUpdatedScript($generated, $template, $sources, $models, $type);
     }
     
     public function addUpdatedStyle($generated, $template, $sources, $models, $media = 'screen', $type = 'text/css') {
-        $pattern = ['type' => $type, 'media' => $media];
-        $key = 'href';
-        $this->addUpdatedModel('styles', $generated, $template, $sources, $models, $pattern, $key);
+        $this->controler->addUpdatedStyle($generated, $template, $sources, $models, $media, $type);
     }
     
 	public function forward($target = array(), $replay = false) {
@@ -212,7 +163,7 @@ class Module {
 	    $file = $this->file($path, $role);
 	    if ($file['code'] == 200) {
 	        $contentType = Zord::value('content', strtolower(pathinfo($file['name'], PATHINFO_EXTENSION)));
-	        return $this->view('/readfile', ['filename' => $file['name']], $contentType);
+	        return $this->view('/readfile', ['filename' => $file['name']], $contentType, false);
 	    } else {
 	        return $this->error($file['code']);
 	    }

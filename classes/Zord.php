@@ -617,13 +617,13 @@ class Zord {
 	public static function template($name, $context = null, $lang = null) {
 	    if (is_string($name)) {
     	    $variants = [];
-    	    if (isset($context) && isset($lang)) {
+    	    if (is_string($context) && is_string($lang)) {
     	        $variants[] = DS.$context.DS.$lang;
     	    }
-    	    if (isset($context)) {
+    	    if (is_string($context)) {
     	        $variants[] = DS.$context;
     	    }
-    	    if (isset($lang)) {
+    	    if (is_string($lang)) {
     	        $variants[] = DS.$lang;
     	    }
     	    $variants[] = '';

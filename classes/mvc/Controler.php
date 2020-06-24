@@ -2,19 +2,22 @@
 
 class Controler {
     
-    protected $user = null;
-    protected $context = null;
-    protected $host = null;
-    protected $scheme = null;
+    protected $user     = null;
+    protected $context  = null;
+    protected $host     = null;
+    protected $scheme   = null;
     protected $indexURL = 0;
-    protected $baseURL = null;
-    protected $base = null;
-    protected $lang = null;
-    protected $locale = null;
-    protected $module = null;
-    protected $action = null;
-    protected $params = [];
-    protected $replay = false;
+    protected $baseURL  = null;
+    protected $base     = null;
+    protected $lang     = null;
+    protected $locale   = null;
+    protected $module   = null;
+    protected $action   = null;
+    protected $params   = [];
+    protected $replay   = false;
+    protected $models   = [];
+    protected $config   = [];
+    protected $skin     = null;
     
     public function getUser() {
         return $this->user;
@@ -64,7 +67,7 @@ class Controler {
         $scheme = $_SERVER['REQUEST_SCHEME'];
         $host   = $_SERVER['HTTP_HOST'];
         $path   = $_SERVER['REQUEST_URI'];
-        $this->lang = Zord::defineLang();
+        $this->lang   = Zord::defineLang();
         $this->locale = Zord::getLocale('portal', $this->lang);
         UserHasSessionEntity::deleteExpired();
         $this->setUser(User::find());
@@ -79,7 +82,9 @@ class Controler {
             $this->indexURL = $target['indexURL'];
             $this->baseURL  = $target['baseURL'];
             $this->base     = $target['base'];
-            $this->params   = isset($target['params']) ? $target['params'] : [];
+            $this->params   = $target['params'];
+            $this->config   = $target['config'];
+            $this->skin     = $target['skin'];
             $this->replay   = $replay;
             if ($this->context && $this->baseURL) {
                 $class = Zord::getClassName($target['module']);
@@ -163,7 +168,9 @@ class Controler {
                             'host'     => $host,
                             'scheme'   => ($config['secure'] ?? false) ? 'https' : 'http',
                             'context'  => $context,
+                            'skin'     => Zord::getSkin($context),
                             'indexURL' => $index,
+                            'config'   => $params,
                             'prefix'   => $config['path']
                         ];
                         break;
@@ -190,8 +197,6 @@ class Controler {
                 die();
             }
             $target['url'] = $url;
-            $target['host'] = $host;
-            $target['scheme'] = $scheme;
             $target['baseURL'] = $scheme.'://'.$host.($target['prefix'] == '/' ? '' : $target['prefix']);
             $target['base'] = $scheme.'://'.$host;
             $target['method'] = $_SERVER["REQUEST_METHOD"];
@@ -270,7 +275,9 @@ class Controler {
                 'context'  => $this->context,
                 'indexURL' => $this->indexURL,
                 'baseURL'  => $this->baseURL,
-                'base'     => $this->base
+                'base'     => $this->base,
+                'config'   => $this->config,
+                'skin'     => $this->skin
             );
         }
         if (defined("DEFAULT_PAGE")) {
@@ -279,6 +286,7 @@ class Controler {
             $target['params']['page'] = DEFAULT_PAGE;
         } else {
             $shortcut = $this->getShortcut('default');
+            $target['params'] = [];
             foreach (array_keys($shortcut) as $property) {
                 $target[$property] = $shortcut[$property];
             }
@@ -286,27 +294,42 @@ class Controler {
         return $target;
     }
     
+    public function implicits() {
+        return [
+            'controler' => $this,
+            'host'      => $this->host,
+            'scheme'    => $this->scheme,
+            'base'      => $this->base,
+            'baseURL'   => $this->baseURL,
+            'user'      => $this->user,
+            'config'    => $this->config,
+            'skin'      => $this->skin
+        ];
+    }
+    
     public function models() {
-        $models = ['portal' => [
-            'module' => get_class($this->module),
-            'action' => $this->action,
-            'params' => Zord::json_encode($this->params, false),
-            'title'  => Zord::portalTitle($this->context, $this->lang),
-            'locale' => Zord::objectToArray(Zord::getLocale('portal', $this->lang))
-        ]];
-        $models['baseURL']['zord'] = $this->baseURL;
+        $models = [
+            'portal'    => [
+                'module'  => get_class($this->module),
+                'action'  => $this->action,
+                'params'  => Zord::json_encode($this->params, false),
+                'title'   => Zord::portalTitle($this->context, $this->lang),
+                'locale'  => Zord::objectToArray(Zord::getLocale('portal', $this->lang)),
+                'baseURL' => ['zord' => $this->baseURL],
+                'user'    => [
+                    'login'   => $this->user->login,
+                    'name'    => $this->user->name,
+                    'email'   => $this->user->email,
+                    'session' => $this->user->session
+                ]
+            ]
+        ];
         foreach (array_keys(Zord::getConfig('context')) as $name) {
             $urls = Zord::value('context', [$name,'url']);
             if (isset($urls)) {
-                $models['baseURL'][$name] = Zord::getContextURL($name);
+                $models['portal']['baseURL'][$name] = Zord::getContextURL($name);
             }
         }
-        $models['user'] = [
-            'login'   => $this->user->login,
-            'name'    => $this->user->name,
-            'email'   => $this->user->email,
-            'session' => $this->user->session
-        ];
         return $models;
     }
     
@@ -510,8 +533,13 @@ class Controler {
 	            $template = $result['__template__'];
 	            $models   = $result['__models__'];
 	            $models   = $this->module->models($models);
-    	        $models   = $this->modelsPlugin($models);
-    	        $view     = (new $view($template, $models, $this));
+	            $portal   = $this->models();
+	            foreach ($this->models as $name => $model) {
+	                $portal['portal'][$name] = $model;
+	            }
+	            $models   = Zord::array_merge($portal, $models);
+	            $models   = $this->modelsPlugin($models);
+	            $view     = new $view($template, $models, $this);
     	        if (substr($content, 0, strlen('text/html')) !== 'text/html') {
     	            $view->setMark(false);
     	        }
@@ -587,5 +615,93 @@ class Controler {
 	        }
 	    }
 	    return $models;
+	}
+	
+	public function addModel($name, $model) {
+	    $this->models[$name][] = $model;
+	}
+	
+	public function addModels($name, $models) {
+	    if (Zord::is_associative($models)) {
+	        foreach ($models as $name => $model) {
+	            $this->addModels($name, $model);
+	        }
+	    } else {
+	        foreach ($models as $model) {
+	            $this->addModel($name, $model);
+	        }
+	    }
+	}
+	
+	public function addMeta($name, $content, $scheme = null, $lang = null) {
+	    $this->addModel('meta', [
+	        'name'    => $name,
+	        'content' => $content,
+	        'scheme'  => $scheme,
+	        'lang'    => $lang
+	    ]);
+	}
+	
+	public function addScript($src, $type = 'text/javascript') {
+	    $this->addModel('scripts', [
+	        'type' => $type,
+	        'src'  => $src
+	    ]);
+	}
+	
+	public function addTemplateScript($template, $type = 'text/javascript') {
+	    $this->addModel('scripts', [
+	        'type'     => $type,
+	        'template' => $template
+	    ]);
+	}
+	
+	public function addStyle($href, $media = 'screen', $type = 'text/css') {
+	    $this->addModel('styles', [
+	        'type'  => $type,
+	        'media' => $media,
+	        'href'  => $href
+	    ]);
+	}
+	
+	public function addTemplateStyle($template, $media = 'screen', $type = 'text/css') {
+	    $this->addModel('styles', [
+	        'type'     => $type,
+	        'media'    => $media,
+	        'template' => $template
+	    ]);
+	}
+	
+	public function updateGenerated($generated, $template, $sources, $models) {
+	    $templateFile = Zord::template($template, $this->context, $this->lang);
+	    if (is_string($sources)) {
+	        $sources = [$sources];
+	    }
+	    if (is_array($sources)) {
+	        $sources[] = $templateFile;
+	    } else {
+	        $sources = [$templateFile];
+	    }
+	    if (Zord::needsUpdate(BUILD_FOLDER.$generated, $sources)) {
+	        file_put_contents(BUILD_FOLDER.$generated, (new View($template, $models))->render());
+	    }
+	}
+	
+	public function addUpdatedModel($type, $generated, $template, $sources, $models, $pattern, $key) {
+	    $this->updateGenerated($generated, $template, $sources, $models);
+	    $pattern[$key] = '/build/'.$generated;
+	    $this->addModel($type, $pattern);
+	}
+	
+	public function addUpdatedScript($generated, $template, $sources, $models, $type = 'text/javascript') {
+	    $pattern = ['type' => $type];
+	    $key = 'src';
+	    $this->addUpdatedModel('scripts', $generated, $template, $sources, $models, $pattern, $key);
+	}
+	
+	public function addUpdatedStyle($generated, $template, $sources, $models, $media = 'screen', $type = 'text/css') {
+	    $pattern = ['type' => $type, 'media' => $media];
+	    $key = 'href';
+	    $this->addUpdatedModel('styles', $generated, $template, $sources, $models, $pattern, $key);
 	}
 }
