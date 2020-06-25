@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 			item.classList.add('selected');
 			selected = contents.querySelector('div.selected');
 			if (selected) {
-				selected.innerHTML = item.dataset.value;
+				selected.innerHTML = item.innerHTML;
 			}
 		}
 		[].forEach.call(editors, function(editor) {
