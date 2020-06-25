@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	
 	var name = document.getElementById('name');
 	var contents = document.getElementById('contents');
-	var preview = document.getElementById('preview');
+	var preview = document.getElementById('preview').querySelector('div.content');
 	var save = document.getElementById('save');
 	var converter = new showdown.Converter();
 	var editors = document.querySelectorAll('textarea.editor');

@@ -15,5 +15,7 @@
     <textarea class="editor" data-page="<?php echo $name; ?>"><?php echo isset($content) ? file_get_contents($content) : ''; ?></textarea>
 <?php } ?>
 	<div id="save" class="admin-button"><?php echo $locale->tab->content->save; ?></div>
-    <div class="content" id="preview"></div>
+	<div id="preview">
+	    <div class="content"></div>
+	</div>
 </div>

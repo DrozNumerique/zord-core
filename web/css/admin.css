@@ -386,8 +386,8 @@ div#wrapper > div#save {
 	margin-top: 10px;
 }
 
-div#wrapper > div.content {
-	padding: 20px;
+div#wrapper > div#preview {
+	padding: 0 0 0 20px;
 	background: white;
 	margin-top: 10px;
 }
