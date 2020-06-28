@@ -232,5 +232,49 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		});
 	});
 	
+	[].forEach.call(document.querySelectorAll('.swipe'), function(swipe) {
+		var frame    = swipe.querySelector('.window');
+		var slider   = swipe.querySelector('.slider');
+		var forward  = swipe.querySelector('.forward');
+		var backward = swipe.querySelector('.backward');
+		if (frame && slider && forward && backward) {
+			[].forEach.call([forward, backward], function(button) {
+				button.addEventListener('click', function(event) {
+					frames = swipe.querySelectorAll(swipe.dataset.frames);
+					index  = Number.parseInt(swipe.dataset.index);
+					if (button.classList.contains('backward')) {
+						if (index > 0) {
+							index = index - 1;
+						} else {
+							index = frames.length - 1;
+						}
+					}
+					if (button.classList.contains('forward')) {
+						if (index < frames.length - 1) {
+							index = index + 1;
+						} else {
+							index = 0;
+						}
+					}
+					swipe.dataset.index = index.toString();
+					switch (swipe.dataset.direction) {
+						case 'vertical': {
+							height = frame.offsetHeight;
+							position = -(index * height);
+							slider.style.top = position + 'px';
+							break;
+						}
+						case 'horizontal': {
+							width = frame.offsetWidth;
+							position = -(index * width);
+							slider.style.left = position + 'px';
+							break;
+						}
+					}
+				});
+			})
+		}
+	});
+	
 });
 

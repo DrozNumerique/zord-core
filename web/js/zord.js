@@ -1,4 +1,4 @@
-var invokeZord = function(params) {
+invokeZord = function(params) {
 
 	var before = params.before == undefined ? null : params.before;
 	var after = params.after == undefined ? null : params.after;
@@ -91,7 +91,7 @@ var invokeZord = function(params) {
 	
 }
 
-var checkProcess = function(pid, offset, callback) {
+checkProcess = function(pid, offset, callback) {
 	invokeZord(
 		{
 			module:'Process',
@@ -107,7 +107,7 @@ var checkProcess = function(pid, offset, callback) {
 	);
 }
 
-var killProcess = function(pid, callback) {
+killProcess = function(pid, callback) {
 	invokeZord(
 		{
 			module:'Process',
@@ -122,11 +122,11 @@ var killProcess = function(pid, callback) {
 	);
 }
 
-var setSessionProperties = function(zord) {
+setSessionProperties = function(zord) {
 	sessionStorage.setItem('zord', JSON.stringify(zord));
 }
 
-var getSessionProperties = function() {
+getSessionProperties = function() {
 	zord = JSON.parse(sessionStorage.getItem('zord'));
 	if (zord == undefined || zord == null) {
 		zord = {};
@@ -135,13 +135,13 @@ var getSessionProperties = function() {
 	return zord;
 }
 
-var setSessionProperty = function(key, value, merge) {
+setSessionProperty = function(key, value, merge) {
 	zord = getSessionProperties();
 	zord = setValue(zord, key, value, merge);
 	setSessionProperties(zord);
 }
 
-var getSessionProperty = function(key, def) {
+getSessionProperty = function(key, def) {
 	zord = getSessionProperties();
 	value = getValue(zord, key, def);
 	if ((value == undefined || value == null) && (def !== undefined && def !== null)) {
@@ -151,15 +151,15 @@ var getSessionProperty = function(key, def) {
 	return value;
 }
 
-var setContextProperty = function(key, value, merge) {
+setContextProperty = function(key, value, merge) {
 	setSessionProperty(CONTEXT + '.' + key, value, merge);
 }
 
-var getContextProperty = function(key, def) {
+getContextProperty = function(key, def) {
 	return getSessionProperty(CONTEXT + '.' + key, def);
 }
 
-var setValue = function(object, key, value, merge) {
+setValue = function(object, key, value, merge) {
 	if (merge == undefined || merge == null || !merge) {
 		object = setValue(object, key, null, true);
 	}
@@ -174,7 +174,7 @@ var setValue = function(object, key, value, merge) {
 	return object;
 }
 
-var getValue = function(object, key) {
+getValue = function(object, key) {
 	keys = key.split('.');
 	value = object;
 	for (index = 0 ; index < keys.length ; index++) {

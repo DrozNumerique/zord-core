@@ -177,3 +177,27 @@ form.account input[type='submit']:hover {
 form.account div {
 	text-align:center;
 }
+
+/* -------------------------------- swipe -------------------------------*/
+.swipe {
+	display: grid;
+	grid-template-areas: "backward window forward";
+}
+
+.swipe > .backward {
+	grid-area: backward;
+}
+
+.swipe > .window {
+	grid-area: window;
+	overflow: hidden;
+}
+
+.swipe > .forward {
+	grid-area: forward;
+}
+
+.swipe .slider {
+	position: relative;
+}
+
