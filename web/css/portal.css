@@ -181,7 +181,16 @@ form.account div {
 /* -------------------------------- swipe -------------------------------*/
 .swipe {
 	display: grid;
+}
+
+.swipe[data-direction="horizontal"] {
 	grid-template-areas: "backward window forward";
+}
+
+.swipe[data-direction="vertical"] {
+	grid-template-areas: "backward"
+	                     "window"
+                         "forward";
 }
 
 .swipe > .backward {
