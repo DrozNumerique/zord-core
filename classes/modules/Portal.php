@@ -7,17 +7,26 @@ class Portal extends Module {
     }
     
     public function content() {
-        $name = $this->params['name'] ?? null;
+        $name  = $this->params['name'] ?? null;
+        $alone = $this->params['alone'] ?? false;
         if (isset($name)) {
-            $page = $this->page('content', ['name' => $name]);
-            foreach (['styles','scripts'] as $type) {
-                if (!empty($this->models[$name][$type])) {
-                    foreach ($this->models[$name][$type] as $model) {
+            if ($alone === 'true') {
+                foreach (['styles','scripts'] as $type) {
+                    $model = Zord::value('skin', $type, 'content');
+                    if (isset($model)) {
                         $this->addModel($type, $model);
                     }
+                    $models = Zord::value('page', ['content', $name, $type]);
+                    if (isset($models)) {
+                        foreach ($models as $model) {
+                            $this->addModel($type, $model);
+                        }
+                    }
                 }
+                return $this->view('/content', ['name' => $name]);
+            } else {
+                return $this->page('content', ['name' => $name]);
             }
-            return $page;
         } else {
             return $this->error(404);
         }
