@@ -1047,7 +1047,7 @@ class Zord {
             if (!file_exists($folder)) {
                 mkdir($folder, 0777, true);
             }
-            return file_put_contents($folder.$date.'.md', $content) ? Zord::date($date, $lang) : null;
+            return file_put_contents($folder.$date.'.md', $content) !== false ? Zord::date($date, $lang) : null;
         }
         $contents = glob($folder.'*.md');
         if (!empty($contents)) {

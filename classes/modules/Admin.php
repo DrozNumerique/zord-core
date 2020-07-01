@@ -215,7 +215,8 @@ class Admin extends Module {
                     'message' => Zord::substitute(
                         $this->locale->tab->content->message->saved,
                         ['label' => $this->contentLabel($name), 'date' => $date]
-                    )
+                    ),
+                    'holder'  => $this->contentHolder($name)
                 ];
             }
             return $result ?? $this->error(500, $this->locale->tab->content->message->unsaved);
@@ -229,6 +230,10 @@ class Admin extends Module {
     
     public function contentLabel($name) {
         return $this->locale->tab->content->label->$name;
+    }
+    
+    public function contentHolder($name) {
+        return '';
     }
     
     protected function prepareIndex($current) {

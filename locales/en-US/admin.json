@@ -48,7 +48,7 @@
 		"content": {
 			"title": "Contents edition",
 			"save": "Save",
-			"content": {
+			"message": {
 				"saved": "Content '${label}' saved on ${date}",
 				"missing": "Missing content or name",
 				"unsaved": "Content not saved"
