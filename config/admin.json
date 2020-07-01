@@ -22,7 +22,7 @@
 				"type": "text/javascript"
 			},
 			{
-				"src": "/js/admin/showdown.js",
+				"src": "/js/showdown.js",
 				"type": "text/javascript"
 			}
 		]

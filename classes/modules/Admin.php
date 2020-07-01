@@ -46,7 +46,8 @@ class Admin extends Module {
         $this->prepareIndex($current);
         return $this->page('admin', array_merge($models, [
             'tabs'    => array_keys($tabs),
-            'current' => $current
+            'current' => $current,
+            'admin'   => $this
         ]));
     }
     
@@ -211,16 +212,23 @@ class Admin extends Module {
             if (isset($date)) {
                 $result = [
                     'date'    => $date,
-                    'message' => Zord::resolve(
+                    'message' => Zord::substitute(
                         $this->locale->tab->content->message->saved,
-                        ['name' => $name, 'date' => $date],
-                        Zord::getLocale('portal', $this->lang)
-                        )
+                        ['label' => $this->contentLabel($name), 'date' => $date]
+                    )
                 ];
             }
             return $result ?? $this->error(500, $this->locale->tab->content->message->unsaved);
         }
         return $this->error(400, $this->locale->tab->content->message->missing);
+    }
+    
+    public function contentList() {
+        return Zord::value('portal', 'contents') ?? [];
+    }
+    
+    public function contentLabel($name) {
+        return $this->locale->tab->content->label->$name;
     }
     
     protected function prepareIndex($current) {

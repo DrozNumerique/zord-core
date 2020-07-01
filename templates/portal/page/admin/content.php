@@ -1,11 +1,11 @@
-<?php $contents = Zord::value('portal', 'contents') ?? []; ?>
+<?php $contents = $admin->contentList(); ?>
 <input id="name" name="name" type="hidden"/>
 <div id="wrapper">
     <div id="contents" class="admin-select admin-button">
      	<div class="selected"></div>
        	<ul class="list">
 <?php foreach ($contents as $name) { ?>
-			<li class="item" data-value="<?php echo $name; ?>"><?php echo htmlspecialchars($locale->tab->content->label->$name); ?></li>
+			<li class="item" data-value="<?php echo $name; ?>"><?php echo htmlspecialchars($admin->contentLabel($name)); ?></li>
 <?php } ?>
    	    </ul>
    	</div>

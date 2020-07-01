@@ -44,7 +44,7 @@
 			"title": "Édition de contenus",
 			"save": "Enregistrer",
 			"message": {
-				"saved": "Le contenu '${name}' a été sauvegardé le ${date}",
+				"saved": "Le contenu '${label}' a été sauvegardé le ${date}",
 				"missing": "Il manque le nom ou le contenu",
 				"unsaved": "Le contenu n'a pas pu être sauvegardé"
 			}

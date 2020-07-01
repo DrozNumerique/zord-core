@@ -49,7 +49,7 @@
 			"title": "Contents edition",
 			"save": "Save",
 			"content": {
-				"saved": "Content '${name}' saved on ${date}",
+				"saved": "Content '${label}' saved on ${date}",
 				"missing": "Missing content or name",
 				"unsaved": "Content not saved"
 			}
