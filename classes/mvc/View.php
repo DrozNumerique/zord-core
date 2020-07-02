@@ -36,28 +36,28 @@ class View {
         $lang    = $this->lang;
         $locale  = is_string($locale) ? Zord::getLocale($locale, $this->lang) : $locale;
         $page    = null;
-        foreach ([$this->implicits, $models] as $vars) {
-            foreach ($vars as $name => $value) {
-                if (!is_object($value)) {
-                    $value = json_decode(Zord::json_encode($value));
+        foreach ([$this->implicits, $models] as $_vars) {
+            foreach ($_vars as $_name => $_value) {
+                if (!is_object($_value)) {
+                    $_value = json_decode(Zord::json_encode($_value));
                 }
-                $$name = $value;
+                $$_name = $_value;
             }
         }
         $this->viewPlugin($template, $models, 'before', $page);
         if (!$this->viewPlugin($template, $models, 'instead', $page)) {
-            $file = Zord::template($template, $context, $lang);
-            $begin = VIEW_MARK_BEGIN;
-            $end = VIEW_MARK_END;
+            $_file = Zord::template($template, $context, $lang);
+            $_begin = VIEW_MARK_BEGIN;
+            $_end = VIEW_MARK_END;
             if (strpos($template, '/script/') > 0 || strpos($template, '/style/') > 0) {
-                $begin = '/*# ';
-                $end = ' #*/';
+                $_begin = '/*# ';
+                $_end = ' #*/';
             }
-            $this->mark('BEGIN '.$template, $begin, $end);
-            if ($file) {
-                include($file);
+            $this->mark('BEGIN '.$template, $_begin, $_end);
+            if ($_file) {
+                include($_file);
             }
-            $this->mark('END '.$template, $begin, $end);
+            $this->mark('END '.$template, $_begin, $_end);
             $this->viewPlugin($template, $models, 'after', $page);
         }
         array_pop($this->locales);

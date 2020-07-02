@@ -1,0 +1,19 @@
+.content.editable[data-name] {
+	cursor: pointer;
+}
+
+.content.editable[data-name] .editor {
+	display: none;
+}
+
+.content.editable[data-name] .editor textarea {
+	width: calc(100% - 4px);
+	height: calc(100% - 4px);
+	resize: vertical;
+}
+
+.content.editable[data-name] .editor button {
+	position: relative;
+	bottom: 32px;
+	left: 4px;
+}
