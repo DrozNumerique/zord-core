@@ -98,6 +98,7 @@ class Controler {
                 if ($this->module && $this->action) {
                     if ($this->isAuthorized($target)) {
                         $type = null;
+                        $history = null;
                         $this->configure();
                         $this->actionPlugin('before', $target);
                         $result = $this->module->execute($this->action);
@@ -108,6 +109,13 @@ class Controler {
                             $type = Zord::value('target', [$target['module'], $target['action'], 'response']);
                         } else if (null !== Zord::value('target', [$target['module'], 'response'])) {
                             $type = Zord::value('target', [$target['module'], 'response']);
+                        }
+                        if (isset($target['params']['history'])) {
+                            $history = ($target['params']['history'] !== 'false');
+                        } else if (null !== Zord::value('target', [$target['module'], $target['action'], 'history'])) {
+                            $history = Zord::value('target', [$target['module'], $target['action'], 'history']);
+                        } else if (null !== Zord::value('target', [$target['module'], 'history'])) {
+                            $history = Zord::value('target', [$target['module'], 'history']);
                         }
                         $response = $this->module->getResponse($this->action);
                         $type = $response ?? $type;
@@ -120,10 +128,6 @@ class Controler {
                         } else if ($this->isError($result)) {
                             $this->error($result, $type);
                         } else {
-                            $history = Zord::value('target', [$target['module'], $target['action'], 'history']);
-                            if (!isset($history)) {
-                                $history = Zord::value('target', [$target['module'], 'history']);
-                            }
                             if (isset($result['__history__'])) {
                                 $history = $result['__history__'];
                             }
