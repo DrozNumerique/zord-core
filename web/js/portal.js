@@ -172,6 +172,28 @@ var displayAccount = function(action) {
 	});
 }
 
+var swipeTo = function(element, index) {
+	element.dataset.index = index.toString();
+	var frame  = element.querySelector('.window');
+	var slider = element.querySelector('.slider');
+	if (frame && slider) {
+		switch (element.dataset.direction) {
+			case 'vertical': {
+				height = frame.offsetHeight;
+				position = -(index * height);
+				slider.style.top = position + 'px';
+				break;
+			}
+			case 'horizontal': {
+				width = frame.offsetWidth;
+				position = -(index * width);
+				slider.style.left = position + 'px';
+				break;
+			}
+		}
+	}
+}
+
 document.addEventListener("DOMContentLoaded", function(event) {
 
 	if (PORTAL == undefined) {
@@ -233,11 +255,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	});
 	
 	[].forEach.call(document.querySelectorAll('.swipe'), function(swipe) {
-		var frame    = swipe.querySelector('.window');
-		var slider   = swipe.querySelector('.slider');
 		var forward  = swipe.querySelector('.forward');
 		var backward = swipe.querySelector('.backward');
-		if (frame && slider && forward && backward) {
+		if (forward && backward) {
 			[].forEach.call([forward, backward], function(button) {
 				button.addEventListener('click', function(event) {
 					frames = swipe.querySelectorAll(swipe.dataset.frames);
@@ -256,21 +276,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 							index = 0;
 						}
 					}
-					swipe.dataset.index = index.toString();
-					switch (swipe.dataset.direction) {
-						case 'vertical': {
-							height = frame.offsetHeight;
-							position = -(index * height);
-							slider.style.top = position + 'px';
-							break;
-						}
-						case 'horizontal': {
-							width = frame.offsetWidth;
-							position = -(index * width);
-							slider.style.left = position + 'px';
-							break;
-						}
-					}
+					swipeTo(swipe, index);
 				});
 			})
 		}
