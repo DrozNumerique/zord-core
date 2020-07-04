@@ -230,8 +230,8 @@ form.account div {
 
 .swipe .backward,
 .swipe .forward {
-	font-size: 18px;
-	color: #6C747F;
+	font-size: var(--controls-size, 18px);
+	color: var(--controls-color,#6C747F);
 	cursor: pointer;
 	display: inline-flex;
 	margin: auto;
@@ -243,11 +243,11 @@ form.account div {
 }
 
 .swipe[data-direction="horizontal"] .backward > span:before {
-	content: '〈';
+	content: var(--backward-horizontal, '〈');
 }
 
 .swipe[data-direction="horizontal"] .forward > span:before {
-	content: '〉';
+	content: var(--forward-horizontal, '〉');
 }
 
 .swipe[data-direction="vertical"] .backward,
@@ -257,21 +257,21 @@ form.account div {
 }
 
 .swipe[data-direction="vertical"] .backward > span:before {
-	content: '︿';
+	content: var(--backward-vertical, '︿');
 }
 
 .swipe[data-direction="vertical"] .forward > span:before {
-	content: '﹀';
+	content: var(--forward-vertical, '﹀');
 }
 
 .swipe[data-direction="horizontal"] .slider {
 	left: 0px;
-	transition: left 1s;
+	transition: left var(--swipe-transition, 1s);
 }
 
 .swipe[data-direction="vertical"] .slider {
 	top: 0px;
-	transition: top 1s;
+	transition: top var(--swipe-transition, 1s);
 }
 
 .swipe .slider > ul {
