@@ -181,6 +181,10 @@ form.account div {
 /* -------------------------------- swipe -------------------------------*/
 .swipe {
 	display: grid;
+	width: var(--swipe-width);
+	height: var(--swipe-height);
+	--backward-size: 25px;
+	--forward-size: 25px;
 }
 
 .swipe[data-direction="horizontal"] {
@@ -191,6 +195,16 @@ form.account div {
 	grid-template-areas: "backward"
 	                     "window"
                          "forward";
+}
+
+.swipe[data-direction="horizontal"] {
+	grid-template-columns: var(--backward-size) calc(var(--swipe-width) - var(--backward-size) - var(--forward-size)) var(--forward-size);
+	grid-template-rows: 100%;
+}
+
+.swipe[data-direction="vertical"] {
+	grid-template-columns: 100%;
+	grid-template-rows: var(--backward-size) var(--swipe-height) var(--forward-size);
 }
 
 .swipe > .backward {
@@ -208,5 +222,83 @@ form.account div {
 
 .swipe .slider {
 	position: relative;
+}
+
+.swipe[data-direction="horizontal"] .slider {
+	height: var(--swipe-height);
+}
+
+.swipe .backward,
+.swipe .forward {
+	font-size: 18px;
+	color: #6C747F;
+	cursor: pointer;
+	display: inline-flex;
+	margin: auto;
+}
+
+.swipe[data-direction="horizontal"] .backward,
+.swipe[data-direction="horizontal"] .forward {
+	vertical-align: middle;
+}
+
+.swipe[data-direction="horizontal"] .backward > span:before {
+	content: '〈';
+}
+
+.swipe[data-direction="horizontal"] .forward > span:before {
+	content: '〉';
+}
+
+.swipe[data-direction="vertical"] .backward,
+.swipe[data-direction="vertical"] .forward {
+	text-align: center;
+	margin: auto;
+}
+
+.swipe[data-direction="vertical"] .backward > span:before {
+	content: '︿';
+}
+
+.swipe[data-direction="vertical"] .forward > span:before {
+	content: '﹀';
+}
+
+.swipe[data-direction="horizontal"] .slider {
+	left: 0px;
+	transition: left 1s;
+}
+
+.swipe[data-direction="vertical"] .slider {
+	top: 0px;
+	transition: top 1s;
+}
+
+.swipe .slider > ul {
+	margin: 0;
+	padding: 0;
+}
+
+.swipe .slider > ul > li.frame {
+	height: var(--swipe-height);
+	width: var(--swipe-width);
+}
+
+.swipe[data-direction="vertical"] .slider > ul {
+	display: block;
+	width: var(--swipe-width);
+}
+
+.swipe[data-direction="horizontal"] .slider > ul {
+	display: table-row;
+	height: var(--swipe-height);
+}
+
+.swipe[data-direction="vertical"] .slider > ul > li.frame {
+	display: block;
+}
+
+.swipe[data-direction="horizontal"] .slider > ul > li.frame {
+	display: table-cell;
 }
 
