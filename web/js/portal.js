@@ -172,12 +172,12 @@ var displayAccount = function(action) {
 	});
 }
 
-var swipeTo = function(element, index) {
+var swipeAt = function(element, index) {
 	element.dataset.index = index.toString();
 	var frame  = element.querySelector('.window');
 	var slider = element.querySelector('.slider');
 	if (frame && slider) {
-		switch (element.dataset.direction) {
+		switch (element.dataset.transition) {
 			case 'vertical': {
 				height = frame.offsetHeight;
 				position = -(index * height);
@@ -190,7 +190,51 @@ var swipeTo = function(element, index) {
 				slider.style.left = position + 'px';
 				break;
 			}
+			case 'crossfade': {
+				height = frame.offsetHeight;
+				position = -(index * height);
+				slider.style.top = position + 'px';
+				frames = element.querySelectorAll(element.dataset.frames);
+				[].forEach.call(frames, function(frame) {
+					frame.classList.remove('current');
+				});
+				frames[index].classList.add('current');
+			}
 		}
+	}
+}
+
+var swipeTo = function(element, direction) {
+	var frames = element.querySelectorAll(element.dataset.frames);
+	var index  = Number.parseInt(element.dataset.index);
+	switch (direction) {
+		case 'backward': {
+			if (index > 0) {
+				index = index - 1;
+			} else {
+				index = frames.length - 1;
+			}
+			break;
+		}
+		case 'forward': {
+			if (index < frames.length - 1) {
+				index = index + 1;
+			} else {
+				index = 0;
+			}
+			break;
+		}
+	}
+	swipeAt(element, index);
+}
+
+var swipeStart = function(swipe) {
+	swipe.dataset.clear = setInterval(swipeTo, Number.parseInt(swipe.dataset.interval), swipe, 'forward');
+}
+
+var swipeStop = function(swipe) {
+	if (swipe.dataset.clear !== undefined) {
+		clearInterval(Number.parseInt(swipe.dataset.clear));
 	}
 }
 
@@ -260,26 +304,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		if (forward && backward) {
 			[].forEach.call([forward, backward], function(button) {
 				button.addEventListener('click', function(event) {
-					frames = swipe.querySelectorAll(swipe.dataset.frames);
-					index  = Number.parseInt(swipe.dataset.index);
-					if (button.classList.contains('backward')) {
-						if (index > 0) {
-							index = index - 1;
-						} else {
-							index = frames.length - 1;
-						}
-					}
-					if (button.classList.contains('forward')) {
-						if (index < frames.length - 1) {
-							index = index + 1;
-						} else {
-							index = 0;
-						}
-					}
-					swipeTo(swipe, index);
+					swipeTo(swipe, button.dataset.direction);
 				});
 			})
 		}
+	});
+	
+	[].forEach.call(document.querySelectorAll('.swipe[data-interval]:not([data-interval="0"])'), function(swipe) {
+		swipeStart(swipe);
 	});
 	
 });
