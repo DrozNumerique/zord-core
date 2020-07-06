@@ -202,6 +202,12 @@ var swipeAt = function(element, index) {
 			}
 		}
 	}
+	[].forEach.call(element.querySelectorAll('.controls span'), function(item) {
+		item.classList.remove('highlight');
+	});
+	[].forEach.call(element.querySelectorAll('.controls span[data-index="' + index + '"]'), function(item) {
+		item.classList.add('highlight');
+	});
 }
 
 var swipeTo = function(element, direction) {
@@ -304,15 +310,38 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	
 	[].forEach.call(document.querySelectorAll('.swipe'), function(swipe) {
 		swipeStart(swipe);
-		var forward  = swipe.querySelector('.forward');
-		var backward = swipe.querySelector('.backward');
-		if (forward && backward) {
-			[].forEach.call([forward, backward], function(button) {
+		[].forEach.call(['forward', 'backward'], function(direction) {
+			var button = swipe.querySelector('.' + direction);
+			if (button) {
 				button.addEventListener('click', function(event) {
+					swipeStop(swipe);
 					swipeTo(swipe, button.dataset.direction);
+					swipeStart(swipe);
 				});
-			})
-		}
+			}
+		});
+		var frames = swipe.querySelectorAll(swipe.dataset.frames);
+		[].forEach.call(['top','bottom','left','right'], function(position) {
+			var index = swipe.querySelector('.' + position);
+			if (index) {
+				[].forEach.call(frames, function(frame, num) {
+					item = document.createElement('span');
+					item.dataset.index = num;
+					if (frame.dataset.title !== undefined) {
+						item.title = frame.dataset.title;
+					}
+					if (num == Number.parseInt(swipe.dataset.index)) {
+						item.classList.add('highlight');
+					}
+					item.addEventListener('click', function(event) {
+						swipeStop(swipe);
+						swipeAt(swipe, num);
+						swipeStart(swipe);
+					});
+					index.appendChild(item);
+				});
+			}
+		});
 	});
 	
 });
