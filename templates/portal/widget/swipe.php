@@ -3,8 +3,8 @@
 					<div class="bottom controls"></div>
 					<div class="left controls"></div>
 					<div class="right controls"></div>
-					<div class="backward controls" data-direction="backward"></div>
-					<div class="forward controls" data-direction="forward"></div>
+					<div class="backward controls" data-direction="backward"><span></span></div>
+					<div class="forward controls" data-direction="forward"><span></span></div>
 					<div class="window">
 						<div class="slider">
 <?php $this->render($models['frames']); ?>
