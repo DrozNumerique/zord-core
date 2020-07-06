@@ -177,7 +177,7 @@ var swipeAt = function(element, index) {
 	var frame  = element.querySelector('.window');
 	var slider = element.querySelector('.slider');
 	if (frame && slider) {
-		switch (element.dataset.transition) {
+		switch (element.dataset.direction) {
 			case 'vertical': {
 				height = frame.offsetHeight;
 				position = -(index * height);
@@ -190,15 +190,15 @@ var swipeAt = function(element, index) {
 				slider.style.left = position + 'px';
 				break;
 			}
+		}
+		switch (element.dataset.transition) {
 			case 'crossfade': {
-				height = frame.offsetHeight;
-				position = -(index * height);
-				slider.style.top = position + 'px';
 				frames = element.querySelectorAll(element.dataset.frames);
 				[].forEach.call(frames, function(frame) {
 					frame.classList.remove('current');
 				});
 				frames[index].classList.add('current');
+				break;
 			}
 		}
 	}
@@ -229,12 +229,16 @@ var swipeTo = function(element, direction) {
 }
 
 var swipeStart = function(swipe) {
-	swipe.dataset.clear = setInterval(swipeTo, Number.parseInt(swipe.dataset.interval), swipe, 'forward');
+	var interval = Number.parseInt(swipe.dataset.interval);
+	if (interval > 0) {
+		swipe.dataset.clear = setInterval(swipeTo, interval, swipe, 'forward');
+	}
 }
 
 var swipeStop = function(swipe) {
-	if (swipe.dataset.clear !== undefined) {
-		clearInterval(Number.parseInt(swipe.dataset.clear));
+	var clear = swipe.dataset.clear;
+	if (clear !== undefined) {
+		clearInterval(Number.parseInt(clear));
 	}
 }
 
@@ -299,6 +303,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	});
 	
 	[].forEach.call(document.querySelectorAll('.swipe'), function(swipe) {
+		swipeStart(swipe);
 		var forward  = swipe.querySelector('.forward');
 		var backward = swipe.querySelector('.backward');
 		if (forward && backward) {
@@ -308,10 +313,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
 				});
 			})
 		}
-	});
-	
-	[].forEach.call(document.querySelectorAll('.swipe[data-interval]:not([data-interval="0"])'), function(swipe) {
-		swipeStart(swipe);
 	});
 	
 });

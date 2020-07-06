@@ -14,7 +14,8 @@
 	<div class="date" data-page="<?php echo $name; ?>"><?php echo isset($content) ? Zord::date(date('YmdHis', filemtime($content)), $lang) : ''; ?></div>
     <textarea class="editor" data-page="<?php echo $name; ?>"><?php echo isset($content) ? file_get_contents($content) : ''; ?></textarea>
 <?php } ?>
-	<div id="save" class="admin-button"><?php echo $locale->tab->content->save; ?></div>
+<?php Zord::log($locale); ?>
+	<div id="save" class="admin-button"><?php echo $locale->save; ?></div>
 	<div id="preview">
 	    <div class="content"></div>
 	</div>

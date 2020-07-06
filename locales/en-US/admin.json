@@ -47,7 +47,6 @@
 		},
 		"content": {
 			"title": "Contents edition",
-			"save": "Save",
 			"message": {
 				"saved": "Content '${label}' saved on ${date}",
 				"missing": "Missing content or name",
