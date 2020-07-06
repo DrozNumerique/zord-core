@@ -251,11 +251,23 @@ form.account div {
 }
 
 .swipe .controls {
-	color: var(--controls-color,#6C747F);
+	color: var(--controls-color,#CCCCCC);
 	font-size: var(--controls-size, 18px);
 	cursor: pointer;
 	display: none;
 	margin: auto;
+}
+
+.swipe .controls:hover {
+	color: var(--controls-hover,#666666);
+}
+
+.swipe .controls span {
+	color: var(--controls-color,#CCCCCC);
+}
+
+.swipe .controls span:hover {
+	color: var(--controls-hover,#666666);
 }
 
 .swipe .controls span:before {
