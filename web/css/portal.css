@@ -278,6 +278,19 @@ form.account div {
 	content: '◉'
 }
 
+.swipe .controls.top span,
+.swipe .controls.bottom span {
+	display: inline;
+	vertical-align: middle;
+}
+
+.swipe .controls.left span,
+.swipe .controls.right span {
+	display: block;
+	text-align: center;
+	line-height: 0.7em;
+}
+
 .swipe .controls.backward,
 .swipe .controls.forward {
 	display: inline-flex;
