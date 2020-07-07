@@ -309,6 +309,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	});
 	
 	[].forEach.call(document.querySelectorAll('.slide'), function(slide) {
+		if (slide.dataset.index !== undefined) {
+			slideAt(slide, Number.parseInt(slide.dataset.index));
+		}
 		slideStart(slide);
 		[].forEach.call(['forward', 'backward'], function(direction) {
 			var control = slide.querySelector('.' + direction);
