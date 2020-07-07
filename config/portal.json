@@ -21,5 +21,19 @@
 			"ips",
 			"password"
 		]
+	},
+	"slide": {
+		"index": 0,
+		"selector": "li.frame",
+		"direction": "vertical",
+		"transition": "swipe",
+		"interval": 0,
+		"controls": {
+			"backward": true,
+			"forward": true,
+			"pause": false,
+			"play": false,
+			"jump": false
+		}
 	}
 }

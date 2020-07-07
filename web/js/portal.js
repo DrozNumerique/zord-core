@@ -235,7 +235,7 @@ var slideTo = function(element, direction) {
 }
 
 var slideStart = function(element) {
-	var interval = Math.abs(Number.parseInt(element.dataset.interval));
+	var interval = Number.parseInt(element.dataset.interval);
 	if (interval > 0) {
 		element.dataset.clear = setInterval(slideTo, interval, element, 'forward');
 		[].forEach.call(element.querySelectorAll('.controls span.play'), function(play) {
@@ -324,9 +324,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		if (slide.dataset.index !== undefined) {
 			slideAt(slide, Number.parseInt(slide.dataset.index));
 		}
+		var controls = JSON.parse(slide.dataset.controls);
 		[].forEach.call(['forward', 'backward'], function(direction) {
 			var control = slide.querySelector('.' + direction);
-			if (control) {
+			if (control && controls[direction]) {
 				control.addEventListener('click', function(event) {
 					slideStop(slide);
 					slideTo(slide, control.dataset.direction);
@@ -338,8 +339,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		[].forEach.call(['top','bottom','left','right'], function(position) {
 			var index = slide.querySelector('.' + position);
 			if (index) {
-				var interruptible = slide.dataset.interval !== undefined && Number.parseInt(slide.dataset.interval) > 0;
-				if (interruptible) {
+				var dynamic = Number.parseInt(slide.dataset.interval) > 0;
+				if (dynamic && controls.pause) {
 					item = document.createElement('span');
 					item.classList.add('pause');
 					item.addEventListener('click', function(event) {
@@ -357,14 +358,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
 					if (num == Number.parseInt(slide.dataset.index)) {
 						item.classList.add('highlight');
 					}
-					item.addEventListener('click', function(event) {
-						slideStop(slide);
-						slideAt(slide, num);
-						slideStart(slide);
-					});
+					if (controls.jump) {
+						item.addEventListener('click', function(event) {
+							slideStop(slide);
+							slideAt(slide, num);
+							slideStart(slide);
+						});
+					}
 					index.appendChild(item);
 				});
-				if (interruptible) {
+				if (dynamic && controls.play) {
 					item = document.createElement('span');
 					item.classList.add('play');
 					item.addEventListener('click', function(event) {
