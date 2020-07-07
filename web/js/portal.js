@@ -172,7 +172,7 @@ var displayAccount = function(action) {
 	});
 }
 
-var swipeAt = function(element, index) {
+var slideAt = function(element, index) {
 	element.dataset.index = index.toString();
 	var frame  = element.querySelector('.window');
 	var slider = element.querySelector('.slider');
@@ -210,7 +210,7 @@ var swipeAt = function(element, index) {
 	});
 }
 
-var swipeTo = function(element, direction) {
+var slideTo = function(element, direction) {
 	var frames = element.querySelectorAll(element.dataset.frames);
 	var index  = Number.parseInt(element.dataset.index);
 	switch (direction) {
@@ -231,18 +231,18 @@ var swipeTo = function(element, direction) {
 			break;
 		}
 	}
-	swipeAt(element, index);
+	slideAt(element, index);
 }
 
-var swipeStart = function(swipe) {
-	var interval = Number.parseInt(swipe.dataset.interval);
+var slideStart = function(element) {
+	var interval = Number.parseInt(element.dataset.interval);
 	if (interval > 0) {
-		swipe.dataset.clear = setInterval(swipeTo, interval, swipe, 'forward');
+		element.dataset.clear = setInterval(slideTo, interval, element, 'forward');
 	}
 }
 
-var swipeStop = function(swipe) {
-	var clear = swipe.dataset.clear;
+var slideStop = function(element) {
+	var clear = element.dataset.clear;
 	if (clear !== undefined) {
 		clearInterval(Number.parseInt(clear));
 	}
@@ -308,21 +308,21 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		});
 	});
 	
-	[].forEach.call(document.querySelectorAll('.swipe'), function(swipe) {
-		swipeStart(swipe);
+	[].forEach.call(document.querySelectorAll('.slide'), function(slide) {
+		slideStart(slide);
 		[].forEach.call(['forward', 'backward'], function(direction) {
-			var button = swipe.querySelector('.' + direction);
-			if (button) {
-				button.addEventListener('click', function(event) {
-					swipeStop(swipe);
-					swipeTo(swipe, button.dataset.direction);
-					swipeStart(swipe);
+			var control = slide.querySelector('.' + direction);
+			if (control) {
+				control.addEventListener('click', function(event) {
+					slideStop(slide);
+					slideTo(slide, control.dataset.direction);
+					slideStart(slide);
 				});
 			}
 		});
-		var frames = swipe.querySelectorAll(swipe.dataset.frames);
+		var frames = slide.querySelectorAll(slide.dataset.frames);
 		[].forEach.call(['top','bottom','left','right'], function(position) {
-			var index = swipe.querySelector('.' + position);
+			var index = slide.querySelector('.' + position);
 			if (index) {
 				[].forEach.call(frames, function(frame, num) {
 					item = document.createElement('span');
@@ -330,13 +330,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
 					if (frame.dataset.title !== undefined) {
 						item.title = frame.dataset.title;
 					}
-					if (num == Number.parseInt(swipe.dataset.index)) {
+					if (num == Number.parseInt(slide.dataset.index)) {
 						item.classList.add('highlight');
 					}
 					item.addEventListener('click', function(event) {
-						swipeStop(swipe);
-						swipeAt(swipe, num);
-						swipeStart(swipe);
+						slideStop(slide);
+						slideAt(slide, num);
+						slideStart(slide);
 					});
 					index.appendChild(item);
 				});
