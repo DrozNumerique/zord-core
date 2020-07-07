@@ -202,10 +202,10 @@ var slideAt = function(element, index) {
 			}
 		}
 	}
-	[].forEach.call(element.querySelectorAll('.controls span'), function(item) {
+	[].forEach.call(element.querySelectorAll('.controls span.index'), function(item) {
 		item.classList.remove('highlight');
 	});
-	[].forEach.call(element.querySelectorAll('.controls span[data-index="' + index + '"]'), function(item) {
+	[].forEach.call(element.querySelectorAll('.controls span.index[data-index="' + index + '"]'), function(item) {
 		item.classList.add('highlight');
 	});
 }
@@ -235,9 +235,15 @@ var slideTo = function(element, direction) {
 }
 
 var slideStart = function(element) {
-	var interval = Number.parseInt(element.dataset.interval);
+	var interval = Math.abs(Number.parseInt(element.dataset.interval));
 	if (interval > 0) {
 		element.dataset.clear = setInterval(slideTo, interval, element, 'forward');
+		[].forEach.call(element.querySelectorAll('.controls span.play'), function(play) {
+			play.classList.add('highlight');
+		});
+		[].forEach.call(element.querySelectorAll('.controls span.pause'), function(pause) {
+			pause.classList.remove('highlight');
+		});
 	}
 }
 
@@ -245,6 +251,12 @@ var slideStop = function(element) {
 	var clear = element.dataset.clear;
 	if (clear !== undefined) {
 		clearInterval(Number.parseInt(clear));
+		[].forEach.call(element.querySelectorAll('.controls span.pause'), function(pause) {
+			pause.classList.add('highlight');
+		});
+		[].forEach.call(element.querySelectorAll('.controls span.play'), function(play) {
+			play.classList.remove('highlight');
+		});
 	}
 }
 
@@ -312,7 +324,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		if (slide.dataset.index !== undefined) {
 			slideAt(slide, Number.parseInt(slide.dataset.index));
 		}
-		slideStart(slide);
 		[].forEach.call(['forward', 'backward'], function(direction) {
 			var control = slide.querySelector('.' + direction);
 			if (control) {
@@ -327,8 +338,18 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		[].forEach.call(['top','bottom','left','right'], function(position) {
 			var index = slide.querySelector('.' + position);
 			if (index) {
+				var interruptible = slide.dataset.interval !== undefined && Number.parseInt(slide.dataset.interval) > 0;
+				if (interruptible) {
+					item = document.createElement('span');
+					item.classList.add('pause');
+					item.addEventListener('click', function(event) {
+						slideStop(slide);
+					});
+					index.appendChild(item);
+				}
 				[].forEach.call(frames, function(frame, num) {
 					item = document.createElement('span');
+					item.classList.add('index');
 					item.dataset.index = num;
 					if (frame.dataset.title !== undefined) {
 						item.title = frame.dataset.title;
@@ -343,8 +364,17 @@ document.addEventListener("DOMContentLoaded", function(event) {
 					});
 					index.appendChild(item);
 				});
+				if (interruptible) {
+					item = document.createElement('span');
+					item.classList.add('play');
+					item.addEventListener('click', function(event) {
+						slideStart(slide);
+					});
+					index.appendChild(item);
+				}
 			}
 		});
+		slideStart(slide);
 	});
 	
 });

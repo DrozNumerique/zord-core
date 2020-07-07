@@ -287,15 +287,26 @@ form.account div {
 	color: var(--controls-hover,#666666);
 }
 
-.slide .controls span:before {
-	content: '●'
-}
-
 .slide .controls span.highlight {
 	color: black;
 }
 
-.slide .controls span.highlight:before {
+.slide .controls span.pause:before {
+	content: 'Ⅱ';
+	font-weight: bold;
+	position: relative;
+	top: 2px;
+}
+
+.slide .controls span.play:before {
+	content: '▶';
+}
+
+.slide .controls span.index:before {
+	content: '●'
+}
+
+.slide .controls span.index.highlight:before {
 	content: '◉';
 }
 
