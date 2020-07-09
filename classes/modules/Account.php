@@ -150,6 +150,8 @@ class Account extends Module {
             } else {
                 if (isset($failure)) {
                     return $this->redirect($failure.'?message='.$this->locale->messages->auth_failed);
+                } else {
+                    $models['message'] = $this->locale->messages->auth_failed;
                 }
             }
         }
