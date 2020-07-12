@@ -37,11 +37,13 @@ class View {
         $locale  = is_string($locale) ? Zord::getLocale($locale, $this->lang) : $locale;
         $page    = null;
         foreach ([$this->implicits, $models] as $_vars) {
-            foreach ($_vars as $_name => $_value) {
-                if (!is_object($_value)) {
-                    $_value = json_decode(Zord::json_encode($_value));
+            if (is_array($_vars) && Zord::is_associative($_vars)) {
+                foreach ($_vars as $_name => $_value) {
+                    if (!is_object($_value)) {
+                        $_value = json_decode(Zord::json_encode($_value));
+                    }
+                    $$_name = $_value;
                 }
-                $$_name = $_value;
             }
         }
         $this->viewPlugin($template, $models, 'before', $page);
