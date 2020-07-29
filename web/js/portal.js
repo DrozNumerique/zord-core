@@ -285,7 +285,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		}
 	});
 	
-	[].forEach.call(document.querySelectorAll('.slide'), function(element) {
+	[].forEach.call(document.querySelectorAll('.pullout'), function(element) {
 		element.addEventListener("mouseover", function(event) {
 			element.classList.add("show");
 		});
