@@ -132,12 +132,13 @@ class Module {
 	    ];
 	}
 	
-	public function view($template, $models = [], $type = 'text/html;charset=UTF-8', $history = null) {
+	public function view($template, $models = [], $type = 'text/html;charset=UTF-8', $history = null, $mark = true) {
 	    return [
 	        '__template__' => $template,
 	        '__models__'   => $models,
 	        '__type__'     => $type,
-	        '__history__'  => $history
+	        '__history__'  => $history,
+	        '__mark__'     => $mark
 	    ];
 	}
 	
@@ -163,7 +164,7 @@ class Module {
 	    $file = $this->file($path, $role);
 	    if ($file['code'] == 200) {
 	        $contentType = Zord::value('content', strtolower(pathinfo($file['name'], PATHINFO_EXTENSION)));
-	        return $this->view('/readfile', ['filename' => $file['name']], $contentType, false);
+	        return $this->view('/readfile', ['filename' => $file['name']], $contentType, false, false);
 	    } else {
 	        return $this->error($file['code']);
 	    }

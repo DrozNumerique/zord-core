@@ -526,6 +526,7 @@ class Controler {
 	        }
 	        case 'VIEW': {
 	            $content = $result['__type__'] ?? 'text/html;charset=UTF-8';
+	            $mark    = $result['__mark__'] ?? true;
 	            $this->sendHeaders($status, [
 	                'Content-Type' => $content,
 	                'Vary'         => 'Accept'
@@ -544,9 +545,7 @@ class Controler {
 	            $models   = Zord::array_merge($portal, $models);
 	            $models   = $this->modelsPlugin($models);
 	            $view     = new $view($template, $models, $this);
-    	        if (substr($content, 0, strlen('text/html')) !== 'text/html') {
-    	            $view->setMark(false);
-    	        }
+	            $view->setMark($mark);
     	        echo $view->render();
 	            break;
 	        }

@@ -11,6 +11,7 @@
 	"csv": "text/csv",
 	"doc": "application/msword",
 	"docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+	"dzi": "application/xml",
 	"eps": "application/postscript",
 	"epub": "application/epub+zip",
 	"gif": "image/gif",
