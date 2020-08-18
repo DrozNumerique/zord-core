@@ -169,7 +169,7 @@ class Account extends Module {
                     $login = $data['login'];
                     $reset = $data['reset'];
                     $user = (new UserEntity())->retrieve($login);
-                    if ($user !== false && $reset == $user->reset) {
+                    if ($user !== false && $reset.' @ '.$_SERVER['REMOTE_ADDR'] === $user->reset) {
                         $this->bind($login);
                     } else {
                         return $this->error(404);
@@ -230,7 +230,7 @@ class Account extends Module {
     
     public function notifyReset($user) {
         $now = date('Y-m-d H:i:s');
-        (new UserEntity())->update($user->login, ['reset' => $now]);
+        (new UserEntity())->update($user->login, ['reset' => $now.' @ '.$_SERVER['REMOTE_ADDR']]);
         $data = Zord::json_encode(['login' => $user->login, 'reset' => $now]);
         $crypted = Zord::encrypt($data, Zord::realpath(OPENSSL_PUBLIC_KEY));
         if ($crypted !== false) {
