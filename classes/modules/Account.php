@@ -122,6 +122,7 @@ class Account extends Module {
                 $models['message'] = $data;
             } else if (!empty($data)) {
                 $data['password.crypted'] = true;
+                $data['reset'] = null;
                 (new UserEntity())->update($this->user->login, $data);
                 $models['message'] = $this->locale->messages->$scope->updated;
             } else {
@@ -170,7 +171,6 @@ class Account extends Module {
                     $user = (new UserEntity())->retrieve($login);
                     if ($user !== false && $reset == $user->reset) {
                         $this->bind($login);
-                        (new UserEntity())->update($login, ['reset' => null]);
                     } else {
                         return $this->error(404);
                     }
