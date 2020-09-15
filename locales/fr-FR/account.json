@@ -30,7 +30,7 @@
 		"auth_failed": "Echec de l'authentification",
 		"mail_sent": "Message d'activation envoyé",
 		"mail_error": "Erreur lors de l'envoi du message d'activation",
-		"encryption_error": "Erreur lors du chiffrement du d'activation",
+		"encryption_error": "Erreur lors du chiffrement de l'activation",
 		"unknown_user": "Utilisateur inconnu",
 		"missing": "Le champ '$[fields.${property}]' doit être renseigné",
 		"password_length": "Le mot de passe doit faire au moins ${min} caractères"
