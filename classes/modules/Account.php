@@ -255,7 +255,7 @@ class Account extends Module {
                 'account'    => htmlspecialchars($user->name.' <'.$user->email.'>')
             ];
             if ($send !== true) {
-                $result['error'] = $this->locale->messages->mail_error.$send;
+                $result['error'] = $this->locale->messages->mail_error.'|'.$send;
             }
             return $result;
         }
