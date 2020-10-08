@@ -66,6 +66,42 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		}
 	});
 	
+	[].forEach.call(document.querySelectorAll('#pagination li.cursor'), function(cursor) {
+		cursor.addEventListener('click', function(event) {
+			var data = cursor.parentNode.dataset;
+			var offset = Number.parseInt(data.offset);
+			var limit  = Number.parseInt(data.limit);
+			var count  = Number.parseInt(data.count);
+			if (cursor.classList.contains('previous') && offset - limit >= 0) {
+				offset -= limit;
+			}
+			if (cursor.classList.contains('next') && offset + limit < count) {
+				offset += limit;
+			}
+			if (offset !== Number.parseInt(data.offset)) {
+				invokeZord({
+					module:'Admin',
+					action:'index',
+					tab:'users',
+					operation:'list',
+					offset:offset
+				});
+			}
+		});
+	});
+	
+	[].forEach.call(document.querySelectorAll('#pagination li.index select'), function(index) {
+		index.addEventListener('change', function(event) {
+			invokeZord({
+				module:'Admin',
+				action:'index',
+				tab:'users',
+				operation:'list',
+				offset:index.value
+			});
+		});
+	})
+	
 	var submitProfile = document.getElementById('submit-profile');
 	if (submitProfile != undefined) {
 		submitProfile.addEventListener("click", function(event) {

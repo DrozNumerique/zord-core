@@ -13,7 +13,8 @@
 				"src": "/js/admin/users.js",
 				"type": "text/javascript"
 			}
-		]
+		],
+		"limit":  100
 	},
 	"content": {
 		"scripts": [

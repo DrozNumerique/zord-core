@@ -43,8 +43,7 @@ class Admin extends Module {
                 }
             }
         }
-        $this->prepareIndex($current);
-        return $this->page('admin', array_merge($models, [
+        return $this->page('admin', array_merge($this->prepareIndex($current, $models), [
             'tabs'    => array_keys($tabs),
             'current' => $current,
             'admin'   => $this
@@ -236,7 +235,7 @@ class Admin extends Module {
         return '';
     }
     
-    protected function prepareIndex($current) {
+    protected function prepareIndex($current, $models) {
         if ($current == 'content') {
             $contents = Zord::value('portal', 'contents') ?? [];
             foreach ($contents as $content) {
@@ -247,7 +246,23 @@ class Admin extends Module {
                     }
                 }
             }
+        } else if ($current == 'users') {
+            if (!isset($this->params['operation']) || $this->params['operation'] == 'list') {
+                $limit = Zord::value('admin', ['users','limit']);
+                $count = (new UserEntity())->retrieve()->count();
+                $offset = $this->params['offset'] ?? 0;
+                $criteria = [
+                    'many'   => true,
+                    'limit'  => $limit,
+                    'offset' => $offset
+                ];
+                $models['count']    = $count;
+                $models['limit']    = $limit;
+                $models['offset']   = $offset;
+                $models['criteria'] = $criteria;
+            } 
         }
+        return $models;
     }
     
     protected function updateModels($models) {

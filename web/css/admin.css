@@ -336,6 +336,34 @@
 
 #account.admin-list {
 	width: 778px;
+	margin: 0;
+}
+
+
+#pagination {
+	list-style-type: none;
+	text-align: center;
+	width: 778px;
+	padding: 0px;
+	margin: 10px 0 0 0;
+}
+
+#pagination li {
+	display: inline-block;
+}
+
+#pagination li.cursor {
+	color: gray;
+	border: 1px solid lightgray;
+	padding: 2px;
+	width: 100px;
+	margin: 0 10px;
+	cursor: pointer;
+}
+
+#pagination li:hover {
+	color: black;
+	border-color: black;
 }
 
 #roles.admin-list {

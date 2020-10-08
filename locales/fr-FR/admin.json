@@ -38,7 +38,9 @@
 				"error": "Echec de l'envoi du mail d'activation",
 				"to": "Destinataire",
 				"activation": "Lien d'activation"
-			}
+			},
+			"previous": "Précédents",
+			"next": "Suivants"
 		},
 		"content": {
 			"title": "Édition de contenus",

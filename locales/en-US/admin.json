@@ -43,7 +43,9 @@
 				"error": "Fail to send activation e-mail",
 				"to": "To",
 				"activation": "Activation link "
-			}
+			},
+			"previous": "Previous",
+			"next": "Next"
 		},
 		"content": {
 			"title": "Contents edition",
