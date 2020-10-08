@@ -20,8 +20,10 @@ abstract class ProcessExecutor {
             'params' => Zord::json_encode($params)
         ]);
         Zord::execute('popen', PROCESS_COMMAND, [
-            'SCRIPT' => ROOT.'process.php',
-            'PID'    => $pid
+            'LOCALE'   => str_replace('-', '_', $lang),
+            'ENCODING' => DEFAULT_ENCODING,
+            'SCRIPT'   => ROOT.'process.php',
+            'PID'      => $pid
         ]);
         return $pid;
     }
