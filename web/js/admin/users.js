@@ -100,7 +100,23 @@ document.addEventListener("DOMContentLoaded", function(event) {
 				offset:index.value
 			});
 		});
-	})
+	});
+	
+	[].forEach.call(document.querySelectorAll('#pagination li.search i'), function(button) {
+		button.addEventListener('click', function(event) {
+			keyword = button.previousElementSibling.value;
+			if (keyword !== undefined && keyword !== null && keyword.trim().length > 0) {
+				invokeZord({
+					module:'Admin',
+					action:'index',
+					tab:'users',
+					operation:'list',
+					offset:0,
+					keyword:keyword.trim()
+				});
+			}
+		});
+	});
 	
 	var submitProfile = document.getElementById('submit-profile');
 	if (submitProfile != undefined) {

@@ -345,7 +345,7 @@
 	text-align: center;
 	width: 778px;
 	padding: 0px;
-	margin: 10px 0 0 0;
+	margin: 0 0 10px 0;
 }
 
 #pagination li {
@@ -364,6 +364,10 @@
 #pagination li:hover {
 	color: black;
 	border-color: black;
+}
+
+#pagination li.search i {
+	cursor: pointer;
 }
 
 #roles.admin-list {
