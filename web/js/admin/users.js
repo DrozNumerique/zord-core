@@ -68,10 +68,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	
 	[].forEach.call(document.querySelectorAll('#pagination li.cursor'), function(cursor) {
 		cursor.addEventListener('click', function(event) {
-			var data = cursor.parentNode.dataset;
-			var offset = Number.parseInt(data.offset);
-			var limit  = Number.parseInt(data.limit);
-			var count  = Number.parseInt(data.count);
+			controls = cursor.parentNode;
+			data = controls.dataset;
+			offset = Number.parseInt(data.offset);
+			limit  = Number.parseInt(data.limit);
+			count  = Number.parseInt(data.count);
 			if (cursor.classList.contains('previous') && offset - limit >= 0) {
 				offset -= limit;
 			}
@@ -79,12 +80,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
 				offset += limit;
 			}
 			if (offset !== Number.parseInt(data.offset)) {
+				keyword = controls.querySelector('li.search input').value;
 				invokeZord({
 					module:'Admin',
 					action:'index',
 					tab:'users',
 					operation:'list',
-					offset:offset
+					offset:offset,
+					keyword:keyword.trim()
 				});
 			}
 		});
@@ -92,12 +95,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	
 	[].forEach.call(document.querySelectorAll('#pagination li.index select'), function(index) {
 		index.addEventListener('change', function(event) {
+			keyword = index.parentNode.parentNode.querySelector('li.search input').value;
 			invokeZord({
 				module:'Admin',
 				action:'index',
 				tab:'users',
 				operation:'list',
-				offset:index.value
+				offset:index.value,
+				keyword:keyword.trim()
 			});
 		});
 	});
