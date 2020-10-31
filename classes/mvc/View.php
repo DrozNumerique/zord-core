@@ -55,6 +55,10 @@ class View {
                 $_begin = '/*# ';
                 $_end = ' #*/';
             }
+            $instruction = Zord::value('plugin',['view',$template,'instruction']);
+            if (isset($instruction)) {
+                echo $instruction."\n";
+            }
             $this->mark('BEGIN '.$template, $_begin, $_end);
             if ($_file) {
                 include($_file);

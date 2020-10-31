@@ -12,14 +12,14 @@
         "key": "login",
         "join": {
         	"UserHasProfileEntity": ["login", "user"],
-        	"UserHasAddressEntity": ["login", "user"],
+        	"UserHasIPV4Entity": ["login", "user"],
         	"UserHasRoleEntity": ["login", "user"],
         	"UserHasSessionEntity": ["login", "user"],
         	"UserHasTokenEntity": ["login", "user"]
         },
         "elements": {
         	"UserHasProfileEntity": ["profiles", "user"],
-        	"UserHasAddressEntity": ["addresses", "user"],
+        	"UserHasIPV4Entity": ["addresses", "user"],
         	"UserHasRoleEntity": ["roles", "user"],
         	"UserHasSessionEntity": ["sessions", "user"],
         	"UserHasTokenEntity": ["tokens", "user"]
@@ -35,8 +35,8 @@
     	],
     	"key": "id"
     },
-	"UserHasAddressEntity": {
-		"table": "user_has_address",
+	"UserHasIPV4Entity": {
+		"table": "user_has_ipv4",
 		"fields": [
 	        "user",
 	    	"ip",

@@ -104,7 +104,7 @@ class Admin extends Module {
                 'many' => true
             ];
             (new UserHasRoleEntity())->delete($criteria);
-            (new UserHasAddressEntity())->delete($criteria);
+            (new UserHasIPV4Entity())->delete($criteria);
             $roles = Zord::objectToArray(json_decode($this->params['roles']));
             foreach ($roles as $role) {
                 (new UserHasRoleEntity())->create($role);
@@ -114,7 +114,7 @@ class Admin extends Module {
             foreach ($ips as $entry) {
                 $entryOK = true;
                 foreach (Zord::explodeIP($entry['ip']) as $ip) {
-                    $other = UserHasAddressEntity::find($ip);
+                    $other = UserHasIPEntity::find($ip);
                     if ($entry['include'] && $other) {
                         $entryOK = false;
                         $result['others'][] = [((new UserEntity())->retrieve($other->user)->name).' ('.$other->user.')', $ip];
@@ -123,7 +123,7 @@ class Admin extends Module {
                 }
                 if ($entryOK) {
                     foreach (Zord::explodeIP($entry['ip']) as $ip) {
-                        (new UserHasAddressEntity())->create([
+                        (new UserHasIPV4Entity())->create([
                             'user'    => $login,
                             'ip'      => $ip,
                             'mask'    => (!empty($entry['mask']) || $entry['mask'] == 0) ? $entry['mask'] : 32,

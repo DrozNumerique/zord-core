@@ -137,9 +137,9 @@ class User {
             $session = null;
             if ($checkIP) {
                 $IP = $_SERVER['REMOTE_ADDR'];
-                if (filter_var($IP, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-                    $entity = UserHasAddressEntity::find($IP);
-                    $login = $entity ? $entity->user : null;
+                $entity = UserHasIPEntity::find($IP);
+                if ($entity !== false) {
+                    $login = $entity->user;
                 }
             }
         }
