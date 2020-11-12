@@ -3,7 +3,8 @@ CREATE TABLE `users` (
   `password` varchar(256) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
-  `ips` varchar(2048) DEFAULT NULL,
+  `ipv4` varchar(2048) DEFAULT NULL,
+  `ipv6` varchar(2048) DEFAULT NULL,
   `activate` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`login`)
 ) ENGINE = INNODB;

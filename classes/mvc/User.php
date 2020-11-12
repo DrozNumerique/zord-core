@@ -12,7 +12,8 @@ class User {
     public $login = null;
     public $name = null;
     public $email = null;
-    public $ips = null;
+    public $ipv4 = null;
+    public $ipv6 = null;
     public $password = null;
     public $session = null;
     public $roles = [];
@@ -24,7 +25,8 @@ class User {
             if ($entity) {
                 $this->name     = $entity->name;
                 $this->email    = $entity->email;
-                $this->ips      = $entity->ips;
+                $this->ipv4     = $entity->ipv4;
+                $this->ipv6     = $entity->ipv6;
                 $this->password = $entity->password;
                 $this->session  = $session;
                 if (isset($session)) {
@@ -253,21 +255,6 @@ class User {
     
     public function isManager() {
         return $this->hasRole('admin', '*');
-    }
-    
-    public function explodeIP() {
-        $result = array();
-        if ($this->ips) {
-            $ips = explode(',', $this->ips);
-            if ($ips) {
-                foreach ($ips as $ip) {
-                    if (!empty($ip)) {
-                        $result[] = Zord::chunkIP($ip);
-                    }
-                }
-            }
-        }
-        return $result;
     }
 }
 

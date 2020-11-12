@@ -134,7 +134,8 @@
 			"parameters": {
 				"user": "FILTER_SANITIZE_STRING",
 				"roles": "FILTER_SANITIZE_STRING",
-				"ips": "FILTER_SANITIZE_STRING"
+				"ipv4": "FILTER_SANITIZE_STRING",
+				"ipv6": "FILTER_SANITIZE_STRING"
 			}
 		},
 		"context": {

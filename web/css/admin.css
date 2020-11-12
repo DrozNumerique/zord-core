@@ -254,8 +254,13 @@
 	margin: 0px;
 }
 
-.admin-list li div input.ip {
+.admin-list li div input.ipv4 {
 	width:21%;
+}
+
+.admin-list li div input.ipv6 {
+	width:8.4%;
+	font-size:96%;
 }
 
 .admin-list li div.blank,
@@ -374,7 +379,7 @@
 	width: 730px;
 }
 
-#ips.admin-list {
+#ipv4.admin-list, #ipv6.admin-list {
 	width: 736px;
 }
 

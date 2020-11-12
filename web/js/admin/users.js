@@ -19,7 +19,8 @@ function checkAccount(operation, data) {
 
 function getProfile() {
 	var roles = [];
-	var ips = [];
+	var ipv4 = [];
+	var ipv6 = [];
 	var login = document.getElementById('login').value;
 	[].forEach.call(document.getElementById('roles').querySelectorAll('.data'), function(entry) {
 		roles.push({
@@ -30,10 +31,18 @@ function getProfile() {
 			end:entry.children[3].firstElementChild.value
 		}); 
 	});
-	[].forEach.call(document.getElementById('ips').querySelectorAll('.data'), function(entry) {
-		ips.push({
+	[].forEach.call(document.getElementById('ipv4').querySelectorAll('.data'), function(entry) {
+		ipv4.push({
 			user:login,
 			ip:entry.children[0].children[0].value + '.' + entry.children[0].children[1].value + '.' + entry.children[0].children[2].value + '.' + entry.children[0].children[3].value,
+			mask:entry.children[1].firstElementChild.value,
+			include:entry.children[2].firstElementChild.value
+		}); 
+	});
+	[].forEach.call(document.getElementById('ipv6').querySelectorAll('.data'), function(entry) {
+		ipv6.push({
+			user:login,
+			ip:entry.children[0].children[0].value + ':' + entry.children[0].children[1].value + ':' + entry.children[0].children[2].value + ':' + entry.children[0].children[3].value + ':' + entry.children[0].children[4].value + ':' + entry.children[0].children[5].value + ':' + entry.children[0].children[6].value + ':' + entry.children[0].children[7].value,
 			mask:entry.children[1].firstElementChild.value,
 			include:entry.children[2].firstElementChild.value
 		}); 
@@ -41,7 +50,8 @@ function getProfile() {
 	var profile = {
 		login:login,
 		roles:JSON.stringify(roles),
-		ips:JSON.stringify(ips)
+		ipv4:JSON.stringify(ipv4),
+		ipv6:JSON.stringify(ipv6)
 	};
 	return profile;
 }
@@ -132,7 +142,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
 				action:'profile',
 				login:profile.login,
 				roles:profile.roles,
-				ips:profile.ips
+				ipv4:profile.ipv4,
+				ipv6:profile.ipv6
 			});
 		});
 	}

@@ -551,7 +551,7 @@ class Zord {
 	    }
 	    $cidr = explode('/', $ip);
 	    $ip = $cidr[0];
-	    $mask = count($cidr) > 1 ? (int) $cidr[1] : 32;
+	    $mask = count($cidr) > 1 ? (int) $cidr[1] : (strpos($ip, ':') !== false ? 128 : 32);
 	    return array(
 	        'ip' => $ip,
 	        'mask' => $mask,

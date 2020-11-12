@@ -97,7 +97,8 @@ class Admin extends Module {
         $result = [];
         if (isset($this->params['login']) &&
             isset($this->params['roles']) &&
-            isset($this->params['ips'])) {
+            isset($this->params['ipv4'])  &&
+            isset($this->params['ipv6'])) {
             $login = $this->params['login'];
             $criteria = [
                 'where' => ['user' => $login],
@@ -105,13 +106,14 @@ class Admin extends Module {
             ];
             (new UserHasRoleEntity())->delete($criteria);
             (new UserHasIPV4Entity())->delete($criteria);
+            (new UserHasIPV6Entity())->delete($criteria);
             $roles = Zord::objectToArray(json_decode($this->params['roles']));
             foreach ($roles as $role) {
                 (new UserHasRoleEntity())->create($role);
             }
-            $ips = Zord::objectToArray(json_decode($this->params['ips']));
-            $user_ips = array();
-            foreach ($ips as $entry) {
+            $ipv4 = Zord::objectToArray(json_decode($this->params['ipv4']));
+            $user_ipv4 = array();
+            foreach ($ipv4 as $entry) {
                 $entryOK = true;
                 foreach (Zord::explodeIP($entry['ip']) as $ip) {
                     $other = UserHasIPEntity::find($ip);
@@ -130,10 +132,32 @@ class Admin extends Module {
                             'include' => $entry['include'] ? 1 : $entry['include']
                         ]);
                     }
-                    $user_ips[] = ($entry['include'] ? '' : '~').$entry['ip'].((!empty($entry['mask']) || $entry['mask'] == 0) ? '/'.$entry['mask'] : '');
+                    $user_ipv4[] = ($entry['include'] ? '' : '~').$entry['ip'].((!empty($entry['mask']) || $entry['mask'] == 0) ? '/'.$entry['mask'] : '');
                 }
             }
-            (new UserEntity())->update($login, ['ips' => implode(',', $user_ips)]);
+            $ipv6 = Zord::objectToArray(json_decode($this->params['ipv6']));
+            $user_ipv6 = array();
+            foreach ($ipv6 as $entry) {
+                $entryOK = true;
+                $other = UserHasIPEntity::find($entry['ip']);
+                if ($entry['include'] && $other) {
+                    $entryOK = false;
+                    $result['others'][] = [((new UserEntity())->retrieve($other->user)->name).' ('.$other->user.')', $entry['ip']];
+                }
+                if ($entryOK) {
+                    (new UserHasIPV6Entity())->create([
+                        'user'    => $login,
+                        'ip'      => $entry['ip'],
+                        'mask'    => (!empty($entry['mask']) || $entry['mask'] == 0) ? $entry['mask'] : 32,
+                        'include' => $entry['include'] ? 1 : $entry['include']
+                    ]);
+                    $user_ipv6[] = ($entry['include'] ? '' : '~').$entry['ip'].((!empty($entry['mask']) || $entry['mask'] == 0) ? '/'.$entry['mask'] : '');
+                }
+            }
+            (new UserEntity())->update($login, [
+                'ipv4' => implode(',', $user_ipv4),
+                'ipv6' => implode(',', $user_ipv6)
+            ]);
             $result = array_merge($result, $this->dataProfile($login));
         }
         return $this->index('users', $result);
@@ -281,7 +305,8 @@ class Admin extends Module {
         $user = User::get($login);
         $result['login'] = $login;
         $result['name'] = $user->name;
-        $result['ips'] = $user->explodeIP();
+        $result['ipv4'] = $this->explodeIP($user->ipv4);
+        $result['ipv6'] = $this->explodeIP($user->ipv6);
         $result['roles'] = array_merge(Zord::getConfig('role'), ['*']);
         $result['contexts'] = array_merge(array_keys(Zord::getConfig('context')), ['*']);
         return $result;
@@ -291,6 +316,21 @@ class Admin extends Module {
         $result = [];
         $result['ctx'] = $name;
         $result['urls'] = Zord::value('context', [$name,'url']);
+        return $result;
+    }
+    
+    protected function explodeIP($ips) {
+        $result = array();
+        if ($ips) {
+            $ips = explode(',', $ips);
+            if ($ips) {
+                foreach ($ips as $ip) {
+                    if (!empty($ip)) {
+                        $result[] = Zord::chunkIP($ip);
+                    }
+                }
+            }
+        }
         return $result;
     }
 }

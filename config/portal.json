@@ -18,7 +18,8 @@
 		"profile": [
 			"name",
 			"email",
-			"ips",
+			"ipv4",
+			"ipv6",
 			"password"
 		]
 	},

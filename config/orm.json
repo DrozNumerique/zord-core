@@ -6,20 +6,23 @@
 	        "password",
 	        "email",
 	        "name",
-	        "ips",
+	        "ipv4",
+	        "ipv6",
 	        "reset"
         ],
         "key": "login",
         "join": {
         	"UserHasProfileEntity": ["login", "user"],
         	"UserHasIPV4Entity": ["login", "user"],
+        	"UserHasIPV6Entity": ["login", "user"],
         	"UserHasRoleEntity": ["login", "user"],
         	"UserHasSessionEntity": ["login", "user"],
         	"UserHasTokenEntity": ["login", "user"]
         },
         "elements": {
         	"UserHasProfileEntity": ["profiles", "user"],
-        	"UserHasIPV4Entity": ["addresses", "user"],
+        	"UserHasIPV4Entity": ["ipv4", "user"],
+        	"UserHasIPV6Entity": ["ipv6", "user"],
         	"UserHasRoleEntity": ["roles", "user"],
         	"UserHasSessionEntity": ["sessions", "user"],
         	"UserHasTokenEntity": ["tokens", "user"]
@@ -51,6 +54,33 @@
            	"ip": {
            		"get": "INET_NTOA",
            		"set": "INET_ATON"
+           	}
+        }
+    },
+	"UserHasIPV6Entity": {
+		"table": "user_has_ipv6",
+		"fields": [
+	        "user",
+	        "ip",
+	    	"mask",
+	    	"include",
+    		"part1",
+    		"part2",
+    		"part3",
+    		"part4",
+    		"mask1",
+    		"mask2",
+    		"mask3",
+    		"mask4"
+        ],
+        "key": [
+        	"user",
+        	"ip"
+        ],
+        "expr": {
+           	"ip": {
+           		"get": "INET6_NTOA",
+           		"set": "INET6_ATON"
            	}
         }
     },
