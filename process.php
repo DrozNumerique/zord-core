@@ -28,7 +28,7 @@ if (isset($_SERVER['argv']) && count($_SERVER['argv']) > 1) {
             $process->setId($entity->pid);
             $process->setUser($entity->user);
             $process->setLang($entity->lang);
-            $process->run(Zord::objectToArray(json_decode($entity->params)));
+            $process->run(Zord::objectToArray(json_decode($entity->params ?? '{}')));
             usleep(500000);
             ProcessExecutor::stop($pid);
         }
