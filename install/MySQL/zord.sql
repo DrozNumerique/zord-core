@@ -44,7 +44,7 @@ CREATE TABLE `process` (
   `class` varchar(255) NOT NULL,
   `user` varchar(255) NOT NULL DEFAULT 'admin',
   `lang` varchar(10) NOT NULL DEFAULT 'fr-FR',
-  `params` varchar(1024) NOT NULL DEFAULT '{}',
+  `params` text DEFAULT NULL,
   `start` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `last` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `step` varchar(255) NOT NULL DEFAULT 'init',
