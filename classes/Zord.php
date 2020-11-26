@@ -1024,7 +1024,7 @@ class Zord {
         }
     }
     
-    public static function handleError($try, $catch) {
+    public static function handleError($parameters) {
         set_error_handler(function($errno, $errstr, $errfile, $errline, $errcontext) {
             if (0 === error_reporting()) {
                 return false;
@@ -1032,10 +1032,17 @@ class Zord {
             throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
         });
         try {
-            return call_user_func($try);
+            if (isset($parameters['try']) && is_callable($parameters['try'])) {
+                return call_user_func($parameters['try']);
+            }
         } catch (ErrorException $exception) {
-            return call_user_func($catch);
+            if (isset($parameters['catch']) && is_callable($parameters['catch'])) {
+                return call_user_func($parameters['catch'], $exception);
+            }
         } finally {
+            if (isset($parameters['finally']) && is_callable($parameters['finally'])) {
+                call_user_func($parameters['finally']);
+            }
             restore_error_handler();
         }
     }
