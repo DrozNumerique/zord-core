@@ -44,7 +44,7 @@
 	"Portal": {
 		"response": "VIEW",
 		"home": {
-			"shortcut": "default"
+			"shortcut": ["home", "default"]
 		},
 		"lang": {
 			"shortcut": "lang",

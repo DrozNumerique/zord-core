@@ -82,7 +82,7 @@ class Controler {
             $this->indexURL = $target['indexURL'];
             $this->baseURL  = $target['baseURL'];
             $this->base     = $target['base'];
-            $this->params   = $target['params'];
+            $this->params   = $target['params'] ?? [];
             $this->config   = $target['config'];
             $this->skin     = $target['skin'];
             $this->replay   = $replay;
@@ -290,7 +290,6 @@ class Controler {
             $target['params']['page'] = DEFAULT_PAGE;
         } else {
             $shortcut = $this->getShortcut('default');
-            $target['params'] = [];
             foreach (array_keys($shortcut) as $property) {
                 $target[$property] = $shortcut[$property];
             }
@@ -355,7 +354,11 @@ class Controler {
     private function getShortcut($name) {
         foreach(Zord::getConfig('target') as $module => $actions) {
             foreach ($actions as $action => $config) {
-                if (isset($config['shortcut']) && $config['shortcut'] == $name) {
+                $shortcut = $config['shortcut'] ?? [];
+                if (!is_array($shortcut)) {
+                    $shortcut = [$shortcut];
+                }
+                if (in_array($name, $shortcut)) {
                     return [
                         'module' => $module,
                         'action' => $action
