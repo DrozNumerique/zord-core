@@ -85,7 +85,7 @@ class Portal extends Module {
     
     public function config() {
         $config = Zord::getConfig('portal');
-        foreach (Zord::getConfig('lang') as $lang => $label) {
+        foreach ($config['lang'] as $lang => $label) {
             $config['locales'][$lang] = Zord::objectToArray(Zord::getLocale('portal', $lang));
             $config['locales'][$lang]['label'] = $label;
         }
