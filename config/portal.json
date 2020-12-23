@@ -1,4 +1,8 @@
 {
+	"lang": {
+	    "en-US": "English (US)",
+	    "fr-FR": "Français (FR)"
+	},
 	"chosen": {
 		"standard": {
 			"width": "100%"
