@@ -1,4 +1,4 @@
-				<div id="<?php echo $models['id']; ?>" class="slide" 
+				<div id="<?php echo $models['id']; ?>" class="<?php echo implode(' ', array_merge(['slide'], $models['class'] ?? [])); ?>" 
 				     data-index="<?php echo $models['index'] ?? Zord::value('portal', ['slide','index']); ?>"
 				     data-frames="<?php echo $models['selector'] ?? Zord::value('portal', ['slide','selector']); ?>"
 				     data-direction="<?php echo $models['direction'] ?? Zord::value('portal', ['slide','direction']); ?>"
@@ -13,7 +13,7 @@
 					<div class="forward controls" data-direction="forward"><span></span></div>
 					<div class="window">
 						<div class="slider">
-<?php $this->render($models['frames']); ?>
+<?php $this->render($models['frames'], $models); ?>
 						</div>
 					</div>
 				</div>
