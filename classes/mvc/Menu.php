@@ -3,9 +3,19 @@
 class Menu {
     
     protected $controler;
+    protected $user;
+    protected $context;
+    protected $params;
+    protected $lang;
+    protected $baseURL;
     
     public function __construct($controler) {
         $this->controler = $controler;
+        $this->user = $controler->getUser();
+        $this->context = $controler->getContext();
+        $this->params = $controler->getParams();
+        $this->lang = $controler->getLang();
+        $this->baseURL = $controler->getBaseURL();
     }
     
     protected function layout() {
@@ -16,17 +26,21 @@ class Menu {
         return Zord::value('menu', $name);
     }
     
+    protected function highlight($name, $subName = null) {
+        return ($this->params['menu'] ?? null) == ($name.(isset($subName) ? '/'.$subName : ''));
+    }
+    
     public function build(&$models) {
         $layout = $this->layout();
         foreach ($layout as $name) {
             $entry = $this->entry($name);
-            if ((!isset($entry['role']) || $this->controler->getUser()->hasRole($entry['role'], $this->controler->getContext())) && (!isset($entry['connected']) || ($this->controler->getUser()->isConnected() && $entry['connected']) || (!$this->controler->getUser()->isConnected() && !$entry['connected']) || $this->controler->getUser()->isManager())) {
+            if ((!isset($entry['role']) || $this->user->hasRole($entry['role'], $this->context)) && (!isset($entry['connected']) || ($this->user->isConnected() && $entry['connected']) || (!$this->user->isConnected() && !$entry['connected']) || $this->user->isManager())) {
                 list($type, $url, $class, $label) = $this->point($entry, $name, $models['portal']['locale']['menu'][$name] ?? null, $models);
                 $subMenu  = [];
                 if ($type == 'menu' && isset($entry['menu']) && is_array($entry['menu']) && Zord::is_associative($entry['menu'])) {
                     foreach ($entry['menu'] as $subName => $subEntry) {
                         list(, $subURL, $subClass, $subLabel) = $this->point($subEntry, $subName, $models['portal']['locale']['menu'][$subName] ?? null, $models);
-                        if (($this->params['menu'] ?? null) == $name.'/'.$subName) {
+                        if ($this->highlight($name, $subName)) {
                             $subClass[] = 'highlight';
                         }
                         $subMenu[] = [
@@ -37,7 +51,7 @@ class Menu {
                         ];
                     }
                 }
-                if (($this->params['menu'] ?? null) == $name) {
+                if ($this->highlight($name)) {
                     $class[] = 'highlight';
                 }
                 $models['portal']['menu']['link'][] = [
@@ -55,9 +69,9 @@ class Menu {
     private function point($entry, $name, $locale, $models) {
         $type    = isset($entry['type'])  ? $entry['type']  : 'default';
         $path    = isset($entry['path'])  ? $entry['path']  : ($type == 'shortcut' ? (isset($entry['module']) && isset($entry['action']) ? '/'.$entry['module'].'/'.$entry['action'] : '/'.$name) : ($type == 'page' ? '/page/'.$name : ($type == 'content' ? '/content/'.$name : '')));
-        $url     = isset($entry['url'])   ? $entry['url']   : ($type == 'menu' ? null : $this->controler->getBaseURL().$path);
+        $url     = isset($entry['url'])   ? $entry['url']   : ($type == 'menu' ? null : $this->baseURL.$path);
         $class   = isset($entry['class']) ? (is_array($entry['class']) ? $entry['class'] : [$entry['class']]) : [];
-        $label   = isset($entry['label'][$this->controler->getLang()]) ? $entry['label'][$this->controler->getLang()] : (isset($locale) ? $locale : $name);
+        $label   = isset($entry['label'][$this->lang]) ? $entry['label'][$this->lang] : (isset($entry['label']) ? $entry['label'] : (isset($locale) ? $locale : $name));
         $display = isset($entry['display']) ? (new View($entry['display'], $models, $this->controler))->render() : null;
         return [$type, $url, $class, $display ?? $label];
     }
