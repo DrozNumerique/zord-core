@@ -23,7 +23,13 @@ class Menu {
     }
     
     protected function entry($name) {
-        return Zord::value('menu', $name);
+        $entry = Zord::value('menu', $name);
+        $entry['connected'] = $entry['connected'] ?? false;
+        $entry['active'] = true;
+        if (isset($entry['role']) && !$this->user->hasRole($entry['role'], $this->context)) {
+            $entry['active'] = false;
+        }
+        return $entry;
     }
     
     protected function highlight($name, $subName = null) {
@@ -34,7 +40,7 @@ class Menu {
         $layout = $this->layout();
         foreach ($layout as $name) {
             $entry = $this->entry($name);
-            if ((!isset($entry['role']) || $this->user->hasRole($entry['role'], $this->context)) && (!isset($entry['connected']) || ($this->user->isConnected() && $entry['connected']) || (!$this->user->isConnected() && !$entry['connected']) || $this->user->isManager())) {
+            if ($entry['active'] === true) {
                 list($type, $url, $class, $label) = $this->point($entry, $name, $models['portal']['locale']['menu'][$name] ?? null, $models);
                 $subMenu  = [];
                 if ($type == 'menu' && isset($entry['menu']) && is_array($entry['menu']) && Zord::is_associative($entry['menu'])) {
