@@ -45,11 +45,12 @@ class Menu {
                 $subMenu  = [];
                 if ($type == 'menu' && isset($entry['menu']) && is_array($entry['menu']) && Zord::is_associative($entry['menu'])) {
                     foreach ($entry['menu'] as $subName => $subEntry) {
-                        list(, $subURL, $subClass, $subLabel) = $this->point($subEntry, $subName, $models['portal']['locale']['menu'][$subName] ?? null, $models);
+                        list($subType, $subURL, $subClass, $subLabel) = $this->point($subEntry, $subName, $models['portal']['locale']['menu'][$subName] ?? null, $models);
                         if ($this->highlight($name, $subName)) {
                             $subClass[] = 'highlight';
                         }
                         $subMenu[] = [
+                            'type'  => $subType,
                             'name'  => $subName,
                             'url'   => $subURL,
                             'class' => $subClass,
