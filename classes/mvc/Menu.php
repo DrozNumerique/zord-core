@@ -19,7 +19,7 @@ class Menu {
     }
     
     protected function layout() {
-        return Zord::value('menu', 'layout') ?? array_keys(Zord::getConfig('menu'));
+        return Zord::value('menu', 'layout') ?? array_keys(Zord::getConfig('menu') ?? []);
     }
     
     protected function entry($name) {
@@ -68,8 +68,8 @@ class Menu {
     
     private function point($entry, $name, $locale, $models) {
         $type    = isset($entry['type'])  ? $entry['type']  : 'default';
-        $path    = isset($entry['path'])  ? $entry['path']  : ($type == 'shortcut' ? (isset($entry['module']) && isset($entry['action']) ? '/'.$entry['module'].'/'.$entry['action'] : '/'.$name) : ($type == 'page' ? '/page/'.$name : ($type == 'content' ? '/content/'.$name : '')));
-        $url     = isset($entry['url'])   ? $entry['url']   : ($type == 'menu' ? null : $this->baseURL.$path);
+        $path    = isset($entry['path'])  ? $entry['path']  : ($type == 'shortcut' ? (isset($entry['module']) && isset($entry['action']) ? '/'.$entry['module'].'/'.$entry['action'] : '/'.$name) : ($type == 'page' ? '/page/'.$name : ($type == 'content' ? '/content/'.$name : ($type == 'nolink' ? '#' : ''))));
+        $url     = isset($entry['url'])   ? $entry['url']   : ($type == 'menu' ? null : ($path !== '#' ? $this->baseURL : '').$path);
         $class   = isset($entry['class']) ? (is_array($entry['class']) ? $entry['class'] : [$entry['class']]) : [];
         $label   = isset($entry['label'][$this->lang]) ? $entry['label'][$this->lang] : (isset($entry['label']) ? $entry['label'] : (isset($locale) ? $locale : $name));
         $display = isset($entry['display']) ? (new View($entry['display'], $models, $this->controler))->render() : null;

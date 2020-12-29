@@ -333,6 +333,8 @@ class Controler {
                 $models['portal']['baseURL'][$name] = Zord::getContextURL($name);
             }
         }
+        $menu = Zord::getClassName('Menu');
+        (new $menu($this))->build($models);
         return $models;
     }
     
