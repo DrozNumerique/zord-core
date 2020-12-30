@@ -81,6 +81,11 @@ class Zord {
 	    return !class_exists($class) || (new ReflectionClass($class))->isAbstract() ? null : $class;
 	}
 	
+	public static function getInstance($class, ...$parameters) {
+	    $class = self::getClassName($class);
+	    return isset($class) ? new $class(...$parameters) : null;
+	}
+	
 	public static function saveConfig($name, $config) {
 	    if (is_array($config)) {
 	        file_put_contents(self::liveFolder('config').$name.'.json', self::json_encode($config));

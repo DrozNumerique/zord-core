@@ -8,22 +8,29 @@ class Menu {
     protected $params;
     protected $lang;
     protected $baseURL;
+    protected $name;
+    protected $config;
+    protected $locale;
     
-    public function __construct($controler) {
+    public function __construct($controler, $name = null) {
         $this->controler = $controler;
+        $this->name = $name;
+        $this->config = isset($name) ? Zord::value('menu', $name) : Zord::getConfig('menu');
         $this->user = $controler->getUser();
         $this->context = $controler->getContext();
         $this->params = $controler->getParams();
         $this->lang = $controler->getLang();
         $this->baseURL = $controler->getBaseURL();
+        $this->locale = Zord::getLocale('portal', $this->lang)->menu;
+        $this->locale = isset($name) ? $this->locale->$name : $this->locale;
     }
     
     protected function layout() {
-        return Zord::value('menu', 'layout') ?? array_keys(Zord::getConfig('menu') ?? []);
+        return $this->config['layout'] ?? array_keys($this->config ?? []);
     }
     
     protected function entry($name) {
-        $entry = Zord::value('menu', $name);
+        $entry = $this->config[$name];
         $entry['connected'] = $entry['connected'] ?? false;
         $entry['active'] = true;
         if (isset($entry['role']) && !$this->user->hasRole($entry['role'], $this->context)) {
@@ -36,51 +43,56 @@ class Menu {
         return ($this->params['menu'] ?? null) == ($name.(isset($subName) ? '/'.$subName : ''));
     }
     
-    public function build(&$models) {
-        $layout = $this->layout();
-        foreach ($layout as $name) {
-            $entry = $this->entry($name);
+    public static function build($controler, $models, $config = null) {
+        $menu = Zord::getInstance('Menu', $controler, $config);
+        $data = [];
+        foreach ($menu->layout() as $name) {
+            $entry = $menu->entry($name);
             if ($entry['active'] === true) {
-                list($type, $url, $class, $label) = $this->point($entry, $name, $models['portal']['locale']['menu'][$name] ?? null, $models);
+                list($type, $url, $class, $label, $render) = $menu->point($entry, $name, $models);
                 $subMenu  = [];
                 if ($type == 'menu' && isset($entry['menu']) && is_array($entry['menu']) && Zord::is_associative($entry['menu'])) {
                     foreach ($entry['menu'] as $subName => $subEntry) {
-                        list($subType, $subURL, $subClass, $subLabel) = $this->point($subEntry, $subName, $models['portal']['locale']['menu'][$subName] ?? null, $models);
-                        if ($this->highlight($name, $subName)) {
+                        list($subType, $subURL, $subClass, $subLabel, $subRender) = $menu->point($subEntry, $subName, $models);
+                        if ($menu->highlight($name, $subName)) {
                             $subClass[] = 'highlight';
                         }
                         $subMenu[] = [
-                            'type'  => $subType,
-                            'name'  => $subName,
-                            'url'   => $subURL,
-                            'class' => $subClass,
-                            'label' => $subLabel
+                            'type'   => $subType,
+                            'name'   => $subName,
+                            'url'    => $subURL,
+                            'class'  => $subClass,
+                            'label'  => $subLabel,
+                            'render' => $subRender
                         ];
                     }
                 }
-                if ($this->highlight($name)) {
+                if ($menu->highlight($name)) {
                     $class[] = 'highlight';
                 }
-                $models['portal']['menu']['link'][] = [
-                    'type'  => $type,
-                    'name'  => $name,
-                    'url'   => $url,
-                    'class' => $class,
-                    'label' => $label,
-                    'menu'  => $subMenu
+                $data[] = [
+                    'type'   => $type,
+                    'name'   => $name,
+                    'url'    => $url,
+                    'class'  => $class,
+                    'label'  => $label,
+                    'render' => $render,
+                    'menu'   => $subMenu
                 ];
             }
         }
+        return $data;
     }
     
-    private function point($entry, $name, $locale, $models) {
+    private function point($entry, $name, $models) {
         $type    = isset($entry['type'])  ? $entry['type']  : 'default';
         $path    = isset($entry['path'])  ? $entry['path']  : ($type == 'shortcut' ? (isset($entry['module']) && isset($entry['action']) ? '/'.$entry['module'].'/'.$entry['action'] : '/'.$name) : ($type == 'page' ? '/page/'.$name : ($type == 'content' ? '/content/'.$name : ($type == 'nolink' ? '#' : ''))));
         $url     = isset($entry['url'])   ? $entry['url']   : ($type == 'menu' ? null : ($path !== '#' ? $this->baseURL : '').$path);
         $class   = isset($entry['class']) ? (is_array($entry['class']) ? $entry['class'] : [$entry['class']]) : [];
-        $label   = isset($entry['label'][$this->lang]) ? $entry['label'][$this->lang] : (isset($entry['label']) ? $entry['label'] : (isset($locale) ? $locale : $name));
+        $label   = isset($entry['label'][$this->lang]) ? $entry['label'][$this->lang] : (isset($entry['label']) ? $entry['label'] : ($this->locale->$name ?? $name));
         $display = isset($entry['display']) ? (new View($entry['display'], $models, $this->controler))->render() : null;
-        return [$type, $url, $class, $display ?? $label];
+        $render  = $type == 'nolink' ? 'nolink' : ($type == 'menu' ? 'sub' : 'link');
+        return [$type, $url, $class, $display ?? $label, $render];
     }
 }
 
