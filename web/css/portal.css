@@ -110,7 +110,6 @@ button[data-id] {
 
 /* ---------------------------------- loading ---------------------------------- */
 div.loading {
-	width: 50em;
 	display: block ! important;
 	background: no-repeat center url("/img/wait.gif");
 }

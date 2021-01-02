@@ -379,6 +379,20 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		});
 		slideStart(slide);
 	});
+
+	window.addEventListener("load", function(event) {
+		setTimeout(function() {
+			loadings = document.querySelectorAll('div.loading');
+			if (loadings) {
+				[].forEach.call(loadings, function(loading) {
+					load = loading.dataset.load;
+					if (load !== undefined && window[load] !== undefined && typeof window[load] == 'function') {
+						window[load](loading);
+					}
+				});
+			}
+		}, 300);
+	});
 	
 });
 
