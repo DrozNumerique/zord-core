@@ -194,6 +194,10 @@ class Controler {
         $path   = parse_url($url, PHP_URL_PATH);
         $scheme = parse_url($url, PHP_URL_SCHEME);
         $target = $this->findTarget($host, $path);
+        if ($target['prefix'] !== '/' && substr($url, strlen($scheme.'://'.$host), strlen($target['prefix'])) !== $target['prefix']) {
+            $path = $target['prefix'].$path;
+            $url = $scheme.'://'.$host.$path;
+        }
         if ($target) {
             if ($this->isSecure($target) && $scheme !== 'https') {
                 $url = 'https'.substr($url, strlen($scheme));
