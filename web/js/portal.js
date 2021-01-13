@@ -174,19 +174,16 @@ var displayAccount = function(action) {
 
 var slideAt = function(element, index) {
 	element.dataset.index = index.toString();
-	var frame  = element.querySelector('.window');
 	var slider = element.querySelector('.slider');
-	if (frame && slider) {
+	var current = slider.querySelector("[data-index='" + index + "']");
+	if (slider && current) {
+		position = -(Number.parseInt(current.dataset.position));
 		switch (element.dataset.direction) {
 			case 'vertical': {
-				height = frame.offsetHeight;
-				position = -(index * height);
 				slider.style.top = position + 'px';
 				break;
 			}
 			case 'horizontal': {
-				width = frame.offsetWidth;
-				position = -(index * width);
 				slider.style.left = position + 'px';
 				break;
 			}
@@ -211,22 +208,34 @@ var slideAt = function(element, index) {
 }
 
 var slideTo = function(element, direction) {
-	var frames = element.querySelectorAll(element.dataset.frames);
-	var index  = Number.parseInt(element.dataset.index);
+	var index   = Number.parseInt(element.dataset.index);
+	var step    = Number.parseInt(element.dataset.step);
+	var frames  = element.querySelectorAll(element.dataset.frames);
+	var cells   = element.querySelectorAll('.cell').length;
+	var padding = element.querySelectorAll('.cell.padding').length;
+	var last    = (cells == 0 ? 1 : Math.round(cells / frames.length)) * (frames.length - 1) - padding;
 	switch (direction) {
 		case 'backward': {
-			if (index > 0) {
-				index = index - 1;
-			} else {
-				index = frames.length - 1;
+			index = index - step;
+			if (index < 0) {
+				if (element.dataset.limits == 'bounce') {
+					index = last;
+				} else {
+					index = 0;
+				}
 			}
 			break;
 		}
 		case 'forward': {
-			if (index < frames.length - 1) {
-				index = index + 1;
-			} else {
-				index = 0;
+			index = index + step;
+			if (index > last) {
+				if (element.dataset.limits == 'bounce') {
+					index = 0;
+				} else if (frames.length > 1) {
+					index = last;
+				} else {
+					index = 0;
+				} 
 			}
 			break;
 		}
@@ -381,6 +390,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	});
 
 	window.addEventListener("load", function(event) {
+		
 		setTimeout(function() {
 			loadings = document.querySelectorAll('div.loading');
 			if (loadings) {
@@ -392,6 +402,47 @@ document.addEventListener("DOMContentLoaded", function(event) {
 				});
 			}
 		}, 300);
+		
+		[].forEach.call(document.querySelectorAll('.slide'), function(slide) {
+			var frames = slide.querySelectorAll(slide.dataset.frames);
+			var framePosition = 0;
+			var index = 0;
+			[].forEach.call(frames, function(frame) {
+				var cells = frame.querySelectorAll('.cell');
+				if (cells.length == 0) {
+					frame.dataset.position = framePosition;
+					frame.dataset.index = index;
+					index++;
+				} else {
+					var cellPosition = framePosition;
+					[].forEach.call(cells, function(cell) {
+						cell.dataset.position = cellPosition;
+						cell.dataset.index = index;
+						index++;
+						switch (slide.dataset.direction) {
+							case 'vertical': {
+								cellPosition += cell.offsetHeight;
+								break;
+							}
+							case 'horizontal': {
+								cellPosition += cell.offsetWidth;
+								break;
+							}
+						}
+					});
+				}
+				switch (slide.dataset.direction) {
+					case 'vertical': {
+						framePosition += frame.offsetHeight;
+						break;
+					}
+					case 'horizontal': {
+						framePosition += frame.offsetWidth;
+						break;
+					}
+				}
+			});
+		});
 	});
 	
 });

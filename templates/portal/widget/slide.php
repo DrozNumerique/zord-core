@@ -4,6 +4,8 @@
 				     data-direction="<?php echo $models['direction'] ?? Zord::value('portal', ['slide','direction']); ?>"
 				     data-transition="<?php echo $models['transition'] ?? Zord::value('portal', ['slide','transition']); ?>"
 				     data-interval="<?php echo $models['interval'] ?? Zord::value('portal', ['slide','interval']); ?>"
+				     data-limits="<?php echo $models['limits'] ?? Zord::value('portal', ['slide','limits']); ?>"
+				     data-step="<?php echo $models['step'] ?? Zord::value('portal', ['slide','step']); ?>"
 				     data-controls='<?php echo Zord::json_encode(Zord::array_merge(Zord::value('portal', ['slide','controls']), $models['controls'] ?? []), false); ?>'>
 					<div class="top controls"></div>
 					<div class="bottom controls"></div>
