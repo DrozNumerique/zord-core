@@ -327,6 +327,7 @@ form.account div {
 .slide .controls.backward,
 .slide .controls.forward {
 	display: inline-flex;
+	justify-content: center;
 }
 
 .slide[data-direction="horizontal"] .backward,
