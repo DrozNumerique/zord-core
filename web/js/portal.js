@@ -175,7 +175,7 @@ var displayAccount = function(action) {
 var slideAt = function(element, index) {
 	element.dataset.index = index.toString();
 	var slider = element.querySelector('.slider');
-	var current = slider.querySelector("[data-index='" + index + "']");
+	var current = slider.querySelector("[data-slide='" + element.id + "'][data-index='" + index + "']");
 	if (slider && current) {
 		position = -(Number.parseInt(current.dataset.position));
 		switch (element.dataset.direction) {
@@ -199,10 +199,10 @@ var slideAt = function(element, index) {
 			}
 		}
 	}
-	[].forEach.call(element.querySelectorAll('.controls span.index'), function(item) {
+	[].forEach.call(element.querySelectorAll(".controls span.index[data-slide='" + element.id + "']"), function(item) {
 		item.classList.remove('highlight');
 	});
-	[].forEach.call(element.querySelectorAll('.controls span.index[data-index="' + index + '"]'), function(item) {
+	[].forEach.call(element.querySelectorAll(".controls span.index[data-slide='" + element.id + "'][data-index='" + index + "']"), function(item) {
 		item.classList.add('highlight');
 	});
 }
@@ -361,6 +361,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 					item = document.createElement('span');
 					item.classList.add('index');
 					item.dataset.index = num;
+					item.dataset.slide = slide.id;
 					if (frame.dataset.title !== undefined) {
 						item.title = frame.dataset.title;
 					}
@@ -412,12 +413,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
 				if (cells.length == 0) {
 					frame.dataset.position = framePosition;
 					frame.dataset.index = index;
+					frame.dataset.slide = slide.id;
 					index++;
 				} else {
 					var cellPosition = framePosition;
 					[].forEach.call(cells, function(cell) {
 						cell.dataset.position = cellPosition;
 						cell.dataset.index = index;
+						cell.dataset.slide = slide.id;
 						index++;
 						switch (slide.dataset.direction) {
 							case 'vertical': {

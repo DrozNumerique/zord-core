@@ -89,8 +89,14 @@ class Zord {
 	public static function saveConfig($name, $config) {
 	    if (is_array($config)) {
 	        file_put_contents(self::liveFolder('config').$name.'.json', self::json_encode($config));
-	        self::$config[$name] = $config;
+	        unset(self::$config[$name]);
 	    }
+	}
+	
+	public static function updateConfig($name, $update) {
+	    $config = self::arrayFromJSONFile(self::liveFolder('config').$name.'.json') ?? [];
+        $update($config);
+	    self::saveConfig($name, $config);
 	}
 	
 	public static function hasConfig($name) {
