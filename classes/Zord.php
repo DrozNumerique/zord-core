@@ -360,7 +360,7 @@ class Zord {
 	}
 	
 	public static function is_associative($array) {
-	    return array_keys($array) !== range(0, count($array) - 1);
+	    return !empty($array) && array_keys($array) !== range(0, count($array) - 1);
 	}
 	
 	public static function array_merge($first, $second, $reset = false, $base = null) {
