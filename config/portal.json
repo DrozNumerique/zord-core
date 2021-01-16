@@ -27,20 +27,22 @@
 			"password"
 		]
 	},
-	"slide": {
-		"index": 0,
-		"selector": "li.frame",
-		"direction": "vertical",
-		"transition": "swipe",
-		"interval": 0,
-		"limits": "block",
-		"step": 1,
-		"controls": {
-			"backward": true,
-			"forward": true,
-			"pause": false,
-			"play": false,
-			"jump": false
+	"slides": {
+		"default" : {
+			"index": 0,
+			"selector": "li.frame",
+			"direction": "vertical",
+			"transition": "swipe",
+			"interval": 0,
+			"limits": "block",
+			"step": 1,
+			"controls": {
+				"backward": true,
+				"forward": true,
+				"pause": false,
+				"play": false,
+				"jump": false
+			}
 		}
 	}
 }
