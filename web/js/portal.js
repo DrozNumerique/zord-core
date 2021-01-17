@@ -137,6 +137,44 @@ var activateChosen = function() {
 					}
 				}
 		    });
+			//Workaround for chosen clipped by overflow:hidden container
+			//Adapted from https://jsfiddle.net/phil_ayres/gvn8bkaL/
+			$('.chosen-select-' + type).on('chosen:showing_dropdown', function (event, params) {    
+				// Access the element
+				var $container = params.chosen.container;
+				var element = $container[0];
+				var style = element.style;
+				var rect = element.getBoundingClientRect();
+				// Save the original position and sizes
+				$container.originalCSS = {
+					width: $container.width(),
+					height: $container.height(),
+					position: style.position,
+					top: style.top,
+					left: style.left,
+					zIndex: style.zIndex
+				};
+				// Set where we want to position the element
+				var newCSS = $.extend({}, $container.originalCSS);
+				newCSS.position = 'absolute';
+				newCSS.top = rect.top + window.pageYOffset;
+				newCSS.left = rect.left + window.pageXOffset;
+				newCSS.zIndex = 999999;
+				// Placeholder to the original position, plus it keeps the correct size for the form
+				var $clone = $container.placeholder = $container.clone();
+				$clone.find('.chosen-drop').remove();
+				$container.before($clone);
+				// Set the new position and move the chosen box into the body
+				$container.css(newCSS);
+				$('body').append($container);
+			});
+			$('.chosen-select-' + type).on('chosen:hiding_dropdown', function (event, params) {
+			    // Move the chosen box back into its form, and remove the placeholder
+				var $container = params.chosen.container;
+				$container.css($container.originalCSS);
+				$container.placeholder.before($container);
+				$container.placeholder.remove();
+			});
 		}
 	}
 }
