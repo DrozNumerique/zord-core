@@ -90,6 +90,13 @@
 				"user": "FILTER_SANITIZE_STRING",
 				"key": "FILTER_SANITIZE_STRING"
 			}
+		},
+		"options": {
+			"response": "DATA",
+			"shorcut": "options",
+			"parameters": {
+				"type": "FILTER_SANITIZE_STRING"
+			}
 		}
 	},
 	"Process": {

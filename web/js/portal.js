@@ -269,6 +269,41 @@ var slideStop = function(element) {
 	}
 }
 
+var loadOptions = function(type) {
+	if (PORTAL.options == undefined) {
+		PORTAL.options = {};
+	}
+	if (type == undefined) {
+		invokeZord({
+			module :'Portal',
+			action :'options',
+			async  :false,
+			before: function() {
+				$dialog.wait();
+			},
+			after: function() {
+				$dialog.hide();
+			},
+			success:function(types) {
+				for (var index in types) {
+					loadOptions(types[index]);
+				};
+			}
+		});
+	} else {
+		invokeZord({
+			module :'Portal',
+			action :'options',
+			type   :type,
+			async  :false,
+			success:function(entries) {
+				PORTAL.options[type] = entries;
+				setSessionProperty('portal.config', PORTAL);
+			}
+		});
+	}
+}
+
 document.addEventListener("DOMContentLoaded", function(event) {
 
 	if (PORTAL == undefined) {

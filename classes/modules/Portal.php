@@ -94,6 +94,21 @@ class Portal extends Module {
         }
         return $config;
     }
+    
+    public function options() {
+        $type = $this->params['type'] ?? null;
+        $options = $this->_options($type);
+        Zord::sort($options);
+        return $options;
+    }
+    
+    protected function _options($type) {
+        if (!isset($type)) {
+            return array_keys(Zord::value('portal', 'options') ?? []);
+        } else {
+            return Zord::value('portal', ['options',$type]) ?? [];
+        }
+    }
 }
 
 ?>
