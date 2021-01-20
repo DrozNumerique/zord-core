@@ -81,7 +81,13 @@
 		},
 		"config": {
 			"shortcut": "config",
-			"response": "DATA"
+			"response": "DATA",
+			"hash": true
+		},
+		"locale": {
+			"shortcut": "locale",
+			"response": "DATA",
+			"hash": true
 		},
 		"token": {
 			"shortcut": "token",
@@ -94,8 +100,10 @@
 		"options": {
 			"response": "DATA",
 			"shorcut": "options",
+			"hash": true,
 			"parameters": {
-				"type": "FILTER_SANITIZE_STRING"
+				"scope": "FILTER_SANITIZE_STRING",
+				"key": "FILTER_SANITIZE_STRING"
 			}
 		}
 	},

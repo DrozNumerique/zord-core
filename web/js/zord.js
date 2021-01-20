@@ -151,12 +151,44 @@ var getSessionProperty = function(key, def) {
 	return value;
 }
 
+var setPortalProperty = function(key, value, merge) {
+	setSessionProperty('portal.' + key, value, merge);
+}
+
+var getPortalProperty = function(key, def) {
+	return getSessionProperty('portal.' + key, def);
+}
+
 var setContextProperty = function(key, value, merge) {
-	setSessionProperty(CONTEXT + '.' + key, value, merge);
+	setSessionProperty('context.' + CONTEXT + '.' + key, value, merge);
 }
 
 var getContextProperty = function(key, def) {
-	return getSessionProperty(CONTEXT + '.' + key, def);
+	return getSessionProperty('context.' + CONTEXT + '.' + key, def);
+}
+
+var setData = function(scope, key, value, merge) {
+	switch (scope) {
+		case 'portal': {
+			setPortalProperty(key, value, merge);
+			break;
+		}
+		case 'context': {
+			setContextProperty(key, value, merge);
+			break;
+		}
+	}
+}
+
+var getData = function(scope, key, def) {
+	switch (scope) {
+		case 'portal': {
+			return getPortalProperty(key, def);
+		}
+		case 'context': {
+			return getContextProperty(key, def);
+		}
+	}
 }
 
 var setValue = function(object, key, value, merge) {

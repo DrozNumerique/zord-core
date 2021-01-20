@@ -41,6 +41,10 @@ class Module {
         return $this->response;
     }
     
+    public function getKey($action) {
+        return null;
+    }
+    
     public function hasAccess($action) {
         return true;
     }

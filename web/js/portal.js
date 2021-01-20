@@ -1,4 +1,5 @@
-var PORTAL = getSessionProperty('portal.config', undefined);
+var CONFIG;
+var LOCALE;
 
 window.$scrollTop = {
 	set : function(value) {
@@ -127,9 +128,9 @@ var setWindowHeight = function() {
 };
 
 var activateChosen = function() {
-	if (typeof PORTAL.chosen !== 'undefined') {
-		for (var type in PORTAL.chosen) {
-			$('.chosen-select-' + type).chosen(PORTAL.chosen[type]).change(function(event, params) {
+	if (typeof CONFIG.chosen !== 'undefined') {
+		for (var type in CONFIG.chosen) {
+			$('.chosen-select-' + type).chosen(CONFIG.chosen[type]).change(function(event, params) {
 				if (event.target.hasAttribute('data-change')) {
 					method = event.target.getAttribute('data-change');
 					if (window[method] instanceof Function) {
@@ -180,13 +181,13 @@ var activateChosen = function() {
 }
 
 var activateStates = function(element) {
-	if (typeof PORTAL.states !== 'undefined') {
+	if (typeof CONFIG.states !== 'undefined') {
 		[].forEach.call(element.querySelectorAll('.state'), function(entry) {
 			entry.addEventListener("click", function(event) {
 				types = entry.dataset.type.split('|');
 				states = {};
 				[].forEach.call(types, function(type) {
-					states = Object.assign(states, PORTAL.states[type]);
+					states = Object.assign(states, CONFIG.states[type]);
 				});
 				keys = Object.keys(states);
 				input = entry.querySelector('input');
@@ -307,54 +308,84 @@ var slideStop = function(element) {
 	}
 }
 
-var loadOptions = function(type) {
-	if (PORTAL.options == undefined) {
-		PORTAL.options = {};
-	}
-	if (type == undefined) {
+var loadData = function(params) {
+	params = params !== undefined ? params : {};
+	scope  = params.scope;
+	key    = params.key;
+	type   = params.type !== undefined ? params.type : null;
+	module = params.module !== undefined ? params.module : 'Portal';
+	action = params.action !== undefined ? params.action : (type !== null ? type : key);
+	wait   = params.wait !== undefined ? params.wait : false;
+	async  = params.async !== undefined ? params.async : !wait;
+	if (scope == undefined) {
+		[].forEach.call(['portal','context'], function(scope) {
+			params.scope = scope;
+			loadData(params);
+		});
+	} else if (key == undefined) {
 		invokeZord({
-			module :'Portal',
-			action :'options',
-			async  :false,
-			before: function() {
-				$dialog.wait();
-			},
-			after: function() {
-				$dialog.hide();
-			},
-			success:function(types) {
-				for (var index in types) {
-					loadOptions(types[index]);
+			module  : module,
+			action  : action,
+			scope   : scope,
+			async   : async,
+			success : function(keys) {
+				for (var index in keys) {
+					params.key = keys[index];
+					loadData(params);
 				};
 			}
 		});
-	} else {
-		invokeZord({
-			module :'Portal',
-			action :'options',
-			type   :type,
-			async  :false,
-			success:function(entries) {
-				PORTAL.options[type] = entries;
-				setSessionProperty('portal.config', PORTAL);
-			}
+	} else if (Array.isArray(key)) {
+		[].forEach.call(key, function(key) {
+			params.key = key;
+			loadData(params);
 		});
+	} else {
+		var property = (type !== null ? type + '.' : '') + key
+		var data = getData(scope, property, null);
+		var id = (scope == 'context' ? 'context.' + CONTEXT + '.' : 'portal.') + property;
+		var hash = getSessionProperty('hash', {});
+		if (data == null || hash[id] == undefined || HASH[id] == undefined || hash[id] !== HASH[id]) {
+			invokeZord({
+				module : module,
+				action : action,
+				scope  : scope,
+				key    : key,
+				async  : async,
+				before  : function() {
+					if (wait) {
+						$dialog.wait();
+					}
+				},
+				after   : function() {
+					if (wait) {
+						$dialog.hide();
+					}
+				},
+				success: function(data) {
+					setData(scope, property, data);
+					setSessionProperty('hash', HASH);
+				}
+			});
+		}
 	}
 }
 
 document.addEventListener("DOMContentLoaded", function(event) {
 
-	if (PORTAL == undefined) {
-		invokeZord({
-			module: 'Portal',
-			action: 'config',
-			async:  false,
-			success: function(config) {
-				PORTAL = config;
-				setSessionProperty('portal.config', PORTAL);
-			}
-		});
-	}
+	loadData({
+		scope : 'portal',
+		key   : 'config',
+		async : false
+	});
+	CONFIG = getData('portal', 'config');
+
+	loadData({
+		scope : 'portal',
+		key   : 'locale',
+		async : false
+	});
+	LOCALE = getData('portal', 'locale');
 
 	window.addEventListener("selectLoaded", function(event) {
 		selects = document.querySelectorAll('select[data-loading]');

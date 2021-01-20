@@ -2,6 +2,8 @@
 
 class Account extends Module {
     
+    public $disconnecting = false;
+    
     public static function actions($connected) {
         $actions = [];
         if ($connected) {
@@ -225,6 +227,7 @@ class Account extends Module {
     
     public function disconnect() {
         $this->user->disconnect();
+        $this->disconnecting = true;
         return $this->redirect($this->baseURL, true);
     }
     

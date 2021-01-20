@@ -84,30 +84,63 @@ class Portal extends Module {
     }
     
     public function config() {
-        $config = Zord::getConfig('portal');
-        foreach ($config['lang'] as $lang => $label) {
-            $config['locales'][$lang] = Zord::objectToArray(Zord::getLocale('portal', $lang));
-            $config['locales'][$lang]['label'] = $label;
-        }
-        foreach (array_keys(Zord::getConfig('context')) as $name) {
-            $config['baseURL'][$name] = Zord::getContextURL($name);
-        }
-        return $config;
+        return Zord::getConfig('portal');
+    }
+    
+    public function locale() {
+        return array_merge(Zord::objectToArray(Zord::getLocale('portal', $this->lang)), ['label' => Zord::value('portal', ['lang',$this->lang])]);
     }
     
     public function options() {
-        $type = $this->params['type'] ?? null;
-        $options = $this->_options($type);
+        $scope = $this->params['scope'] ?? null;
+        $key = $this->params['key'] ?? null;
+        $options = $this->_options($scope, $key);
         Zord::sort($options);
         return $options;
     }
     
-    protected function _options($type) {
-        if (!isset($type)) {
-            return array_keys(Zord::value('portal', 'options') ?? []);
-        } else {
-            return Zord::value('portal', ['options',$type]) ?? [];
+    public function getKey($action) {
+        $scope = $this->params['scope'] ?? null;
+        $key = $this->params['key'] ?? null;
+        switch ($action) {
+            case 'config': {
+                return 'portal.config';
+            }
+            case 'locales': {
+                return 'portal.locales';
+            }
+            case 'options': {
+                if ($key) {
+                    $prefix = null;
+                    if ($scope == 'portal') {
+                        $prefix = 'portal';
+                    }
+                    if ($scope == 'context') {
+                        $prefix = 'context.'.$this->context;
+                    }
+                    if ($prefix) {
+                        return $prefix.'.options.'.$key;
+                    }
+                }
+            }
         }
+        return null;
+    }
+    
+    protected function _options($scope, $key) {
+        $values = [];
+        if (in_array($scope, ['portal','context'])) {
+            $values = Zord::value('portal', ['options',$scope]) ?? [];
+            if ($scope == 'context') {
+                $values = $values[$this->context] ?? ($values['*'] ?? []);
+            }
+            if (!isset($key)) {
+                $values = array_keys($values);
+            } else {
+                $values = $values[$key] ?? [];
+            }
+        }
+        return $values;
     }
 }
 

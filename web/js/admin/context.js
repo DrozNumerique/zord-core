@@ -9,7 +9,7 @@ function checkContext(operation, data) {
 		return false;
 	}
 	if (operation == 'delete') {
-		return confirm(PORTAL.locales[LANG].admin.context.delete.confirm);
+		return confirm(LOCALE.admin.context.delete.confirm);
 	}
 	return true;
 }

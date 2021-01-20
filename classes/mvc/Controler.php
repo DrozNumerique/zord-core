@@ -487,6 +487,12 @@ class Controler {
 	    switch ($type) {
 	        case 'DATA': {
 	            $json = Zord::json_encode($result);
+	            $key = $this->module->getKey($this->action);
+	            if ($key) {
+	                Zord::updateConfig('hash', function(&$config) use ($key, $result) {
+	                    $config[$key] = hash('md5', serialize($result));
+	                });
+	            }
 	            $this->sendHeaders($status, [
 	                'Content-Type' => 'application/json',
 	                'Content-length' => strlen($json)
@@ -564,7 +570,9 @@ class Controler {
 	    foreach($headers as $key => $value) {
 	        header($key.': '.$value);
 	    }
-	    Zord::cookie(User::$ZORD_SESSION, $this->user->session ?? '', 0, '/');
+	    if ($this->user->isConnected() || ($this->module->disconnecting ?? false)) {
+	       Zord::cookie(User::$ZORD_SESSION, $this->user->session ?? '');
+	    }
 	}
 	
 	private function sendDownloadHeaders($status, $filename, $headers) {
