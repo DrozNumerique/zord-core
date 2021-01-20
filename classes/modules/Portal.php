@@ -106,8 +106,8 @@ class Portal extends Module {
             case 'config': {
                 return 'portal.config';
             }
-            case 'locales': {
-                return 'portal.locales';
+            case 'locale': {
+                return 'portal.locale';
             }
             case 'options': {
                 if ($key) {
