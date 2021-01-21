@@ -492,6 +492,21 @@ document.addEventListener("DOMContentLoaded", function(event) {
 				}
 			}
 		});
+		var index = 0;
+		[].forEach.call(frames, function(frame) {
+			var cells = frame.querySelectorAll('.cell');
+			if (cells.length == 0) {
+				frame.dataset.index = index;
+				frame.dataset.slide = slide.id;
+				index++;
+			} else {
+				[].forEach.call(cells, function(cell) {
+					cell.dataset.index = index;
+					cell.dataset.slide = slide.id;
+					index++;
+				});
+			}
+		});
 		slideStart(slide);
 	});
 	
@@ -514,21 +529,14 @@ window.addEventListener("load", function(event) {
 	[].forEach.call(document.querySelectorAll('.slide'), function(slide) {
 		var frames = slide.querySelectorAll(slide.dataset.frames);
 		var framePosition = 0;
-		var index = 0;
 		[].forEach.call(frames, function(frame) {
 			var cells = frame.querySelectorAll('.cell');
 			if (cells.length == 0) {
 				frame.dataset.position = framePosition;
-				frame.dataset.index = index;
-				frame.dataset.slide = slide.id;
-				index++;
 			} else {
 				var cellPosition = framePosition;
 				[].forEach.call(cells, function(cell) {
 					cell.dataset.position = cellPosition;
-					cell.dataset.index = index;
-					cell.dataset.slide = slide.id;
-					index++;
 					switch (slide.dataset.direction) {
 						case 'vertical': {
 							cellPosition += cell.offsetHeight;
