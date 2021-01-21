@@ -178,7 +178,7 @@ var activateChosen = function() {
 			});
 		}
 	}
-}
+};
 
 var activateStates = function(element) {
 	if (typeof CONFIG.states !== 'undefined') {
@@ -200,7 +200,7 @@ var activateStates = function(element) {
 			});
 		});
 	}
-}
+};
 
 var displayAccount = function(action) {
 	[].forEach.call(document.querySelectorAll('li.account'), function(element) {
@@ -209,7 +209,7 @@ var displayAccount = function(action) {
 			element.classList.add('active');
 		}
 	});
-}
+};
 
 var slideAt = function(element, index) {
 	element.dataset.index = index.toString();
@@ -245,7 +245,7 @@ var slideAt = function(element, index) {
 	[].forEach.call(element.querySelectorAll(".controls span.index[data-slide='" + element.id + "'][data-index='" + index + "']"), function(item) {
 		item.classList.add('highlight');
 	});
-}
+};
 
 var slideTo = function(element, direction) {
 	var index   = Number.parseInt(element.dataset.index);
@@ -281,7 +281,7 @@ var slideTo = function(element, direction) {
 		}
 	}
 	slideAt(element, index);
-}
+};
 
 var slideStart = function(element) {
 	var interval = Number.parseInt(element.dataset.interval);
@@ -294,7 +294,7 @@ var slideStart = function(element) {
 			pause.classList.remove('highlight');
 		});
 	}
-}
+};
 
 var slideStop = function(element) {
 	var clear = element.dataset.clear;
@@ -307,7 +307,45 @@ var slideStop = function(element) {
 			play.classList.remove('highlight');
 		});
 	}
-}
+};
+
+var slidePosition = function(element) {
+	[].forEach.call(element.querySelectorAll('.slide'), function(slide) {
+		var frames = slide.querySelectorAll(slide.dataset.frames);
+		var framePosition = 0;
+		[].forEach.call(frames, function(frame) {
+			var cells = frame.querySelectorAll('.cell');
+			if (cells.length == 0) {
+				frame.dataset.position = framePosition;
+			} else {
+				var cellPosition = framePosition;
+				[].forEach.call(cells, function(cell) {
+					cell.dataset.position = cellPosition;
+					switch (slide.dataset.direction) {
+						case 'vertical': {
+							cellPosition += cell.offsetHeight;
+							break;
+						}
+						case 'horizontal': {
+							cellPosition += cell.offsetWidth;
+							break;
+						}
+					}
+				});
+			}
+			switch (slide.dataset.direction) {
+				case 'vertical': {
+					framePosition += frame.offsetHeight;
+					break;
+				}
+				case 'horizontal': {
+					framePosition += frame.offsetWidth;
+					break;
+				}
+			}
+		});
+	});
+};
 
 var loadData = function(params) {
 	params = params !== undefined ? params : {};
@@ -526,41 +564,7 @@ window.addEventListener("load", function(event) {
 		}
 	}, 300);
 	
-	[].forEach.call(document.querySelectorAll('.slide'), function(slide) {
-		var frames = slide.querySelectorAll(slide.dataset.frames);
-		var framePosition = 0;
-		[].forEach.call(frames, function(frame) {
-			var cells = frame.querySelectorAll('.cell');
-			if (cells.length == 0) {
-				frame.dataset.position = framePosition;
-			} else {
-				var cellPosition = framePosition;
-				[].forEach.call(cells, function(cell) {
-					cell.dataset.position = cellPosition;
-					switch (slide.dataset.direction) {
-						case 'vertical': {
-							cellPosition += cell.offsetHeight;
-							break;
-						}
-						case 'horizontal': {
-							cellPosition += cell.offsetWidth;
-							break;
-						}
-					}
-				});
-			}
-			switch (slide.dataset.direction) {
-				case 'vertical': {
-					framePosition += frame.offsetHeight;
-					break;
-				}
-				case 'horizontal': {
-					framePosition += frame.offsetWidth;
-					break;
-				}
-			}
-		});
-	});
+	slidePosition(document);
 	
 });
 
