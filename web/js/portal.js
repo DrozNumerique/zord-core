@@ -237,6 +237,7 @@ var slideAt = function(element, index) {
 				break;
 			}
 		}
+		element.dispatchEvent(new Event("change"));
 	}
 	[].forEach.call(element.querySelectorAll(".controls span.index[data-slide='" + element.id + "']"), function(item) {
 		item.classList.remove('highlight');
@@ -493,62 +494,63 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		});
 		slideStart(slide);
 	});
+	
+});
 
-	window.addEventListener("load", function(event) {
+window.addEventListener("load", function(event) {
 		
-		setTimeout(function() {
-			loadings = document.querySelectorAll('div.loading');
-			if (loadings) {
-				[].forEach.call(loadings, function(loading) {
-					load = loading.dataset.load;
-					if (load !== undefined && window[load] !== undefined && typeof window[load] == 'function') {
-						window[load](loading);
+	setTimeout(function() {
+		loadings = document.querySelectorAll('div.loading');
+		if (loadings) {
+			[].forEach.call(loadings, function(loading) {
+				load = loading.dataset.load;
+				if (load !== undefined && window[load] !== undefined && typeof window[load] == 'function') {
+					window[load](loading);
+				}
+			});
+		}
+	}, 300);
+	
+	[].forEach.call(document.querySelectorAll('.slide'), function(slide) {
+		var frames = slide.querySelectorAll(slide.dataset.frames);
+		var framePosition = 0;
+		var index = 0;
+		[].forEach.call(frames, function(frame) {
+			var cells = frame.querySelectorAll('.cell');
+			if (cells.length == 0) {
+				frame.dataset.position = framePosition;
+				frame.dataset.index = index;
+				frame.dataset.slide = slide.id;
+				index++;
+			} else {
+				var cellPosition = framePosition;
+				[].forEach.call(cells, function(cell) {
+					cell.dataset.position = cellPosition;
+					cell.dataset.index = index;
+					cell.dataset.slide = slide.id;
+					index++;
+					switch (slide.dataset.direction) {
+						case 'vertical': {
+							cellPosition += cell.offsetHeight;
+							break;
+						}
+						case 'horizontal': {
+							cellPosition += cell.offsetWidth;
+							break;
+						}
 					}
 				});
 			}
-		}, 300);
-		
-		[].forEach.call(document.querySelectorAll('.slide'), function(slide) {
-			var frames = slide.querySelectorAll(slide.dataset.frames);
-			var framePosition = 0;
-			var index = 0;
-			[].forEach.call(frames, function(frame) {
-				var cells = frame.querySelectorAll('.cell');
-				if (cells.length == 0) {
-					frame.dataset.position = framePosition;
-					frame.dataset.index = index;
-					frame.dataset.slide = slide.id;
-					index++;
-				} else {
-					var cellPosition = framePosition;
-					[].forEach.call(cells, function(cell) {
-						cell.dataset.position = cellPosition;
-						cell.dataset.index = index;
-						cell.dataset.slide = slide.id;
-						index++;
-						switch (slide.dataset.direction) {
-							case 'vertical': {
-								cellPosition += cell.offsetHeight;
-								break;
-							}
-							case 'horizontal': {
-								cellPosition += cell.offsetWidth;
-								break;
-							}
-						}
-					});
+			switch (slide.dataset.direction) {
+				case 'vertical': {
+					framePosition += frame.offsetHeight;
+					break;
 				}
-				switch (slide.dataset.direction) {
-					case 'vertical': {
-						framePosition += frame.offsetHeight;
-						break;
-					}
-					case 'horizontal': {
-						framePosition += frame.offsetWidth;
-						break;
-					}
+				case 'horizontal': {
+					framePosition += frame.offsetWidth;
+					break;
 				}
-			});
+			}
 		});
 	});
 	
