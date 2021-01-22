@@ -135,6 +135,33 @@ var getSessionProperties = function() {
 	return zord;
 }
 
+var setValue = function(object, key, value, merge) {
+	if (merge == undefined || merge == null || !merge) {
+		object = setValue(object, key, null, true);
+	}
+	keys = key.split('.');
+	temp = null;
+	for (index = keys.length ; index > 0 ; index--) {
+		temp = {};
+		temp[keys[index - 1]] = value;
+		value = temp;
+	}
+	$.extend(true, object, temp);
+	return object;
+}
+
+var getValue = function(object, key) {
+	keys = key.split('.');
+	value = object;
+	for (index = 0 ; index < keys.length ; index++) {
+		value = value[keys[index]];
+		if (value == undefined || value == null) {
+			break;
+		}
+	}
+	return value;
+}
+
 var setSessionProperty = function(key, value, merge) {
 	zord = getSessionProperties();
 	zord = setValue(zord, key, value, merge);
@@ -191,29 +218,65 @@ var getData = function(scope, key, def) {
 	}
 }
 
-var setValue = function(object, key, value, merge) {
-	if (merge == undefined || merge == null || !merge) {
-		object = setValue(object, key, null, true);
-	}
-	keys = key.split('.');
-	temp = null;
-	for (index = keys.length ; index > 0 ; index--) {
-		temp = {};
-		temp[keys[index - 1]] = value;
-		value = temp;
-	}
-	$.extend(true, object, temp);
-	return object;
-}
-
-var getValue = function(object, key) {
-	keys = key.split('.');
-	value = object;
-	for (index = 0 ; index < keys.length ; index++) {
-		value = value[keys[index]];
-		if (value == undefined || value == null) {
-			break;
+var loadData = function(params) {
+	params = params !== undefined ? params : {};
+	scope  = params.scope;
+	key    = params.key;
+	type   = params.type !== undefined ? params.type : null;
+	module = params.module !== undefined ? params.module : 'Portal';
+	action = params.action !== undefined ? params.action : (type !== null ? type : key);
+	wait   = params.wait !== undefined ? params.wait : false;
+	async  = params.async !== undefined ? params.async : !wait;
+	if (scope == undefined) {
+		[].forEach.call(['portal','context'], function(scope) {
+			params.scope = scope;
+			loadData(params);
+		});
+	} else if (key == undefined) {
+		invokeZord({
+			module  : module,
+			action  : action,
+			scope   : scope,
+			async   : async,
+			success : function(keys) {
+				for (var index in keys) {
+					params.key = keys[index];
+					loadData(params);
+				};
+			}
+		});
+	} else if (Array.isArray(key)) {
+		[].forEach.call(key, function(key) {
+			params.key = key;
+			loadData(params);
+		});
+	} else {
+		var property = (type !== null ? type + '.' : '') + key
+		var data = getData(scope, property, null);
+		var id = (scope == 'context' ? 'context.' + CONTEXT + '.' : 'portal.') + property;
+		var hash = getSessionProperty('hash', {});
+		if (data == null || hash[id] == undefined || HASH[id] == undefined || hash[id] !== HASH[id]) {
+			invokeZord({
+				module : module,
+				action : action,
+				scope  : scope,
+				key    : key,
+				async  : async,
+				before  : function() {
+					if (wait) {
+						$dialog.wait();
+					}
+				},
+				after   : function() {
+					if (wait) {
+						$dialog.hide();
+					}
+				},
+				success: function(data) {
+					setData(scope, property, data);
+					setSessionProperty('hash', HASH);
+				}
+			});
 		}
 	}
-	return value;
 }

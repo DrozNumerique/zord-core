@@ -123,10 +123,6 @@ var getNumber = function(element,property) {
 	return Number(string.substring(0, string.length - 2));
 };
 
-var setWindowHeight = function() {
-	windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-};
-
 var activateChosen = function() {
 	if (typeof CONFIG.chosen !== 'undefined') {
 		for (var type in CONFIG.chosen) {
@@ -346,69 +342,6 @@ var slidePosition = function(element) {
 		});
 	});
 };
-
-var loadData = function(params) {
-	params = params !== undefined ? params : {};
-	scope  = params.scope;
-	key    = params.key;
-	type   = params.type !== undefined ? params.type : null;
-	module = params.module !== undefined ? params.module : 'Portal';
-	action = params.action !== undefined ? params.action : (type !== null ? type : key);
-	wait   = params.wait !== undefined ? params.wait : false;
-	async  = params.async !== undefined ? params.async : !wait;
-	if (scope == undefined) {
-		[].forEach.call(['portal','context'], function(scope) {
-			params.scope = scope;
-			loadData(params);
-		});
-	} else if (key == undefined) {
-		invokeZord({
-			module  : module,
-			action  : action,
-			scope   : scope,
-			async   : async,
-			success : function(keys) {
-				for (var index in keys) {
-					params.key = keys[index];
-					loadData(params);
-				};
-			}
-		});
-	} else if (Array.isArray(key)) {
-		[].forEach.call(key, function(key) {
-			params.key = key;
-			loadData(params);
-		});
-	} else {
-		var property = (type !== null ? type + '.' : '') + key
-		var data = getData(scope, property, null);
-		var id = (scope == 'context' ? 'context.' + CONTEXT + '.' : 'portal.') + property;
-		var hash = getSessionProperty('hash', {});
-		if (data == null || hash[id] == undefined || HASH[id] == undefined || hash[id] !== HASH[id]) {
-			invokeZord({
-				module : module,
-				action : action,
-				scope  : scope,
-				key    : key,
-				async  : async,
-				before  : function() {
-					if (wait) {
-						$dialog.wait();
-					}
-				},
-				after   : function() {
-					if (wait) {
-						$dialog.hide();
-					}
-				},
-				success: function(data) {
-					setData(scope, property, data);
-					setSessionProperty('hash', HASH);
-				}
-			});
-		}
-	}
-}
 
 document.addEventListener("DOMContentLoaded", function(event) {
 
