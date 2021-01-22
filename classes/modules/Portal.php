@@ -84,11 +84,22 @@ class Portal extends Module {
     }
     
     public function config() {
-        return Zord::getConfig('portal');
+        $domain = $this->params['domain'] ?? 'portal';
+        if (!$this->user->hasRole('admin', $this->context) && !in_array($domain, Zord::value('portal', 'public') ?? [])) {
+            return $this->error(401);
+        }
+        $key = $this->params['key'] ?? null;
+        if ($key) {
+            return Zord::value($domain, explode(DS, $key));
+        } else {
+            return Zord::getConfig($domain);
+        }
     }
     
     public function locale() {
-        return array_merge(Zord::objectToArray(Zord::getLocale('portal', $this->lang)), ['label' => Zord::value('portal', ['lang',$this->lang])]);
+        $domain = $this->params['domain'] ?? 'portal';
+        $lang = $this->params['lang'] ?? $this->lang;
+        return Zord::getLocale($domain, $lang, true);
     }
     
     public function options() {

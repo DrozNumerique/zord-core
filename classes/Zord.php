@@ -135,7 +135,7 @@ class Zord {
 	    return isset($value) ? $value : $def;
 	}
 	
-	public static function getLocale($target, $lang = DEFAULT_LANG) {
+	public static function getLocale($target, $lang = DEFAULT_LANG, $array = false) {
 	    if (!isset(self::$locales[$target][$lang])) {
 	        $locale = array();
 	        foreach (COMPONENT_FOLDERS as $folder) {
@@ -145,7 +145,8 @@ class Zord {
 	        }
 	        self::$locales[$target][$lang] = json_decode(json_encode($locale));
 	    }
-	    return self::$locales[$target][$lang];
+	    $locale = self::$locales[$target][$lang];
+	    return $array ? self::objectToArray($locale) : $locale;
 	}
 	
 	public static function getSkin($context = 'default') {

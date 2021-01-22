@@ -1,8 +1,11 @@
 {
-	"lang": {
-	    "en-US": "English (US)",
-	    "fr-FR": "Français (FR)"
-	},
+	"public": [
+		"portal"
+	],
+	"lang": [
+	    "en-US",
+	    "fr-FR"
+	],
 	"chosen": {
 		"standard": {
 			"width": "100%"

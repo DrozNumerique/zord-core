@@ -321,7 +321,7 @@ class Controler {
                 'action'  => $this->action,
                 'params'  => Zord::json_encode($this->params, false),
                 'title'   => Zord::portalTitle($this->context, $this->lang),
-                'locale'  => Zord::objectToArray(Zord::getLocale('portal', $this->lang)),
+                'locale'  => Zord::getLocale('portal', $this->lang, true),
                 'baseURL' => ['zord' => $this->baseURL],
                 'user'    => [
                     'login'   => $this->user->login,

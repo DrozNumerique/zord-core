@@ -82,12 +82,20 @@
 		"config": {
 			"shortcut": "config",
 			"response": "DATA",
-			"hash": true
+			"hash": true,
+			"parameters": {
+				"domain": "FILTER_SANITIZE_STRING",
+				"key": "PATH"
+			}
 		},
 		"locale": {
 			"shortcut": "locale",
 			"response": "DATA",
-			"hash": true
+			"hash": true,
+			"parameters": {
+				"domain": "FILTER_SANITIZE_STRING",
+				"lang": "FILTER_SANITIZE_STRING"
+			}
 		},
 		"token": {
 			"shortcut": "token",
