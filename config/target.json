@@ -85,7 +85,7 @@
 			"hash": true,
 			"parameters": {
 				"domain": "FILTER_SANITIZE_STRING",
-				"key": "PATH"
+				"property": "PATH"
 			}
 		},
 		"locale": {

@@ -88,9 +88,9 @@ class Portal extends Module {
         if (!$this->user->hasRole('admin', $this->context) && !in_array($domain, Zord::value('portal', 'public') ?? [])) {
             return $this->error(401);
         }
-        $key = $this->params['key'] ?? null;
-        if ($key) {
-            return Zord::value($domain, explode(DS, $key));
+        $property = $this->params['property'] ?? null;
+        if ($property) {
+            return Zord::value($domain, explode(DS, $property));
         } else {
             return Zord::getConfig($domain);
         }
