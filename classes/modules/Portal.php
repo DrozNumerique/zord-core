@@ -99,7 +99,14 @@ class Portal extends Module {
     public function locale() {
         $domain = $this->params['domain'] ?? 'portal';
         $lang = $this->params['lang'] ?? $this->lang;
-        return Zord::getLocale($domain, $lang, true);
+        $property = $this->params['property'] ?? null;
+        $locale = Zord::getLocale($domain, $lang, true);
+        if ($property) {
+            foreach (explode(DS, $property) as $name) {
+                $locale = $locale[$name];
+            }
+        }
+        return $locale;
     }
     
     public function options() {

@@ -94,7 +94,8 @@
 			"hash": true,
 			"parameters": {
 				"domain": "FILTER_SANITIZE_STRING",
-				"lang": "FILTER_SANITIZE_STRING"
+				"lang": "FILTER_SANITIZE_STRING",
+				"property": "PATH"
 			}
 		},
 		"token": {
