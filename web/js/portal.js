@@ -346,16 +346,16 @@ var slidePosition = function(element) {
 document.addEventListener("DOMContentLoaded", function(event) {
 
 	loadData({
-		scope : 'portal',
-		key   : 'config',
-		async : false
+		data_scope : 'portal',
+		data_key   : 'config',
+		async      : false
 	});
 	CONFIG = getData('portal', 'config');
 
 	loadData({
-		scope : 'portal',
-		key   : 'locale',
-		async : false
+		data_scope : 'portal',
+		data_key   : 'locale',
+		async      : false
 	});
 	LOCALE = getData('portal', 'locale');
 

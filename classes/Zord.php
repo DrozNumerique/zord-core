@@ -799,14 +799,19 @@ class Zord {
 	    return $separator ? str_replace([' ',"\u{00a0}",'"',"'",',',';','.','-','(',')','[',']',':','/','!','?','¿','+','=','*','#','«','»','„','“','”','‚','‘','’','<','>','‹','›','`','…'], '', $string) : $string;
 	}
 	
-	public static function sort(&$array, $values = true) {
+	public static function sort(&$array, $values = true, $value = null) {
+	    if (!isset($value)) {
+	        $value = function($comparable) {
+	            return self::collapse($comparable);
+	        };
+	    }
 	    if ($values) {
-    	    uasort($array, function($first, $second) {
-    	        return self::collapse($first) <=> self::collapse($second);
+    	    uasort($array, function($first, $second) use ($value) {
+    	        return $value($first) <=> $value($second);
     	    });
 	    } else {
-	        uksort($array, function($first, $second) {
-	            return self::collapse($first) <=> self::collapse($second);
+	        uksort($array, function($first, $second) use ($value) {
+	            return $value($first) <=> $value($second);
 	        });
 	    }
 	}

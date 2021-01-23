@@ -110,51 +110,27 @@ class Portal extends Module {
     }
     
     public function options() {
-        $scope = $this->params['scope'] ?? null;
-        $key = $this->params['key'] ?? null;
+        $scope = $this->params['data_scope'] ?? null;
+        $key = $this->params['data_key'] ?? null;
         $options = $this->_options($scope, $key);
         Zord::sort($options);
+        $options = array_combine(array_map(function($key) {return 'key:'.$key;}, array_keys($options)), array_values($options));
         return $options;
-    }
-    
-    public function getKey($action) {
-        $scope = $this->params['scope'] ?? null;
-        $key = $this->params['key'] ?? null;
-        switch ($action) {
-            case 'config': {
-                return 'portal.config';
-            }
-            case 'locale': {
-                return 'portal.locale';
-            }
-            case 'options': {
-                if ($key) {
-                    $prefix = null;
-                    if ($scope == 'portal') {
-                        $prefix = 'portal';
-                    }
-                    if ($scope == 'context') {
-                        $prefix = 'context.'.$this->context;
-                    }
-                    if ($prefix) {
-                        return $prefix.'.options.'.$key;
-                    }
-                }
-            }
-        }
-        return null;
     }
     
     protected function _options($scope, $key) {
         $values = [];
-        if (in_array($scope, ['portal','context'])) {
+        if (in_array($scope, ['portal','context','user'])) {
             $values = Zord::value('portal', ['options',$scope]) ?? [];
             if ($scope == 'context') {
                 $values = $values[$this->context] ?? ($values['*'] ?? []);
             }
-            if (!isset($key)) {
+            if ($scope == 'user') {
+                $values = $values[$this->user->login] ?? ($values['*'] ?? []);
+            }
+            if (!isset($key) && Zord::is_associative($values)) {
                 $values = array_keys($values);
-            } else {
+            } else if (isset($key)) {
                 $values = $values[$key] ?? [];
             }
         }

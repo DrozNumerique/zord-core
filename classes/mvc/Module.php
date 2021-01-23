@@ -41,7 +41,30 @@ class Module {
         return $this->response;
     }
     
-    public function getKey($action) {
+    public function hashKey($action) {
+        $scope = $this->params['data_scope'] ?? null;
+        $type = $this->params['data_type'] ?? null;
+        $key = $this->params['data_key'] ?? null;
+        if ($scope && $key) {
+            $prefix = null;
+            switch ($scope) {
+                case 'portal': {
+                    $prefix = 'portal';
+                    break;
+                }
+                case 'context': {
+                    $prefix = 'context.'.$this->context;
+                    break;
+                }
+                case 'user': {
+                    $prefix = 'user.'.$this->user->login;
+                    break;
+                }
+            }
+            if ($prefix) {
+                return $prefix.'.'.($type ? $type.'.' : '').$key;
+            }
+        }
         return null;
     }
     

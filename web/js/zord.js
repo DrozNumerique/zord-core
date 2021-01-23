@@ -194,6 +194,14 @@ var getContextProperty = function(key, def) {
 	return getSessionProperty('context.' + CONTEXT + '.' + key, def);
 }
 
+var setUserProperty = function(key, value, merge) {
+	setSessionProperty('user.' + USER.login + '.' + key, value, merge);
+}
+
+var getUserProperty = function(key, def) {
+	return getSessionProperty('user.' + USER.login + '.' + key, def);
+}
+
 var setData = function(scope, key, value, merge) {
 	switch (scope) {
 		case 'portal': {
@@ -202,6 +210,10 @@ var setData = function(scope, key, value, merge) {
 		}
 		case 'context': {
 			setContextProperty(key, value, merge);
+			break;
+		}
+		case 'context': {
+			setUserProperty(key, value, merge);
 			break;
 		}
 	}
@@ -215,68 +227,82 @@ var getData = function(scope, key, def) {
 		case 'context': {
 			return getContextProperty(key, def);
 		}
+		case 'context': {
+			return getUserProperty(key, def);
+		}
 	}
+}
+
+var getOptionValue = function(key) {
+	return key.startsWith('key:') ? key.substr('key:'.length) : key;
 }
 
 var loadData = function(params) {
 	params = params !== undefined ? params : {};
-	scope  = params.scope;
-	key    = params.key;
-	type   = params.type !== undefined ? params.type : null;
+	scope  = params.data_scope;
+	type   = params.data_type;
+	key    = params.data_key;
 	module = params.module !== undefined ? params.module : 'Portal';
-	action = params.action !== undefined ? params.action : (type !== null ? type : key);
-	wait   = params.wait !== undefined ? params.wait : false;
-	async  = params.async !== undefined ? params.async : !wait;
+	action = params.action !== undefined ? params.action : (type !== undefined ? type : (key !== undefined ? key : 'data'));
+	wait   = params.wait   !== undefined ? params.wait   : false;
+	async  = params.async  !== undefined ? params.async  : !wait;
+	params['module'] = module;
+	params['action'] = action;
+	params['wait']   = wait;
+	params['async']  = async;
 	if (scope == undefined) {
-		[].forEach.call(['portal','context'], function(scope) {
-			params.scope = scope;
+		[].forEach.call(['portal','context','user'], function(scope) {
+			params.data_scope = scope;
 			loadData(params);
 		});
 	} else if (key == undefined) {
-		invokeZord({
-			module  : module,
-			action  : action,
-			scope   : scope,
-			async   : async,
-			success : function(keys) {
-				for (var index in keys) {
-					params.key = keys[index];
-					loadData(params);
-				};
+		params['success'] = function(keys) {
+			for (var index in keys) {
+				params.data_key = keys[index];
+				loadData(params);
 			}
-		});
+		};
+		invokeZord(params);
 	} else if (Array.isArray(key)) {
 		[].forEach.call(key, function(key) {
-			params.key = key;
+			params.data_key = key;
 			loadData(params);
 		});
 	} else {
-		var property = (type !== null ? type + '.' : '') + key
-		var data = getData(scope, property, null);
-		var id = (scope == 'context' ? 'context.' + CONTEXT + '.' : 'portal.') + property;
-		var hash = getSessionProperty('hash', {});
+		var property = (type !== undefined ? type + '.' : '') + key
+		var data     = getData(scope, property, null);
+		var hash     = getSessionProperty('hash', {});
+		var id       = property;
+		switch (scope) {
+			case 'portal': {
+				id = 'portal.' + id;
+				break;
+			}
+			case 'context': {
+				id = 'context.' + CONTEXT + '.' + id;
+				break;
+			}
+			case 'user': {
+				id = 'user.' + USER.login + '.' + id;
+				break;
+			}
+		}
 		if (data == null || hash[id] == undefined || HASH[id] == undefined || hash[id] !== HASH[id]) {
-			invokeZord({
-				module : module,
-				action : action,
-				scope  : scope,
-				key    : key,
-				async  : async,
-				before  : function() {
-					if (wait) {
-						$dialog.wait();
-					}
-				},
-				after   : function() {
-					if (wait) {
-						$dialog.hide();
-					}
-				},
-				success: function(data) {
-					setData(scope, property, data);
-					setSessionProperty('hash', HASH);
+			params['before'] = function() {
+				if (wait) {
+					$dialog.wait();
 				}
-			});
+			};
+			params['after'] = function() {
+				if (wait) {
+					$dialog.hide();
+				}
+			};
+			params['success'] = function(data) {
+				setData(scope, property, data);
+				setSessionProperty('hash', HASH);
+			};
+			invokeZord(params);
 		}
 	}
 }

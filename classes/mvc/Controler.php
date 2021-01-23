@@ -487,7 +487,7 @@ class Controler {
 	    switch ($type) {
 	        case 'DATA': {
 	            $json = Zord::json_encode($result);
-	            $key = $this->module->getKey($this->action);
+	            $key = $this->module->hashKey($this->action);
 	            if ($key) {
 	                Zord::updateConfig('hash', function(&$config) use ($key, $result) {
 	                    $config[$key] = hash('md5', serialize($result));
