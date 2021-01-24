@@ -189,6 +189,9 @@ form.account div {
 	--bottom-size: 0px;
 	--right-size: 0px;
 	--left-size: 0px;
+	--transition-duration: 1s;
+	--transition-delay: 0s;
+	--transition-timing: ease;
 }
 
 .slide[data-direction="horizontal"] {
@@ -399,16 +402,16 @@ form.account div {
 }
 
 .slide[data-transition="swipe"][data-direction="horizontal"] > .window > .slider {
-	transition: left var(--slide-transition, 1s);
+	transition: left var(--transition-duration) var(--transition-timing) var(--transition-delay);
 }
 
 .slide[data-transition="swipe"][data-direction="vertical"] > .window > .slider {
-	transition: top var(--slide-transition, 1s);
+	transition: top var(--transition-duration) var(--transition-timing) var(--transition-delay);
 }
 
 .slide[data-transition="crossfade"] > .window > .slider > ul > li.frame {
 	opacity: 0;
-	transition: opacity var(--slide-transition, 1s);
+	transition: opacity var(--transition-duration) var(--transition-timing) var(--transition-delay);
 }
 
 .slide[data-transition="crossfade"] > .window > .slider > ul > li.frame.current {

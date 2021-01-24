@@ -119,8 +119,11 @@ window.$dialog = (function(undefined) {
 }());
 
 var getNumber = function(element,property) {
-	var string = window.getComputedStyle(element).getPropertyValue(property);
-	return Number(string.substring(0, string.length - 2));
+	return Number(window.getComputedStyle(element).getPropertyValue(property).replace(/[^\d.]+/g, ''));
+};
+
+var getUnit = function(element,property) {
+	return window.getComputedStyle(element).getPropertyValue(property).replace(/[\d.]+/g, '').trim();
 };
 
 var activateChosen = function() {
@@ -342,6 +345,12 @@ var slidePosition = function(element) {
 		});
 	});
 };
+
+var slideTimeout = function(slide) {
+	timeout = (getUnit(slide, '--transition-duration') == 's' ? 1000 : 1) * getNumber(slide, '--transition-duration');
+	timeout += (getUnit(slide, '--transition-delay') == 's' ? 1000 : 1) * getNumber(slide, '--transition-delay');
+	return timeout;
+}
 
 document.addEventListener("DOMContentLoaded", function(event) {
 

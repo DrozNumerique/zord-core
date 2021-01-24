@@ -110,8 +110,8 @@ class Portal extends Module {
     }
     
     public function options() {
-        $scope = $this->params['data_scope'] ?? null;
-        $key = $this->params['data_key'] ?? null;
+        $scope = $this->params['scope'] ?? ($this->params['data_scope'] ?? null);
+        $key = $this->params['key'] ?? ($this->params['data_key'] ?? null);
         $options = $this->_options($scope, $key);
         Zord::sort($options);
         $options = array_combine(array_map(function($key) {return 'key:'.$key;}, array_keys($options)), array_values($options));
