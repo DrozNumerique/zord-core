@@ -14,7 +14,7 @@ function checkContext(operation, data) {
 	return true;
 }
 
-function getData() {
+function getContextData() {
 	var urls = [];
 	var context = document.getElementById('context').value;
 	var urlsElement = document.getElementById('urls');
@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	var submitURLs = document.getElementById('submit-urls');
 	if (submitURLs != undefined) {
 		submitURLs.addEventListener("click", function(event) {
-			var data = getData();
+			var data = getContextData();
 			invokeZord({
 				module:'Admin',
 				action:'urls',

@@ -42,6 +42,7 @@ class Module {
     }
     
     public function hashKey($action) {
+        $locale = $this->params['data_locale'] ?? false;
         $scope = $this->params['data_scope'] ?? null;
         $type = $this->params['data_type'] ?? null;
         $key = $this->params['data_key'] ?? null;
@@ -62,7 +63,7 @@ class Module {
                 }
             }
             if ($prefix) {
-                return $prefix.'.'.($type ? $type.'.' : '').$key;
+                return $prefix.'.'.($type ? $type.'.' : '').$key.($locale ? '.'.$this->lang : '');
             }
         }
         return null;

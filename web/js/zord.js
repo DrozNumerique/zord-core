@@ -233,12 +233,18 @@ var getData = function(scope, key, def) {
 	}
 }
 
+var getKey = function(type, key, locale) {
+	locale = locale !== undefined ? locale : false;
+	return (type !== undefined && type !== null ? type : '') + (type !== undefined && type !== null && key !== undefined && key !== null ? '.' : '') + (key !== undefined && key !== null ? key : '') + (locale ? '.' + LANG : '');
+}
+
 var getOptionValue = function(key) {
 	return key.startsWith('key:') ? key.substr('key:'.length) : key;
 }
 
 var loadData = function(params) {
 	params = params !== undefined ? params : {};
+	locale = params.data_locale;
 	scope  = params.data_scope;
 	type   = params.data_type;
 	key    = params.data_key;
@@ -269,7 +275,7 @@ var loadData = function(params) {
 			loadData(params);
 		});
 	} else {
-		var property = (type !== undefined ? type + '.' : '') + key
+		var property = getKey(type, key, locale);
 		var data     = getData(scope, property, null);
 		var hash     = getSessionProperty('hash', {});
 		var id       = property;
