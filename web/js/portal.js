@@ -363,10 +363,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 	loadData({
 		data_scope : 'portal',
-		data_key   : 'locale',
+		data_type  : 'locale',
+		data_key   : LANG,
 		async      : false
 	});
-	LOCALE = getData('portal', 'locale');
+	LOCALE = getData('portal', 'locale.' + LANG);
 
 	window.addEventListener("selectLoaded", function(event) {
 		selects = document.querySelectorAll('select[data-loading]');
