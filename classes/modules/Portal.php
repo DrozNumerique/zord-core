@@ -84,7 +84,7 @@ class Portal extends Module {
     }
     
     public function config() {
-        $domain = $this->params['domain'] ?? 'portal';
+        $domain = $this->parameter('config', 'domain', 'portal');
         if (!$this->user->hasRole('admin', $this->context) && !in_array($domain, Zord::value('portal', 'public') ?? [])) {
             return $this->error(401);
         }
@@ -97,7 +97,7 @@ class Portal extends Module {
     }
     
     public function locale() {
-        $domain = $this->params['domain'] ?? 'portal';
+        $domain = $this->parameter('locale', 'domain', 'portal');
         $lang = $this->params['lang'] ?? $this->lang;
         $property = $this->params['property'] ?? null;
         $locale = Zord::getLocale($domain, $lang, true);
@@ -110,7 +110,7 @@ class Portal extends Module {
     }
     
     public function options() {
-        $scope = $this->params['scope'] ?? ($this->params['data_scope'] ?? null);
+        $scope = $this->params['scope'] ?? ($this->params['data_scope'] ?? 'portal');
         $key = $this->params['key'] ?? ($this->params['data_key'] ?? null);
         $options = $this->_options($scope, $key);
         Zord::sort($options);

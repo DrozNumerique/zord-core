@@ -43,28 +43,26 @@ class Module {
     
     public function hashKey($action) {
         $locale = $this->params['data_locale'] ?? false;
-        $scope = $this->params['data_scope'] ?? null;
+        $scope = $this->params['data_scope'] ?? 'portal';
         $type = $this->params['data_type'] ?? null;
         $key = $this->params['data_key'] ?? null;
-        if ($scope && $key) {
-            $prefix = null;
-            switch ($scope) {
-                case 'portal': {
-                    $prefix = 'portal';
-                    break;
-                }
-                case 'context': {
-                    $prefix = 'context.'.$this->context;
-                    break;
-                }
-                case 'user': {
-                    $prefix = 'user.'.$this->user->login;
-                    break;
-                }
+        $prefix = null;
+        switch ($scope) {
+            case 'portal': {
+                $prefix = 'portal';
+                break;
             }
-            if ($prefix) {
-                return $prefix.'.'.($type ? $type.'.' : '').$key.($locale ? '.'.$this->lang : '');
+            case 'context': {
+                $prefix = 'context.'.$this->context;
+                break;
             }
+            case 'user': {
+                $prefix = 'user.'.$this->user->login;
+                break;
+            }
+        }
+        if ($prefix) {
+            return $prefix.'.'.($type ? $type.'.' : '').$key.($locale ? '.'.$this->lang : '');
         }
         return null;
     }
@@ -316,5 +314,16 @@ class Module {
 	public function bind($login) {
 	    $this->controler->setUser(User::bind($login));
 	    $this->user = $this->controler->getUser();
+	}
+	
+	protected function parameter($action, $name, $default) {
+	    $parameter = $this->params[$name] ?? null;
+	    if (!isset($parameter) && !isset($this->params['data_type'])) {
+	        $key = $this->params['data_key'] ?? null;
+	        if ($key !== $action) {
+	            $parameter = $key;
+	        }
+	    }
+	    return $parameter ?? $default;
 	}
 }

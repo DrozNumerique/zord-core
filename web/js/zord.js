@@ -244,7 +244,7 @@ var getOptionValue = function(key) {
 
 var loadData = function(params) {
 	params = params !== undefined ? params : {};
-	locale = params.data_locale;
+	locale = params.data_locale !== undefined ? params.data_locale : false;
 	scope  = params.data_scope;
 	type   = params.data_type;
 	key    = params.data_key;
