@@ -211,6 +211,7 @@ var displayAccount = function(action) {
 };
 
 var slideAt = function(element, index) {
+	var change = element.dataset.index !== index.toString();
 	element.dataset.index = index.toString();
 	var slider = element.querySelector('.slider');
 	var current = slider.querySelector("[data-slide='" + element.id + "'][data-index='" + index + "']");
@@ -236,7 +237,9 @@ var slideAt = function(element, index) {
 				break;
 			}
 		}
-		element.dispatchEvent(new Event("change"));
+		if (change) {
+			element.dispatchEvent(new Event("change"));
+		}
 	}
 	[].forEach.call(element.querySelectorAll(".controls span.index[data-slide='" + element.id + "']"), function(item) {
 		item.classList.remove('highlight');
@@ -350,6 +353,10 @@ var slideTimeout = function(slide) {
 	timeout = (getUnit(slide, '--transition-duration') == 's' ? 1000 : 1) * getNumber(slide, '--transition-duration');
 	timeout += (getUnit(slide, '--transition-delay') == 's' ? 1000 : 1) * getNumber(slide, '--transition-delay');
 	return timeout;
+}
+
+var slideItem = function(slide, index) {
+	return slide.querySelector(slide.dataset.frames + '[data-slide="' + slide.id + '"][data-index="' + (index !== undefined ? index : slide.dataset.index) + '"]');
 }
 
 document.addEventListener("DOMContentLoaded", function(event) {
