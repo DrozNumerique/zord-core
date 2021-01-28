@@ -133,7 +133,7 @@ var activateChosen = function() {
 				if (event.target.hasAttribute('data-change')) {
 					method = event.target.getAttribute('data-change');
 					if (window[method] instanceof Function) {
-						window[method]();
+						window[method](event, params);
 					}
 				}
 		    });
