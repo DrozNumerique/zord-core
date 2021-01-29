@@ -43,7 +43,7 @@ class Module {
     
     public function hashKey($action) {
         $locale = $this->params['data_locale'] ?? false;
-        $scope = $this->params['data_scope'] ?? 'portal';
+        $scope = $this->params['data_scope'] ?? null;
         $type = $this->params['data_type'] ?? null;
         $key = $this->params['data_key'] ?? null;
         $prefix = null;
