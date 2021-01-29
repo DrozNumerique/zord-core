@@ -23,6 +23,11 @@
 			"media": "screen",
 			"type": "text/css",
 			"href": "/css/chosen.css"
+		},
+		"jquery-ui": {
+			"media": "screen",
+			"type": "text/css",
+			"href": "/css/jquery-ui.css"
 		}
 	},
 	"scripts": {
