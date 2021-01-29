@@ -8,7 +8,7 @@
     <div id="panel" class="admin-panel">
         <div class="admin-tab">
             <div class="admin-panel-title"><?php echo $locale->tab->$current->title; ?></div>
-            <div class="admin-panel-content">
+            <div class="admin-panel-content <?php echo $current; ?>">
 <?php $this->render($current); ?>
             </div>
         </div>
