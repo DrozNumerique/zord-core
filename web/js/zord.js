@@ -202,113 +202,48 @@ var getUserProperty = function(key, def) {
 	return getSessionProperty('user.' + USER.login + '.' + key, def);
 }
 
-var setData = function(scope, key, value, merge) {
-	switch (scope) {
-		case 'portal': {
-			setPortalProperty(key, value, merge);
-			break;
-		}
-		case 'context': {
-			setContextProperty(key, value, merge);
-			break;
-		}
-		case 'context': {
-			setUserProperty(key, value, merge);
-			break;
-		}
-	}
-}
-
-var getData = function(scope, key, def) {
-	switch (scope) {
-		case 'portal': {
-			return getPortalProperty(key, def);
-		}
-		case 'context': {
-			return getContextProperty(key, def);
-		}
-		case 'context': {
-			return getUserProperty(key, def);
-		}
-	}
-}
-
-var getKey = function(type, key, locale) {
-	locale = locale !== undefined ? locale : false;
-	return (type !== undefined && type !== null ? type : '') + (type !== undefined && type !== null && key !== undefined && key !== null ? '.' : '') + (key !== undefined && key !== null ? key : '') + (locale ? '.' + LANG : '');
-}
-
-var getOptionValue = function(key) {
-	return key.startsWith('key:') ? key.substr('key:'.length) : key;
-}
-
 var loadData = function(params) {
-	params = params !== undefined ? params : {};
-	locale = params.data_locale !== undefined ? params.data_locale : false;
-	scope  = params.data_scope;
-	type   = params.data_type;
-	key    = params.data_key;
-	module = params.module !== undefined ? params.module : 'Portal';
-	action = params.action !== undefined ? params.action : (type !== undefined ? type : (key !== undefined ? key : 'data'));
-	wait   = params.wait   !== undefined ? params.wait   : false;
-	async  = params.async  !== undefined ? params.async  : !wait;
-	params['module'] = module;
-	params['action'] = action;
-	params['wait']   = wait;
-	params['async']  = async;
-	if (scope == undefined) {
-		[].forEach.call(['portal','context','user'], function(scope) {
-			params.data_scope = scope;
-			loadData(params);
-		});
-	} else if (key == undefined) {
-		params['success'] = function(keys) {
-			for (var index in keys) {
-				params.data_key = keys[index];
-				loadData(params);
-			}
-		};
-		invokeZord(params);
-	} else if (Array.isArray(key)) {
-		[].forEach.call(key, function(key) {
-			params.data_key = key;
-			loadData(params);
-		});
+	var action = params.action;
+	var keys = getSessionProperty('data.keys', {});
+	var json = JSON.stringify(params);
+	if (keys[json] !== undefined) {
+		_loadData(Object.assign(params, {action:action}), keys[json]);
 	} else {
-		var property = getKey(type, key, locale);
-		var data     = getData(scope, property, null);
-		var hash     = getSessionProperty('hash', {});
-		var id       = property;
-		switch (scope) {
-			case 'portal': {
-				id = 'portal.' + id;
-				break;
+		invokeZord(Object.assign(params, {
+			action  : 'hashKey',
+			_action : action,
+			success : function(key) {
+				keys[json] = key;
+				setSessionProperty('data.keys', keys);
+				_loadData(Object.assign(params, {action:action}), key);
 			}
-			case 'context': {
-				id = 'context.' + CONTEXT + '.' + id;
-				break;
-			}
-			case 'user': {
-				id = 'user.' + USER.login + '.' + id;
-				break;
-			}
-		}
-		if (data == null || hash[id] == undefined || HASH[id] == undefined || hash[id] !== HASH[id]) {
-			params['before'] = function() {
-				if (wait) {
+		}));
+	}
+}
+
+var _loadData = function(params, key) {
+	data = getSessionProperty(key, null);
+	hash = getSessionProperty('data.hash', {});			
+	if (data == null || hash[key] == undefined || HASH[key] == undefined || hash[key] !== HASH[key]) {
+		invokeZord(Object.assign(params, {
+			before  : function() {
+				if (params.wait ?? false) {
 					$dialog.wait();
 				}
-			};
-			params['after'] = function() {
-				if (wait) {
+			},
+			after   : function() {
+				if (params.wait ?? false) {
 					$dialog.hide();
 				}
-			};
-			params['success'] = function(data) {
-				setData(scope, property, data);
-				setSessionProperty('hash', HASH);
-			};
-			invokeZord(params);
-		}
+			},
+			success : function(data) {
+				setSessionProperty(key, data);
+				setSessionProperty('data.hash', HASH);
+			}
+		}));
 	}
+}
+
+var getOptionValue = function(value) {
+	return value.startsWith('key:') ? value.substr('key:'.length) : value;
 }

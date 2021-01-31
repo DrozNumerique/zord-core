@@ -687,9 +687,12 @@ class Zord {
 	    return $values;
 	}
 	
-	public static function arrayToJS($array, $num = 2, $root = true) {
+	public static function arrayToJS($array, $assoc = true, $num = 2, $root = true) {
+	    if (empty($array)) {
+	        return $assoc ? '{}' : '[]';
+	    }
 	    $indent = str_repeat("\t", $num);
-	    $sequential = $array === [] || !self::is_associative($array);
+	    $sequential = !self::is_associative($array);
 	    $result = ($sequential ? '[' : '{')."\n";
 	    $index = 0;
 	    foreach ($array as $key => $value) {
@@ -698,7 +701,7 @@ class Zord {
 	            $result .= "'";
 	        }
 	        if (is_array($value)) {
-	            $result .= self::arrayToJS($value, $num + 1);
+	            $result .= self::arrayToJS($value, $assoc, $num + 1);
 	        } else if (is_string($value)) {
 	            $result .= str_replace("'", "\\'", $value);
 	        } else if (is_numeric($value)) {

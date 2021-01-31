@@ -84,7 +84,7 @@ class Portal extends Module {
     }
     
     public function config() {
-        $domain = $this->parameter('config', 'domain', 'portal');
+        $domain = $this->params['domain'] ?? 'portal';
         if (!$this->user->hasRole('admin', $this->context) && !in_array($domain, Zord::value('portal', 'public') ?? [])) {
             return $this->error(401);
         }
@@ -97,7 +97,7 @@ class Portal extends Module {
     }
     
     public function locale() {
-        $domain = $this->parameter('locale', 'domain', 'portal');
+        $domain = $this->params['domain'] ?? 'portal';
         $lang = $this->params['lang'] ?? $this->lang;
         $property = $this->params['property'] ?? null;
         $locale = Zord::getLocale($domain, $lang, true);
@@ -110,8 +110,8 @@ class Portal extends Module {
     }
     
     public function options() {
-        $scope = $this->params['scope'] ?? ($this->params['data_scope'] ?? 'portal');
-        $key = $this->params['key'] ?? ($this->params['data_key'] ?? null);
+        $scope = $this->params['scope'] ?? 'portal';
+        $key = $this->params['key'] ?? null;
         $options = $this->_options($scope, $key);
         Zord::sort($options);
         $options = array_combine(array_map(function($key) {return 'key:'.$key;}, array_keys($options)), array_values($options));
@@ -135,6 +135,32 @@ class Portal extends Module {
             }
         }
         return $values;
+    }
+    
+    protected function _hashKey($action) {
+        switch ($action) {
+            case 'config': {
+                $this->params['data_locale'] = false;
+                $this->params['data_scope']  = 'portal';
+                $this->params['data_type']   = 'config';
+                $this->params['data_key']    = $this->params['domain'] ?? null;
+                break;
+            }
+            case 'locale': {
+                $this->params['data_locale'] = !isset($this->params['lang']);
+                $this->params['data_scope']  = 'portal';
+                $this->params['data_type']   = 'locale';
+                $this->params['data_key']    = (!isset($this->params['domain']) && !isset($this->params['lang']) ? null : ($this->params['domain'] ?? '').(isset($this->params['domain']) && isset($this->params['lang']) ? '.' : '').($this->params['lang']) ?? '');
+                break;
+            }
+            case 'options': {
+                $this->params['data_locale'] = ($this->params['locale'] ?? 'true') == 'true';
+                $this->params['data_scope']  = $this->params['scope'] ?? 'portal';
+                $this->params['data_type']   = 'options';
+                $this->params['data_key']    = $this->params['key'] ?? '_keys';
+                break;
+            }
+        }
     }
 }
 

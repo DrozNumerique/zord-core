@@ -362,19 +362,18 @@ var slideItem = function(slide, index) {
 document.addEventListener("DOMContentLoaded", function(event) {
 
 	loadData({
-		data_scope : 'portal',
-		data_key   : 'config',
-		async      : false
+		module : 'Portal',
+		action : 'config',
+		async  : false
 	});
-	CONFIG = getData('portal', 'config');
+	CONFIG = getPortalProperty('config');
 
 	loadData({
-		data_locale : true,
-		data_scope  : 'portal',
-		data_key    : 'locale',
-		async       : false
+		module : 'Portal',
+		action : 'locale',
+		async  : false
 	});
-	LOCALE = getData('portal', 'locale.' + LANG);
+	LOCALE = getPortalProperty('locale.' + LANG);
 
 	window.addEventListener("selectLoaded", function(event) {
 		selects = document.querySelectorAll('select[data-loading]');

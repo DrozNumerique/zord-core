@@ -41,7 +41,12 @@ class Module {
         return $this->response;
     }
     
-    public function hashKey($action) {
+    protected function _hashKey($action) {}
+    
+    public function hashKey($action = null) {
+        $this->response = 'DATA';
+        $action = $action ?? $this->params['_action'];
+        $this->_hashKey($action);
         $locale = $this->params['data_locale'] ?? false;
         $scope = $this->params['data_scope'] ?? null;
         $type = $this->params['data_type'] ?? null;
@@ -62,7 +67,7 @@ class Module {
             }
         }
         if ($prefix) {
-            return $prefix.'.'.($type ? $type.'.' : '').$key.($locale ? '.'.$this->lang : '');
+            return $prefix.'.'.($type ?? '').(isset($type) && isset($key) ? '.' : '').($key ?? '').($locale ? '.'.$this->lang : '');
         }
         return null;
     }
@@ -314,16 +319,5 @@ class Module {
 	public function bind($login) {
 	    $this->controler->setUser(User::bind($login));
 	    $this->user = $this->controler->getUser();
-	}
-	
-	protected function parameter($action, $name, $default) {
-	    $parameter = $this->params[$name] ?? null;
-	    if (!isset($parameter) && !isset($this->params['data_type'])) {
-	        $key = $this->params['data_key'] ?? null;
-	        if ($key !== $action) {
-	            $parameter = $key;
-	        }
-	    }
-	    return $parameter ?? $default;
 	}
 }
