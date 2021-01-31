@@ -371,6 +371,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	loadData({
 		module : 'Portal',
 		action : 'locale',
+		_lang  : LANG,
 		async  : false
 	});
 	LOCALE = getPortalProperty('locale.' + LANG);

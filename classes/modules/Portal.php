@@ -147,14 +147,14 @@ class Portal extends Module {
                 break;
             }
             case 'locale': {
-                $this->params['data_locale'] = !isset($this->params['lang']);
+                $this->params['data_locale'] = true;
                 $this->params['data_scope']  = 'portal';
                 $this->params['data_type']   = 'locale';
                 $this->params['data_key']    = (!isset($this->params['domain']) && !isset($this->params['lang']) ? null : ($this->params['domain'] ?? '').(isset($this->params['domain']) && isset($this->params['lang']) ? '.' : '').($this->params['lang']) ?? '');
                 break;
             }
             case 'options': {
-                $this->params['data_locale'] = ($this->params['locale'] ?? 'true') == 'true';
+                $this->params['data_locale'] = isset($this->params['_lang']);
                 $this->params['data_scope']  = $this->params['scope'] ?? 'portal';
                 $this->params['data_type']   = 'options';
                 $this->params['data_key']    = $this->params['key'] ?? '_keys';
