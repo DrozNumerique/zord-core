@@ -207,15 +207,16 @@ var loadData = function(params) {
 	var keys = getSessionProperty('data.keys', {});
 	var json = JSON.stringify(params);
 	if (keys[json] !== undefined) {
-		_loadData(Object.assign(params, {action:action}), keys[json]);
+		_loadData(Object.assign(params, {action:action,async:false}), keys[json]);
 	} else {
 		invokeZord(Object.assign(params, {
 			action  : 'hashKey',
 			_action : action,
+			async   : false,
 			success : function(key) {
 				keys[json] = key;
 				setSessionProperty('data.keys', keys);
-				_loadData(Object.assign(params, {action:action}), key);
+				_loadData(Object.assign(params, {action:action,async:false}), key);
 			}
 		}));
 	}

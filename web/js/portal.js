@@ -363,16 +363,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 	loadData({
 		module : 'Portal',
-		action : 'config',
-		async  : false
+		action : 'config'
 	});
 	CONFIG = getPortalProperty('config');
 
 	loadData({
 		module : 'Portal',
 		action : 'locale',
-		_lang  : LANG,
-		async  : false
+		_lang  : LANG
 	});
 	LOCALE = getPortalProperty('locale.' + LANG);
 
