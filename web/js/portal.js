@@ -512,6 +512,15 @@ window.addEventListener("load", function(event) {
 		}
 	}, 300);
 	
+	const observer = new ResizeObserver(entries => {
+		for (let entry of entries) {
+			entry.target.parentNode.style.height = window.getComputedStyle(entry.target).getPropertyValue('height');
+		}
+	});
+	[].forEach.call(document.querySelectorAll('ul.chosen-choices'), function(choices) {
+		observer.observe(choices);
+	});
+	
 	slidePosition(document);
 	
 });
