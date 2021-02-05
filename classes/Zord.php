@@ -458,7 +458,9 @@ class Zord {
 	    } else {
 	        $val = mb_encode_numericentity($val, self::$convmap, 'UTF-8');
 	    }
-	    $val = mb_decode_numericentity(json_encode($val, $pretty ? JSON_PRETTY_PRINT : null), self::$convmap, 'UTF-8');
+	    $options = JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES;
+	    $options = $pretty ? $options|JSON_PRETTY_PRINT : $options;
+	    $val = mb_decode_numericentity(json_encode($val, $options), self::$convmap, 'UTF-8');
 	    return preg_replace_callback(
 	        '#:"(\d+)"#s',
 	        function($matches) {
