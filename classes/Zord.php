@@ -1097,4 +1097,55 @@ class Zord {
         }
         return $content;
     }
+    
+    public static function firstElementChild($node) {
+        $element = null;
+        if (isset($node) && $node->childNodes->length > 0) {
+            foreach ($node->childNodes as $child) {
+                if ($child->nodeType == XML_ELEMENT_NODE) {
+                    $element = $child;
+                    break;
+                }
+            }
+        }
+        return $element;
+    }
+    
+    public static function lastElementChild($node) {
+        $element = null;
+        if (isset($node) && $node->childNodes->length > 0) {
+            $children = [];
+            foreach ($node->childNodes as $child) {
+                if ($child->nodeType == XML_ELEMENT_NODE) {
+                    $children[] = $child;
+                }
+            }
+            if (!empty($children)) {
+                $element = $children[count($children) - 1];
+            }
+        }
+        return $element;
+    }
+    
+    public static function nextElementSibling($node) {
+        $element = null;
+        if (isset($node)) {
+            $element = $node->nextSibling;
+            if (isset($element) && $element->nodeType !== XML_ELEMENT_NODE) {
+                $element = self::nextElementSibling($element);
+            }
+        }
+        return $element;
+    }
+    
+    public static function previousElementSibling($node) {
+        $element = null;
+        if (isset($node)) {
+            $element = $node->previousSibling;
+            if (isset($element) && $element->nodeType !== XML_ELEMENT_NODE) {
+                $element = self::previousElementSibling($element);
+            }
+        }
+        return $element;
+    }
 }
