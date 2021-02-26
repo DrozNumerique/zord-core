@@ -248,7 +248,8 @@ class Account extends Module {
             'content'    => '/mail/account/notify',
             'models'     => [
                 'login' => $user->login
-            ]
+            ],
+            'styles'     => Zord::value('mail', ['styles','account']) ?? null
         ]);
         $result = [
             'account' => htmlspecialchars($user->name.' <'.$user->email.'>')
@@ -279,7 +280,8 @@ class Account extends Module {
                 'content'    => '/mail/account/reset',
                 'models'     => [
                     'url' => $url
-                ]
+                ],
+                'styles'     => Zord::value('mail', ['styles','account']) ?? null
             ]);
             $result = [
                 'activation' => $url,

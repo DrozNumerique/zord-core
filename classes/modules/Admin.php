@@ -61,10 +61,11 @@ class Admin extends Module {
             $name = $this->params['name'];
             $email = $this->params['email'];
             $entity = new UserEntity();
+            $account = Zord::getInstance('Account', $this->controler);
             if ($login && $operation) {
                 switch ($operation) {
                     case 'create': {
-                        $result = (new Account($this->controler))->notifyReset($entity->create([
+                        $result = $account->notifyReset($entity->create([
                             'login' => $login,
                             'name'  => $name,
                             'email' => $email
@@ -87,7 +88,7 @@ class Admin extends Module {
                         break;
                     }
                     case 'notify': {
-                        $result = (new Account($this->controler))->notifyProfile($entity->retrieve($login));
+                        $result = $account->notifyProfile($entity->retrieve($login));
                         break;
                     }
                 }
