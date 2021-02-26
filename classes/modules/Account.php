@@ -231,6 +231,34 @@ class Account extends Module {
         return $this->redirect($this->baseURL, true);
     }
     
+    public function notifyProfile($user) {
+        if ($user === false) {
+            return ['error' => $this->locale->messages->unknown_user];
+        }
+        $send = $this->sendMail([
+            'category'   => 'account'.DS.$user->login,
+            'principal'  => ['email' => $user->email, 'name' => $user->name],
+            'recipients' => [
+                'bcc' => [
+                    WEBMASTER_MAIL_ADDRESS => WEBMASTER_MAIL_NAME
+                ]
+            ],
+            'subject'    => $this->locale->mail->notify_profile->subject,
+            'text'       => $this->locale->mail->notify_profile->text.$user->login."\n",
+            'content'    => '/mail/account/notify',
+            'models'     => [
+                'login' => $user->login
+            ]
+        ]);
+        $result = [
+            'account' => htmlspecialchars($user->name.' <'.$user->email.'>')
+        ];
+        if ($send !== true) {
+            $result['error'] = $this->locale->messages->mail_error.'|'.$send;
+        }
+        return $result;
+    }
+    
     public function notifyReset($user) {
         $now = date('Y-m-d H:i:s');
         (new UserEntity())->update($user->login, ['reset' => $now.' @ '.$_SERVER['REMOTE_ADDR']]);

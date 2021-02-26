@@ -64,12 +64,11 @@ class Admin extends Module {
             if ($login && $operation) {
                 switch ($operation) {
                     case 'create': {
-                        $data = [
-                            'login'    => $login,
-                            'name'     => $name,
-                            'email'    => $email
-                        ];
-                        $result = (new Account($this->controler))->notifyReset($entity->create($data));
+                        $result = (new Account($this->controler))->notifyReset($entity->create([
+                            'login' => $login,
+                            'name'  => $name,
+                            'email' => $email
+                        ]));
                         break;
                     }
                     case 'update': {
@@ -85,6 +84,10 @@ class Admin extends Module {
                     }
                     case 'profile': {
                         $result = $this->dataProfile($login);
+                        break;
+                    }
+                    case 'notify': {
+                        $result = (new Account($this->controler))->notifyProfile($entity->retrieve($login));
                         break;
                     }
                 }
@@ -271,27 +274,25 @@ class Admin extends Module {
                 }
             }
         } else if ($current == 'users') {
-            if (!isset($this->params['operation']) || $this->params['operation'] == 'list') {
-                $limit = Zord::value('admin', ['users','limit']);
-                $offset = $this->params['offset'] ?? 0;
-                $criteria = ['many' => true];
-                $keyword = $this->params['keyword'] ?? null;
-                if (isset($keyword)) {
-                    $match = '%'.$keyword.'%';
-                    $criteria['where']= [
-                        'raw'        => 'login LIKE ? OR email LIKE ? OR name LIKE ?',
-                        'parameters' => [$match,$match,$match]
-                    ];
-                }
-                $count = (new UserEntity())->retrieve($criteria)->count();
-                $criteria['limit']  = $limit;
-                $criteria['offset'] = $offset;
-                $models['count']    = $count;
-                $models['limit']    = $limit;
-                $models['offset']   = $offset;
-                $models['criteria'] = $criteria;
-                $models['keyword']  = $keyword;
-            } 
+            $limit = Zord::value('admin', ['users','limit']);
+            $offset = $this->params['offset'] ?? 0;
+            $criteria = ['many' => true];
+            $keyword = $this->params['keyword'] ?? null;
+            if (isset($keyword)) {
+                $match = '%'.$keyword.'%';
+                $criteria['where']= [
+                    'raw'        => 'login LIKE ? OR email LIKE ? OR name LIKE ?',
+                    'parameters' => [$match,$match,$match]
+                ];
+            }
+            $count = (new UserEntity())->retrieve($criteria)->count();
+            $criteria['limit']  = $limit;
+            $criteria['offset'] = $offset;
+            $models['count']    = $count;
+            $models['limit']    = $limit;
+            $models['offset']   = $offset;
+            $models['criteria'] = $criteria;
+            $models['keyword']  = $keyword;
         }
         return $models;
     }

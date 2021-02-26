@@ -58,7 +58,7 @@ function getProfile() {
 	
 document.addEventListener("DOMContentLoaded", function(event) {
 
-	attach(['profile'], function(entry, operation) {
+	attach(['profile','notify'], function(entry, operation) {
 		var data = {
 			login:entry.parentNode.children[0].firstElementChild.value,
 			name:entry.parentNode.children[1].firstElementChild.value,

@@ -40,6 +40,10 @@
 			"subject": "Modification du mot de passe",
 			"click_here": "Cliquer ici pour modifier votre mot de passe",
 			"copy_paste": "Copier/coller le lien ci-dessous dans votre navigateur pour modifier votre mot de passe"
+		},
+		"notify_profile": {
+			"subject": "Information du compte",
+			"text": "Votre identifiant est "
 		}
 	},
 	"switch": {

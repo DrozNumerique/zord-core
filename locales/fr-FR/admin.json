@@ -21,6 +21,7 @@
 			"name": "Nom",
 			"email": "Courriel",
 			"profile": "Profil...",
+			"notify": "Renvoyer",
 			"roles": "Rôles",
 			"ipv4": "Adresses IPV4",
 			"ipv6": "Adresses IPV6",

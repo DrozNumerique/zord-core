@@ -33,12 +33,14 @@
            					<div class="blank"></div>
            					<div class="blank"></div>
            					<div class="blank"></div>
+           					<div class="blank"></div>
        					</li>
        					<li>
           					<div class="column"><input name="login" data-empty="no" type="text"/></div>
           					<div class="column"><input name="name" data-empty="no" type="text"/></div>
           					<div class="column"><input name="email" data-empty="no" type="email"/></div>
           					<div class="create"><i class="fa fa-plus fa-fw" title="<?php echo $locale->list->create; ?>"></i></div>
+           					<div class="blank"></div>
            					<div class="blank"></div>
            					<div class="blank"></div>
        					</li>
@@ -50,6 +52,7 @@
            					<div class="delete"><i class="fa fa-times fa-fw" title="<?php echo $locale->list->delete; ?>"></i></div>
            					<div class="update"><i class="fa fa-check fa-fw" title="<?php echo $locale->list->update; ?>"></i></div>
            					<div class="profile"><i class="fa fa-user fa-fw" title="<?php echo $locale->tab->users->profile; ?>"></i></div>
+           					<div class="notify"><i class="fa fa-envelope fa-fw" title="<?php echo $locale->tab->users->notify; ?>"></i></div>
        					</li>
 <?php } ?>
    					</ul>
