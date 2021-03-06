@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 				offset += limit;
 			}
 			if (offset !== Number.parseInt(data.offset)) {
-				keyword = controls.querySelector('li.search input').value;
+				keyword = document.querySelector('#lookup input').value;
 				invokeZord({
 					module:'Admin',
 					action:'index',
@@ -105,7 +105,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	
 	[].forEach.call(document.querySelectorAll('#pagination li.index select'), function(index) {
 		index.addEventListener('change', function(event) {
-			keyword = index.parentNode.parentNode.querySelector('li.search input').value;
+			keyword = document.querySelector('#lookup input').value;
 			invokeZord({
 				module:'Admin',
 				action:'index',
@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		});
 	});
 	
-	[].forEach.call(document.querySelectorAll('#search i'), function(button) {
+	[].forEach.call(document.querySelectorAll('#lookup i'), function(button) {
 		button.addEventListener('click', function(event) {
 			keyword = button.previousElementSibling.value;
 			if (keyword == undefined || keyword == null) {
