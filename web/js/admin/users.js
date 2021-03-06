@@ -117,19 +117,20 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		});
 	});
 	
-	[].forEach.call(document.querySelectorAll('#pagination li.search i'), function(button) {
+	[].forEach.call(document.querySelectorAll('#search i'), function(button) {
 		button.addEventListener('click', function(event) {
 			keyword = button.previousElementSibling.value;
-			if (keyword !== undefined && keyword !== null && keyword.trim().length > 0) {
-				invokeZord({
-					module:'Admin',
-					action:'index',
-					tab:'users',
-					operation:'list',
-					offset:0,
-					keyword:keyword.trim()
-				});
+			if (keyword == undefined || keyword == null) {
+				keyword = '';
 			}
+			invokeZord({
+				module:'Admin',
+				action:'index',
+				tab:'users',
+				operation:'list',
+				offset:0,
+				keyword:keyword.trim()
+			});
 		});
 	});
 	

@@ -263,6 +263,17 @@ class Admin extends Module {
         return '';
     }
     
+    protected function usersCriteria($keyword) {
+        if (isset($keyword)) {
+            $match = '%'.$keyword.'%';
+            return [null, [
+                'raw'        => 'login LIKE ? OR email LIKE ? OR name LIKE ?',
+                'parameters' => [$match, $match, $match]
+            ]];
+        }
+        return [null, null];
+    }
+    
     protected function prepareIndex($current, $models) {
         if ($current == 'content') {
             $contents = Zord::value('portal', 'contents') ?? [];
@@ -277,23 +288,18 @@ class Admin extends Module {
         } else if ($current == 'users') {
             $limit = Zord::value('admin', ['users','limit']);
             $offset = $this->params['offset'] ?? 0;
-            $criteria = ['many' => true];
             $keyword = $this->params['keyword'] ?? null;
-            if (isset($keyword)) {
-                $match = '%'.$keyword.'%';
-                $criteria['where']= [
-                    'raw'        => 'login LIKE ? OR email LIKE ? OR name LIKE ?',
-                    'parameters' => [$match,$match,$match]
-                ];
-            }
+            list($join, $where) = $this->usersCriteria($keyword);
+            $criteria = ['many' => true, 'join' => $join, 'where' => $where];
             $count = (new UserEntity())->retrieve($criteria)->count();
             $criteria['limit']  = $limit;
             $criteria['offset'] = $offset;
+            $users = (new UserEntity())->retrieve($criteria);
             $models['count']    = $count;
             $models['limit']    = $limit;
             $models['offset']   = $offset;
-            $models['criteria'] = $criteria;
             $models['keyword']  = $keyword;
+            $models['users']    = $users;
         }
         return $models;
     }
