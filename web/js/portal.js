@@ -257,6 +257,14 @@ var slideTo = function(element, direction) {
 	var padding = element.querySelectorAll('.cell.padding').length;
 	var last    = (cells == 0 ? 1 : Math.round(cells / frames.length)) * (frames.length - 1) - padding;
 	switch (direction) {
+		case 'first': {
+			index = 0;
+			break;
+		}
+		case 'last': {
+			index = last;
+			break;
+		}
 		case 'backward': {
 			index = index - step;
 			if (index < 0) {
