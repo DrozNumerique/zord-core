@@ -1,6 +1,9 @@
 # zord-core
 Framework générique pour développement de portails
 
+# Install
+http://user.zord.tech/doku.php?id=documentation:install
+
 # Cadre métier
 
 Édition numérique de textes littéraires. Publication de textes et outils de recherche scientifiques dans les contenus
