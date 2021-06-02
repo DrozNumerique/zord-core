@@ -122,6 +122,10 @@ class Account extends Module {
             $data = $this->check($models, $scope);
             if (is_string($data)) {
                 $models['message'] = $data;
+                if ($scope == 'password' && empty($this->user->password)) {
+                    $models['password'] = null;
+                    $models['confirm'] = null;
+                }
             } else if (!empty($data)) {
                 $data['password.crypted'] = true;
                 $data['reset'] = null;
