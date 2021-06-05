@@ -15,11 +15,11 @@
 	},
 	"messages": {
 		"profile": {
-			"updated": "Profil mis à jour",
+			"updated": "Profil mis à jour.",
 			"unchanged": "Profil inchangé"
 		},
 		"password": {
-			"updated": "Mot de passe mis à jour",
+			"updated": "Mot de passe mis à jour. Vous êtes maintenant connecté(e)",
 			"unchanged": "Mot de passe inchangé"
 		},
 		"account_created": "Compte créé|Vous allez recevoir un mail avec un lien pour activer votre mot de passe",

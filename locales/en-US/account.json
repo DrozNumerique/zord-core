@@ -19,7 +19,7 @@
 			"unchanged": "Profile unchanged"
 		},
 		"password": {
-			"updated": "Password updated",
+			"updated": "Password updated. You're now connected",
 			"unchanged": "Password unchanged"
 		},
 		"profile_updated": "Profile updated",
