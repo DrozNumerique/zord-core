@@ -1,10 +1,10 @@
 {
 	"fields": {
-		"login": "Chose en login",
+		"login": "Chose a login",
 		"name": "Enter your full name",
 		"email": "Enter your email address",
-		"password": "Password",
-		"confirm" : "Confirm"
+		"password": "Enter a password",
+		"confirm" : "Confirm your password"
 	},
 	"actions": {
 		"connect": "Connect",

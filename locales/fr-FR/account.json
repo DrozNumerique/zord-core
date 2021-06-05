@@ -3,8 +3,8 @@
 		"login" : "Choisissez un identifiant",
 		"name": "Entrez votre nom complet",
 		"email": "Indiquez votre adresse e-mail",
-		"password" : "Mot de passe",
-		"confirm" : "Confirmation"
+		"password" : "Entrez un mot de passe",
+		"confirm" : "Confirmez votre mot de passe"
 	},
 	"actions": {
 		"connect" : "Connexion",
