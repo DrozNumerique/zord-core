@@ -1,6 +1,6 @@
 {
 	"fields": {
-		"login": "Chose a login",
+		"login": "Chose/Enter your login",
 		"name": "Enter your full name",
 		"email": "Enter your email address",
 		"password": "Enter a password",

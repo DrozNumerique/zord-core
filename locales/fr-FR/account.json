@@ -1,6 +1,6 @@
 {
 	"fields": {
-		"login" : "Choisissez un identifiant",
+		"login" : "Choisissez/Rentrez votre identifiant",
 		"name": "Entrez votre nom complet",
 		"email": "Indiquez votre adresse e-mail",
 		"password" : "Entrez un mot de passe",
