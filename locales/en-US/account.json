@@ -1,10 +1,10 @@
 {
 	"fields": {
-		"login": "Login",
-		"name": "Full name",
-		"email": "E-mail address",
-		"password": "Password",
-		"confirm" : "Confirm"
+		"login": "Chose/Enter your login",
+		"name": "Enter your full name",
+		"email": "Enter your email address",
+		"password": "Enter a password",
+		"confirm" : "Confirm your password"
 	},
 	"actions": {
 		"connect": "Connect",
@@ -19,7 +19,7 @@
 			"unchanged": "Profile unchanged"
 		},
 		"password": {
-			"updated": "Password updated",
+			"updated": "Password updated. You're now connected",
 			"unchanged": "Password unchanged"
 		},
 		"profile_updated": "Profile updated",
@@ -40,7 +40,7 @@
 	"mail": {
 		"reset_password": {
 			"subject": "Reset password",
-			"click_here": "Click <span class=\"here\">here</span> to reset your password",
+			"click_here": "Click <span class=\"here\">here</span> to create/reset your password",
 			"copy_paste": "Copy/Paste following URL in your browser to reset your password"
 		},
 		"notify_profile": {

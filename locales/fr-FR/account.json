@@ -1,10 +1,10 @@
 {
 	"fields": {
-		"login" : "Identifiant",
-		"name": "Nom complet",
-		"email": "Adresse e-mail",
-		"password" : "Mot de passe",
-		"confirm" : "Confirmation"
+		"login" : "Choisissez/Rentrez votre identifiant",
+		"name": "Entrez votre nom complet",
+		"email": "Indiquez votre adresse e-mail",
+		"password" : "Entrez un mot de passe",
+		"confirm" : "Confirmez votre mot de passe"
 	},
 	"actions": {
 		"connect" : "Connexion",
@@ -15,11 +15,11 @@
 	},
 	"messages": {
 		"profile": {
-			"updated": "Profil mis à jour",
+			"updated": "Profil mis à jour.",
 			"unchanged": "Profil inchangé"
 		},
 		"password": {
-			"updated": "Mot de passe mis à jour",
+			"updated": "Mot de passe mis à jour. Vous êtes maintenant connecté(e)",
 			"unchanged": "Mot de passe inchangé"
 		},
 		"account_created": "Compte créé|Vous allez recevoir un mail avec un lien pour activer votre mot de passe",
@@ -38,7 +38,7 @@
 	"mail": {
 		"reset_password": {
 			"subject": "Modification du mot de passe",
-			"click_here": "Cliquer <span class=\"here\">ici</span> pour modifier votre mot de passe",
+			"click_here": "Cliquer <span class=\"here\">ici</span> pour créer/modifier votre mot de passe",
 			"copy_paste": "Copier/coller le lien ci-dessous dans votre navigateur pour modifier votre mot de passe"
 		},
 		"notify_profile": {
