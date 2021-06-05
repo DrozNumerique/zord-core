@@ -23,8 +23,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		if (text && editor && save && display && converter) {
 			save.addEventListener('click', function(event) {
 				invokeZord({
-					module: 'Admin',
-					action: 'content',
+					module: save.dataset.module,
+					action: save.dataset.action,
 					name: content.dataset.name,
 					content: text.value,
 					success: function(result) {
