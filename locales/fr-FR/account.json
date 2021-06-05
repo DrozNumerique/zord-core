@@ -1,8 +1,8 @@
 {
 	"fields": {
-		"login" : "Identifiant",
-		"name": "Nom complet",
-		"email": "Adresse e-mail",
+		"login" : "Choisissez un identifiant",
+		"name": "Entrez votre nom complet",
+		"email": "Indiquez votre adresse e-mail",
 		"password" : "Mot de passe",
 		"confirm" : "Confirmation"
 	},
@@ -38,7 +38,7 @@
 	"mail": {
 		"reset_password": {
 			"subject": "Modification du mot de passe",
-			"click_here": "Cliquer ici pour modifier votre mot de passe",
+			"click_here": "Cliquer ici pour créer/modifier votre mot de passe",
 			"copy_paste": "Copier/coller le lien ci-dessous dans votre navigateur pour modifier votre mot de passe"
 		},
 		"notify_profile": {

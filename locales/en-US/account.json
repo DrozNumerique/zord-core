@@ -1,8 +1,8 @@
 {
 	"fields": {
-		"login": "Login",
-		"name": "Full name",
-		"email": "E-mail address",
+		"login": "Chose en login",
+		"name": "Enter your full name",
+		"email": "Enter your email address",
 		"password": "Password",
 		"confirm" : "Confirm"
 	},
@@ -40,7 +40,7 @@
 	"mail": {
 		"reset_password": {
 			"subject": "Reset password",
-			"click_here": "Click here to reset your password",
+			"click_here": "Click here to create/reset your password",
 			"copy_paste": "Copy/Paste following URL in your browser to reset your password"
 		},
 		"notify_profile": {
