@@ -776,10 +776,10 @@ class Zord {
 	    return null;
 	}
 	
-	public static function liveFolder($path) {
+	public static function liveFolder($path, $create = true) {
 	    $folders = COMPONENT_FOLDERS;
 	    $folder = end($folders).$path.(substr($path, -1) !== DS ? DS : '');
-	    if (!file_exists($folder)) {
+	    if (!file_exists($folder) && $create) {
 	        mkdir($folder, 0755, true);
 	    }
 	    return $folder;
@@ -1070,7 +1070,7 @@ class Zord {
     }
     
     public static function content($name, $lang, $content = null) {
-        $folder = Zord::liveFolder('contents'.DS.$name.DS.$lang);
+        $folder = Zord::liveFolder('contents'.DS.$name.DS.$lang, false);
         if (isset($content)) {
             $date = date('YmdHis');
             if (!file_exists($folder)) {
