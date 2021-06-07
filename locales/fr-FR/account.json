@@ -37,7 +37,7 @@
 	},
 	"mail": {
 		"reset_password": {
-			"subject": "Modification du mot de passe",
+			"subject": "Création/Modification du mot de passe",
 			"click_here": "Cliquer ici pour créer/modifier votre mot de passe",
 			"copy_paste": "Copier/coller le lien ci-dessous dans votre navigateur pour modifier votre mot de passe"
 		},
