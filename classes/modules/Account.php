@@ -22,7 +22,7 @@ class Account extends Module {
                 if ($point == 'before') {
                     $switch[] = 'reset';
                 }
-                if ($point == 'after') {
+                if ($point == 'after' && ACCOUNT_AUTO_CREATE) {
                     $switch[] = 'create';
                 }
                 break;
