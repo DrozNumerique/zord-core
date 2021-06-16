@@ -15,7 +15,7 @@
 	},
 	"titles": {
 		"connect" : "Already have an account ?",
-		"reset": "forgotten password",
+		"reset": "Forgotten password",
 		"profile" : "Your user data",
 		"password" : "Password modification",
 		"create"  : "New account"
