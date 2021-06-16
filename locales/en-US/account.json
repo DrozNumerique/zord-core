@@ -8,6 +8,7 @@
 		"email": "Enter your email address",
 		"password": {
 			"connect": "Type your password",
+			"password": "Choose a password",
 			"reset": "Choose a password",
 			"profile": "Change your password"
 		},
@@ -17,7 +18,7 @@
 		"connect" : "Already have an account ?",
 		"reset": "Forgotten password",
 		"profile" : "Your user data",
-		"password" : "Password modification",
+		"password" : "Password definition",
 		"create"  : "New account"
 	},
 	"actions": {

@@ -8,6 +8,7 @@
 		"email": "Indiquez votre adresse e-mail",
 		"password" : {
 			"connect": "Entrez votre mot de passe",
+			"password": "Choisissez un mot de passe",
 			"reset": "Choisissez un mot de passe",
 			"profile": "Changez votre mot de passe"
 		},
@@ -17,7 +18,7 @@
 		"connect" : "Vous avez déjà un compte ?",
 		"reset": "Mot de passe oublié",
 		"profile" : "Vos informations utilisateur",
-		"password" : "Changement de mot de passe",
+		"password" : "Définition de mot de passe",
 		"create"  : "Création d'un compte"
 	},
 	"actions": {
