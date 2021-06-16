@@ -1,10 +1,24 @@
 {
 	"fields": {
-		"login" : "Choisissez/Rentrez votre identifiant",
-		"name": "Entrez votre nom complet",
+		"login" : {
+			"connect": "Entrez votre identifiant",
+			"create": "Choisissez un identifiant"
+		},
+		"name": "Indiquez votre nom complet",
 		"email": "Indiquez votre adresse e-mail",
-		"password" : "Entrez un mot de passe",
+		"password" : {
+			"connect": "Entrez votre mot de passe",
+			"reset": "Choisissez un mot de passe",
+			"profile": "Changez votre mot de passe"
+		},
 		"confirm" : "Confirmez votre mot de passe"
+	},
+	"titles": {
+		"connect" : "Vous avez déjà un compte ?",
+		"reset": "Mot de passe oublié",
+		"profile" : "Vos informations utilisateur",
+		"password" : "Changement de mot de passe",
+		"create"  : "Création d'un compte"
 	},
 	"actions": {
 		"connect" : "Connexion",

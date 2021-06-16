@@ -134,25 +134,46 @@ ul.account > li.account div.switch {
 }
 
 form.account  {
-	text-transform: uppercase;
 	background: #999;
 	color: black;
 	border-radius: 3px;
-	width:450px;
+	max-width:580px;
 	margin:70px auto;
 	text-align:center;
 	padding:30px;
+	font-size: large;
+}
+
+form.account div.title {
+	color: white;
+	text-align:left;
+	margin-bottom:20px;
+}
+
+form.account div.switch {
+	text-decoration:underline;
+}
+
+form.account div.switch.before {
+	text-transform: uppercase;
+	margin-bottom:20px;
+}
+
+form.account div.switch.after {
+	color: white;
+	text-align:left;
 }
 
 form.account label {
-	width:150px;
+	width:280px;
 	display: inline-block;
 	text-align: right;
+	white-space: nowrap;
 }
 
 form.account input {
 	background:#EEE;
-	width: 250px;
+	width: 220px;
 	height: 25px;
 	margin-left: 20px;
 	margin-bottom: 15px;

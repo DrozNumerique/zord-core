@@ -4,12 +4,9 @@ class Account extends Module {
     
     public $disconnecting = false;
     
-    public static function actions($connected) {
-        $actions = [];
-        if ($connected) {
-            $actions[] = $connected;
-        } else {
-            $actions[] = 'connect';
+    public static function actions($action) {
+        $actions = [$action];
+        if ($action == 'connect') {
             $actions[] = 'reset';
             if (ACCOUNT_AUTO_CREATE) {
                 $actions[] = 'create';
@@ -18,9 +15,32 @@ class Account extends Module {
         return $actions;
     }
     
+    public static function switch($action, $point) {
+        $switch = [];
+        switch ($action) {
+            case 'connect': {
+                if ($point == 'before') {
+                    $switch[] = 'reset';
+                }
+                if ($point == 'after') {
+                    $switch[] = 'create';
+                }
+                break;
+            }
+            case 'create':
+            case 'reset': {
+                if ($point == 'after') {
+                    $switch[] = 'connect';
+                }
+                break;
+            }
+        }
+        return $switch;
+    }
+    
     protected function form($action = null, $models = []) {
         $models['action']  = $action ?? 'connect';
-        $models['actions'] = self::actions($this->user->isConnected() ? $action : false);
+        $models['actions'] = self::actions($models['action']);
         return $this->page('account', $models);
     }
     
