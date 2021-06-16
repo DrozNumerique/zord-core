@@ -22,7 +22,7 @@
 	},
 	"actions": {
 		"connect": "Connect",
-		"reset": "Reset",
+		"reset": "Send an e-mail",
 		"profile" : "Update",
 		"password" : "Update",
 		"create"  : "Create"
