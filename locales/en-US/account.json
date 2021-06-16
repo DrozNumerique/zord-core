@@ -33,7 +33,7 @@
 			"unchanged": "Profile unchanged"
 		},
 		"password": {
-			"updated": "Password updated. You're now connected",
+			"updated": "Password created/updated. You're now connected",
 			"unchanged": "Password unchanged"
 		},
 		"profile_updated": "Profile updated",
@@ -53,7 +53,7 @@
 	},
 	"mail": {
 		"reset_password": {
-			"subject": "Reset password",
+			"subject": "Create/Reset password",
 			"click_here": "Click <span class=\"here\">here</span> to create/reset your password",
 			"copy_paste": "Copy/Paste following URL in your browser to reset your password"
 		},
