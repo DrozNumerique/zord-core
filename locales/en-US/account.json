@@ -4,8 +4,8 @@
 			"connect": "Type your login",
 			"create": "Choose a login"
 		},
-		"name": "Enter your full name",
-		"email": "Enter your email address",
+		"name": "Type your full name",
+		"email": "Type your email address",
 		"password": {
 			"connect": "Type your password",
 			"password": "Choose a password",
@@ -17,9 +17,9 @@
 	"titles": {
 		"connect" : "Already have an account ?",
 		"reset": "Forgotten password",
-		"profile" : "Your user data",
+		"profile" : "Your account data",
 		"password" : "Password definition",
-		"create"  : "New account"
+		"create"  : "Create an account"
 	},
 	"actions": {
 		"connect": "Connect",
@@ -64,9 +64,8 @@
 		}
 	},
 	"switch": {
-		"connect": "Back to log in",
+		"connect": "Already have an account ? Log in",
 		"reset": "Forgot password ?",
-		"profile": "Update profile",
-		"create": "Create account"
+		"create": "Create an account"
 	}
 }

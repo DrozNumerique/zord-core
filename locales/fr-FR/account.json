@@ -18,7 +18,7 @@
 		"connect" : "Vous avez déjà un compte ?",
 		"reset": "Mot de passe oublié",
 		"profile" : "Vos informations utilisateur",
-		"password" : "Définition de mot de passe",
+		"password" : "Définition du mot de passe",
 		"create"  : "Création d'un compte"
 	},
 	"actions": {
@@ -62,9 +62,8 @@
 		}
 	},
 	"switch": {
-		"connect": "Retour à la connexion",
+		"connect": "Vous avez déjà un compte ? Connectez-vous",
 		"reset": "Mot de passe oublié ?",
-		"profile": "Mettre à jour vos informations personnelles",
 		"create": "Créer un compte"
 	}
 }
