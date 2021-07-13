@@ -28,5 +28,10 @@
 			}
 		}
 	},
-	"zord" : "Propulsé par ꓜꓳꓤꓷ"
+	"header": {
+		"accessProvidedBy": "Accès fourni par"
+	},
+	"footer": {
+		"enginedByZord" : "Propulsé par ꓜꓳꓤꓷ"
+	}
 }
