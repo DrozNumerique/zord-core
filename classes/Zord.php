@@ -397,9 +397,9 @@ class Zord {
     	        }
     	    }
 	    }
-	    if ($first) {
+	    if (isset($first)) {
 	        return $first;
-	    } else if ($second) {
+	    } else if (isset($second)) {
 	        return $second;
 	    } else {
 	        return [];
