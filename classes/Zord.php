@@ -371,6 +371,8 @@ class Zord {
     	            if (isset($value['__RESET__'])) {
     	                $reset = true;
     	                $value = $value['__RESET__'];
+    	            } else if (isset($value['__CONST__']) && defined($value['__CONST__'])) {
+    	                $value = constant($value['__CONST__']);
     	            } else {
     	                if (!isset($first[$key])) {
     	                    $first[$key] = [];
