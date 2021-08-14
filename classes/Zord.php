@@ -367,25 +367,25 @@ class Zord {
 	public static function array_merge($first, $second, $reset = false, $base = null) {
 	    if (is_array($first) && is_array($second)) {
     	    foreach ($second as $key => $value) {
-    	        if (is_array($value) && self::is_associative($value)) {
-    	            if (isset($value['__RESET__'])) {
-    	                $reset = true;
-    	                $value = $value['__RESET__'];
-    	            } else if (isset($value['__CONST__']) && defined($value['__CONST__'])) {
-    	                $value = constant($value['__CONST__']);
-    	            } else {
-    	                if (!isset($first[$key])) {
-    	                    $first[$key] = [];
-    	                }
-    	                $value = self::array_merge($first[$key], $value, $reset, isset($base) ? $base.'.'.$key : null);
-    	            }
-    	        }
-    	        if (!self::is_associative($second)) {
-    	            $first[] = $value;
+    	        if ($value === '__UNSET__') {
+    	            unset($first[$key]);
     	        } else {
-    	            if ($value === '__UNSET__') {
-    	                unset($first[$key]);
-    	            } else {
+    	            if (is_array($value) && self::is_associative($value)) {
+        	            if (isset($value['__RESET__'])) {
+        	                $reset = true;
+        	                $value = $value['__RESET__'];
+        	            } else if (isset($value['__CONST__']) && defined($value['__CONST__'])) {
+        	                $value = constant($value['__CONST__']);
+        	            } else {
+        	                if (!isset($first[$key])) {
+        	                    $first[$key] = [];
+        	                }
+        	                $value = self::array_merge($first[$key], $value, $reset, isset($base) ? $base.'.'.$key : null);
+        	            }
+        	        }
+        	        if (!self::is_associative($second)) {
+        	            $first[] = $value;
+        	        } else {
     	                if (!$reset && isset($first[$key]) && self::matches($first[$key], $value)) {
     	                    foreach ($value as $entry) {
     	                        $first[$key][] = $entry;
