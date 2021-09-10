@@ -10,7 +10,7 @@ class Tunnel {
     protected $process    = null;
     protected $prefix     = null;
     
-    public function __construct($name, $process = null) {
+    public function __construct($name, $process = null, $check = true) {
         $config = Zord::value('connection', ['tunnel', $name]);
         $processUser = posix_getpwuid(posix_geteuid());
         $this->host = $config['host'] ?? 'localhost';
@@ -24,9 +24,11 @@ class Tunnel {
         } else {
             ssh2_auth_pubkey_file($this->connection, $this->user, Zord::realPath($config['public'] ?? '~/.ssh/id_rsa.pub'), Zord::realPath($config['private'] ?? '~/.ssh/id_rsa'), $config['passphrase'] ?? null);
         }
-        $command = $config['check']['command'] ?? TUNNEL_CHECK_COMMAND;
-        $report  = $config['check']['report']  ?? TUNNEL_CHECK_REPORT;
-        $this->exec($command, $report);
+        if ($check) {
+            $command = $config['check']['command'] ?? TUNNEL_CHECK_COMMAND;
+            $report  = $config['check']['report']  ?? TUNNEL_CHECK_REPORT;
+            $this->exec($command, $report);
+        }
         $this->sftp = ssh2_sftp($this->connection);
     }
     

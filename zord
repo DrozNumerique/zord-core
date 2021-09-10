@@ -1,0 +1,43 @@
+#!/bin/bash
+install()
+{
+	local URL=$1
+	local NAME=$2
+	git clone ${URL} ${NAME}
+	cd ${NAME}
+	if [ -x ./install.sh ]; then
+		source ./install.sh
+	fi
+	cd ..
+}
+
+if [ "$1" != "" ]; then
+	BASE=$1
+fi
+if [ "${BASE}" = "" ]; then
+	echo "No URL provided!"
+	exit 1
+fi
+INSTALL=/tmp/zord_install.$(date +%Y%m%d%H%M%S%N).json
+curl -sS ${BASE}/install.json > ${INSTALL}
+CORE=`cat ${INSTALL}|jq '.core'`
+if [ "${CORE}" = "null" ]; then
+	CORE=https://github.com/DrozNumerique/zord-core
+fi
+APP=`cat ${INSTALL}|jq '.app'`
+if [ "${APP}" = "null" ]; then
+	APP=${PWD##*/}
+	cd ..
+fi
+install ${CORE} ${APP}
+mkdir components
+cd components
+COMPONENTS=`cat ${INSTALL}|jq '.components'`
+LENGTH=`echo ${COMPONENTS}|jq length`
+for INDEX in `seq 0 $((${LENGTH} - 1))`; do
+	URL=`echo ${COMPONENTS}|jq --raw-output ".[${INDEX}] .url"` 
+	NAME=`echo ${COMPONENTS}|jq --raw-output ".[${INDEX}] .name"`
+	install ${URL} ${NAME}
+done
+cd ..
+
