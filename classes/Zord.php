@@ -812,14 +812,17 @@ class Zord {
 	            return self::collapse($comparable);
 	        };
 	    }
+	    $compare = function($first, $second) use ($value) {
+	        return $value($first) <=> $value($second);
+	    };
 	    if ($values) {
-    	    uasort($array, function($first, $second) use ($value) {
-    	        return $value($first) <=> $value($second);
-    	    });
+	        if (self::is_associative($array)) {
+	            uasort($array, $compare);
+	        } else {
+	            usort($array, $compare);
+	        }
 	    } else {
-	        uksort($array, function($first, $second) use ($value) {
-	            return $value($first) <=> $value($second);
-	        });
+	        uksort($array, $compare);
 	    }
 	}
 	
