@@ -579,7 +579,15 @@
             $this->_instance_id_column = $id_column;
             return $this;
         }
-
+        
+        protected function _field_is_object($key) {
+            $_fields_as_objects = self::$_config[$this->_connection_name]['fields_as_objects'][$this->_table_name] ?? [];
+            if (!is_array($_fields_as_objects)) {
+                $_fields_as_objects = [$_fields_as_objects];
+            }
+            return in_array($key, $_fields_as_objects);
+        }
+        
         /**
          * Create an ORM instance from the given row (an associative
          * array of data fetched from the database)
@@ -587,6 +595,11 @@
         protected function _create_instance_from_row($row) {
             $instance = self::for_table($this->_table_name, $this->_connection_name);
             $instance->use_id_column($this->_instance_id_column);
+            foreach ($row as $key => $value) {
+                if ($this->_field_is_object($key)) {
+                    $row[$key] = json_decode($value);
+                }
+            }
             $instance->hydrate($row);
             return $instance;
         }

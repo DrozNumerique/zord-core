@@ -38,7 +38,7 @@ abstract class Entity
         }
         if ($this->table && $this->fields) {
             foreach(Zord::value('connection', ['database',$this->database]) as $key => $value) {
-                Engine::configure($key, $value, $this->database);
+                ORM::configure($key, $value, $this->database);
             }
             $keys = array();
             $objects = array();
@@ -57,13 +57,13 @@ abstract class Entity
             }
             
             if (count($keys) > 0) {
-                Engine::configure('id_column_overrides', $keys, $this->database);
+                ORM::configure('id_column_overrides', $keys, $this->database);
             }
             if (count($objects) > 0) {
-                Engine::configure('fields_as_objects', $objects, $this->database);
+                ORM::configure('fields_as_objects', $objects, $this->database);
             }
-            Engine::configure('return_result_sets', true, $this->database);
-            $this->engine = Engine::for_table($this->table, $this->database)->table_alias($this->type);
+            ORM::configure('return_result_sets', true, $this->database);
+            $this->engine = ORM::for_table($this->table, $this->database)->table_alias($this->type);
         }
     }
     
@@ -318,7 +318,7 @@ abstract class Entity
                 if ($set) {
                     $entity->set_expr($field, $set.'("'.$data[$field].'")');
                 } else if (is_array($data[$field])) {
-                    $entity->set($field, Zord::json_encode($data[$field], false));
+                    $entity->set($field, Zord::json_encode($data[$field]));
                 } else {
                     $entity->set($field, $data[$field]);
                 }
