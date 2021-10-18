@@ -32,7 +32,7 @@ class UserEntity extends Entity {
         if (isset($data['password']) && !($data['password.crypted'] ?? false)) {
             $entity->set('password', User::crypt($data['password']));
         }
-        return $entity;
+        return parent::beforeSave($entity, $data);
     }
 }
 

@@ -80,7 +80,7 @@ class User {
             }
             $profile = [];
             if ($entity !== false) {
-                $profile = Zord::objectToArray(json_decode($entity->profile));
+                $profile = Zord::objectToArray($entity->profile);
             } else {
                 $profile = $this->profile();
             }

@@ -10,6 +10,7 @@ abstract class Entity
     protected $keys;
     protected $joins;
     protected $elements;
+    protected $json;
     
     protected $engine = null;
     protected $select = false;
@@ -31,28 +32,38 @@ abstract class Entity
         $this->keys = Zord::value($this->mapping, [$this->type,'key']);
         $this->joins = Zord::value($this->mapping, [$this->type,'join']);
         $this->elements = Zord::value($this->mapping, [$this->type,'elements']);
+        $this->json = Zord::value($this->mapping, [$this->type,'json']);
         if (!is_array($this->keys)) {
             $this->keys = [$this->keys];
         }
         if ($this->table && $this->fields) {
             foreach(Zord::value('connection', ['database',$this->database]) as $key => $value) {
-                ORM::configure($key, $value, $this->database);
+                Engine::configure($key, $value, $this->database);
             }
             $keys = array();
+            $objects = array();
             foreach(array_keys(Zord::getConfig($this->mapping)) as $key) {
                 $table = Zord::value($this->mapping, [$key,'table']);
                 if ($table) {
-                    $key = Zord::value($this->mapping, [$key,'key']);
-                    if ($key) {
-                        $keys[$table] = $key;
+                    $_key = Zord::value($this->mapping, [$key,'key']);
+                    if ($_key) {
+                        $keys[$table] = $_key;
+                    }
+                    $_json = Zord::value($this->mapping, [$key,'json']);
+                    if ($_json) {
+                        $objects[$table] = $_json;
                     }
                 }
             }
+            
             if (count($keys) > 0) {
-                ORM::configure('id_column_overrides', $keys, $this->database);
+                Engine::configure('id_column_overrides', $keys, $this->database);
             }
-            ORM::configure('return_result_sets', true, $this->database);
-            $this->engine = ORM::for_table($this->table, $this->database)->table_alias($this->type);
+            if (count($objects) > 0) {
+                Engine::configure('fields_as_objects', $objects, $this->database);
+            }
+            Engine::configure('return_result_sets', true, $this->database);
+            $this->engine = Engine::for_table($this->table, $this->database)->table_alias($this->type);
         }
     }
     
@@ -292,6 +303,14 @@ abstract class Entity
         return $result;
     }
     
+    public function get($entity, $property) {
+        if (in_array($property, $this->json)) {
+            return json_decode($entity->$property);
+        } else {
+            return $entity->$property;
+        }
+    }
+    
     private function set($entity, $data) {
         foreach ($this->fields as $field) {
             if (array_key_exists($field, $data)) {
@@ -308,8 +327,7 @@ abstract class Entity
     }
     
     private function save($entity, $data) {
-        $this->beforeSave($entity, $data);
-        $entity->save();
+        return $this->beforeSave($entity, $data)->save();
     }
     
     private function is_many($criteria) {
@@ -337,5 +355,7 @@ abstract class Entity
         return $is_key;
     }
     
-    protected function beforeSave($entity, $data) {}
+    protected function beforeSave($entity, $data) {
+        return $entity;
+    }
 }

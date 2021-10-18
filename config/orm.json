@@ -36,7 +36,8 @@
     		"date",
     		"profile"
     	],
-    	"key": "id"
+    	"key": "id",
+		"json": "profile"
     },
 	"UserHasIPV4Entity": {
 		"table": "user_has_ipv4",
