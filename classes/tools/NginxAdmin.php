@@ -12,7 +12,7 @@ trait NginxAdmin  {
                 exec("sudo service nginx reload", $output, $status);
                 if (!empty($output) || $status !== 0) {
                     file_put_contents(NGINX_VHOST_INCLUDE, $content);
-                    return "Can't reload nginx config";
+                    return "Can't reload nginx config\n\nStatus : $status\nOutput : ".implode("\n", $output);
                 }
             } else {
                 return "Can't write ".NGINX_VHOST_INCLUDE;
