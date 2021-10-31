@@ -206,7 +206,15 @@ class Admin extends Module {
                     break;
                 }
             }
-            Zord::saveConfig('context', $this->resetContext($context));
+            if (in_array($operation, ['create','uodate','delete'])) {
+                $context = $this->resetContext($context);
+                if (is_array($context)) {
+                    Zord::saveConfig('context', $context);
+                } else {
+                    $this->response = 'DATA';
+                    return $this->error(500, $context);
+                }
+            }
         }
         return $this->index('context', $result);
     }
@@ -223,7 +231,13 @@ class Admin extends Module {
             } else {
                 unset($context[$name]['url']);
             }
-            Zord::saveConfig('context', $this->resetContext($context));
+            $context = $this->resetContext($context);
+            if (is_array($context)) {
+                Zord::saveConfig('context', $context);
+            } else {
+                $this->response = 'DATA';
+                return $this->error(500, $context);
+            }
             $result['ctx'] = $name;
             $result['urls'] = $urls;
         }
