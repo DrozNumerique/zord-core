@@ -4,14 +4,17 @@ trait NginxAdmin  {
     
     protected function resetContext($context) {
         if (defined('NGINX_VHOST_INCLUDE')) {
-            $include = $this->serverName($context);
-            $content = file_get_contents(NGINX_VHOST_INCLUDE);
-            if (file_put_contents(NGINX_VHOST_INCLUDE, $include)) {
+            $include = $this->buildInclude($context);
+            if (is_string($include)) {
+                return "Can't build include\n\n$include";
+            }
+            $current = file_get_contents(NGINX_VHOST_INCLUDE);
+            if (file_put_contents(NGINX_VHOST_INCLUDE, implode("\n", $include))) {
                 $output = [];
                 $status = 0;
                 exec("sudo service nginx reload", $output, $status);
                 if ($status !== 0) {
-                    file_put_contents(NGINX_VHOST_INCLUDE, $content);
+                    file_put_contents(NGINX_VHOST_INCLUDE, $current);
                     return "Can't reload nginx config\n\nStatus : $status\nOutput : ".implode("\n", $output);
                 }
             } else {
@@ -21,15 +24,13 @@ trait NginxAdmin  {
         return parent::resetContext($context);
     }
     
-    protected function serverName($context) {
-        $directive = "server_name\n";
+    protected function buildInclude($context) {
         $hosts = [];
         foreach ($context as $entry) {
             foreach ($entry['url'] ?? [] as $url) {
                 $host = $url['host'];
                 if (!in_array($host, $hosts)) {
                     $hosts[] = $host;
-                    $directive .= "\t$host\n";
                 }
             }
         }
@@ -37,10 +38,14 @@ trait NginxAdmin  {
             return "No context host defined";
         }
         if (defined('NGINX_VHOST_SERVER_NAME') && !empty(NGINX_VHOST_SERVER_NAME)) {
-            $directive .= "\t".NGINX_VHOST_SERVER_NAME."\n";
+            $hosts[] = NGINX_VHOST_SERVER_NAME;
         }
-        $directive .= ";";
-        return $directive;
+        $lines = ["server_name"];
+        foreach ($hosts as $host) {
+            $lines[]= "\t$host";
+        }
+        $lines[] = ";";
+        return $lines;
     }
 }
 
