@@ -37,7 +37,7 @@ abstract class ProcessExecutor {
         ]);
         $log = LOGS_FOLDER.$process->class.'-'.Zord::timestamp('Y-m-d-H-i-s').'.log';
         foreach ($entities as $entity) {
-            $content = ProcessExecutor::indent($entity->indent).$entity->message.($entity->newline == 1 ? "\n" : "");
+            $content = ProcessExecutor::indent($entity->indent).$entity->message.($entity->newline == 1 || $entity->over == 1 ? "\n" : "");
             file_put_contents($log, $content, FILE_APPEND);
         }
         (new ProcessHasReportEntity())->delete($pid, [
@@ -99,7 +99,7 @@ abstract class ProcessExecutor {
         }
     }
     
-    public function report($indent = 0, $style = 'default', $message = '', $newline = true, $pad = false) {
+    public function report($indent = 0, $style = 'default', $message = '', $newline = true, $pad = false, $over = false) {
         if ($message instanceof Throwable) {
             $this->report($indent, $style, $message->getMessage());
             foreach (explode("\n", $message->getTraceAsString()) as $trace) {
@@ -107,7 +107,7 @@ abstract class ProcessExecutor {
             }
         } else {
             if ($pad) {
-                $message = Zord::str_pad($message, PROCESS_REPORT_PAD_LENGTH - PROCESS_REPORT_INDENT_LENGTH * $indent, PROCESS_REPORT_PAD_STRING);
+                $message = Zord::str_pad($message, PROCESS_REPORT_PAD_LENGTH - PROCESS_REPORT_INDENT_LENGTH * $indent, $pad === true ? PROCESS_REPORT_PAD_STRING : $pad);
             }
             if ($this->pid) {
                 (new ProcessHasReportEntity())->create([
@@ -116,25 +116,26 @@ abstract class ProcessExecutor {
                     'indent'  => $indent,
                     'style'   => $style,
                     'message' => $message,
-                    'newline' => $newline ? 1 : 0
+                    'newline' => $newline ? 1 : 0,
+                    'over'    => $over ? 1 : 0
                 ]);
                 $this->index++;
             } else {
-                echo self::indent($indent).self::style($style).$message.self::style('default').($newline ? "\n" : "");
+                echo self::indent($indent).self::style($style).$message.self::style('default').($newline ? "\n" : "").($over ? "\r" : "");
             }
         }
     }
     
-    public function info($indent = 0, $message = '', $newline = true, $pad = false) {
-        $this->report($indent, 'info', $message, $newline, $pad);
+    public function info($indent = 0, $message = '', $newline = true, $pad = false, $over = false) {
+        $this->report($indent, 'info', $message, $newline, $pad, $over);
     }
     
-    public function warn($indent = 0, $message = '', $newline = true, $pad = false) {
-        $this->report($indent, 'warn', $message, $newline, $pad);
+    public function warn($indent = 0, $message = '', $newline = true, $pad = false, $over = false) {
+        $this->report($indent, 'warn', $message, $newline, $pad, $over);
     }
     
-    public function error($indent = 0, $message = '', $newline = true, $pad = false) {
-        $this->report($indent, 'error', $message, $newline, $pad);
+    public function error($indent = 0, $message = '', $newline = true, $pad = false, $over = false) {
+        $this->report($indent, 'error', $message, $newline, $pad, $over);
     }
     
     public abstract function execute($parameters = []);

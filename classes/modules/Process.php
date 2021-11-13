@@ -22,7 +22,8 @@ class Process extends Module {
                         'indent'  => $entity->indent,
                         'style'   => $entity->style,
                         'message' => $entity->message,
-                        'newline' => $entity->newline == 1
+                        'newline' => $entity->newline == 1,
+                        'over'    => $entity->over == 1
                     ];
                 }
                 return [

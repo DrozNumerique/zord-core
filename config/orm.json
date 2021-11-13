@@ -142,7 +142,8 @@
 	        "indent",
 	        "style",
 	        "message",
-	        "newline"
+	        "newline",
+	        "over"
         ],
         "key": [
         	"process",
