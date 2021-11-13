@@ -8,11 +8,13 @@
 	],
 	"chosen": {
 		"standard": {
-			"width": "100%"
+			"width": "100%",
+			"inherit_select_classes": true
 		},
 		"no-single": {
 			"width": "100%",
-			"disable_search_threshold": 10
+			"disable_search_threshold": 10,
+			"inherit_select_classes": true
 		}
 	},
 	"states": {
