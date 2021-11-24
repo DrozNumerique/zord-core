@@ -29,7 +29,11 @@ abstract class ProcessExecutor {
     }
     
     public static function stop($pid, $step = 'closed') {
-        $process = (new ProcessEntity())->update($pid, ['step' => $step]);
+        (new ProcessEntity())->update($pid, ['step' => $step]);
+    }
+    
+    public static function clear($pid) {
+        $process = (new ProcessEntity())->retrieve($pid);
         $entities = (new ProcessHasReportEntity())->retrieve([
             'many'  => true,
             'where' => ['process' => $pid],

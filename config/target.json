@@ -124,6 +124,18 @@
 				"pid": "FILTER_SANITIZE_STRING"
 			}
 		},
+		"clear": {
+			"response": "DATA",
+			"parameters": {
+				"pid": "FILTER_SANITIZE_STRING"
+			}
+		},
+		"report": {
+			"response": "DATA",
+			"parameters": {
+				"line": "FILTER_SANITIZE_STRING"
+			}
+		},
 		"kill": {
 			"response": "DATA",
 			"parameters": {

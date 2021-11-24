@@ -107,6 +107,22 @@ var checkProcess = function(pid, offset, callback) {
 	);
 }
 
+var clearProcess = function(pid, offset, callback) {
+	invokeZord(
+		{
+			module:'Process',
+			action:'clear',
+			pid:pid,
+			offset:offset,
+			success:function(result) {
+				if (callback !== undefined && callback !== null) {
+					callback(result);
+				}
+			}
+		}
+	);
+}
+
 var killProcess = function(pid, callback) {
 	invokeZord(
 		{
@@ -120,6 +136,182 @@ var killProcess = function(pid, callback) {
 			}
 		}
 	);
+}
+
+var reportProcess = function(pid, style, indent, message, newline, over, callback) {
+	invokeZord(
+		{
+			module:'Process',
+			action:'report',
+			line: JSON.stringify({
+				process:pid,
+				style:style,
+				indent:indent,
+				message:message,
+				newline:newline,
+				over:over
+			}),
+			success:function(result) {
+				if (callback !== undefined) {
+					callback(result);
+				}
+			}
+		}
+	);
+}
+
+var followProcess = function(params) {
+	if (params.stopped !== undefined && params.stopped !== null) {
+		var stopped = params.stopped;
+		if (stopped()) {
+			if (params.step !== undefined && params.step !== null) {
+				var step = params.step;
+				step.innerHTML = LOCALE.process.stopped;
+			}
+			if (params.wait !== undefined && params.wait !== null) {
+				var wait = params.wait;
+				if (wait.style.display == 'block') {
+					wait.style.display = 'none';
+				}
+			}
+			if (params.report !== undefined && params.report !== null) {
+				var report = params.report;
+				var lines = [['info',''],['error',LOCALE.process.stopped],['info','']];
+				[].forEach.call(lines, function(line) {
+					reportProcess(params.process, line[0], 0, line[1], true, false);
+				});
+				checkProcess(params.process, params.offset, function(result) {
+					[].forEach.call(result.report, function(line) {
+						reportLine(report, line.style, line.indent, line.message, line.newline, line.over);
+					});
+				});
+			}
+			clearProcess(params.process, params.clear);
+			return;
+		}
+	}
+	checkProcess(params.process, params.offset, function(result) {
+		if (result.error !== undefined) {
+			alert(result.error);
+			if (params.error !== undefined && params.error !== null) {
+				var error = params.error;
+				error(result);
+			}
+		} else {
+			var report = params.report;
+			if (report !== undefined && report !== null) {
+				[].forEach.call(result.report, function(line) {
+					reportLine(report, line.style, line.indent, line.message, line.newline, line.over);
+				});
+			}
+			var step = params.step;
+			if (step !== undefined && step !== null) {
+				if (result.step == 'closed') {
+					step.innerHTML = LOCALE.process.closed;
+				} else if (result.step == 'init') {
+					step.innerHTML = LOCALE.process.init;
+				} else {
+					step.innerHTML = result.step;
+				}
+			}
+			var progress = params.progress;
+			if (progress !== undefined && progress !== null) {
+				progress.style = 'width:' + result.progress + '%;';
+				if (result.progress > 3) {
+					progress.innerHTML = result.progress + '%';
+				}
+			}
+			if (params.follow !== undefined && params.follow !== null) {
+				var follow = params.follow;
+				follow(result);
+			}
+			params.offset = params.offset + result.report.length;
+			if (result.step !== 'closed') {
+				setTimeout(followProcess, params.period, params);
+			} else {	
+				if (params.wait !== undefined && params.wait !== null) {
+					var wait = params.wait;
+					wait.style.display = 'none';
+				}
+				if (params.closed !== undefined && params.closed !== null) {
+					var closed = params.closed;
+					closed();
+				}
+				if (report !== undefined && report !== null) {
+					reportLine(report, 'info', 0, '', true, false);
+				}
+				clearProcess(params.process, params.clear);
+			}
+		}
+	});
+}
+	
+var reportLine = function(report, style, indent, message, newline, over) {
+	span = document.createElement("span");
+	span.classList.add(style);
+	span.style.paddingLeft = (indent * 2) + "em";
+	span.innerHTML = message;
+	spinner = report.querySelector('.spinner');
+	if (report.dataset.over == 'true') {
+		if (spinner) {
+			report.removeChild(report.lastElementChild.previousElementSibling);
+	    } else {
+			report.removeChild(report.lastElementChild);
+		}
+	}
+	if (spinner) {
+		report.insertBefore(span, spinner);
+	} else {
+		report.appendChild(span);
+	}
+	report.dataset.over = over ? 'true' : 'false';
+	if (newline) {
+		var br = document.createElement("br");
+		if (spinner) {
+			report.insertBefore(br, spinner);
+		} else {
+			report.appendChild(br);
+		}
+	}
+	report.scrollTop = report.scrollHeight - report.clientHeight;
+}
+	
+var resetProcess = function(widgets, displayReport) {
+	var notify = widgets.notify;
+	var step = widgets.step;
+	var progress = widgets.progress;
+	var report = widgets.report;
+	var wait = widgets.wait;
+	if (notify !== undefined && notify !== null) {
+		notify.style.display = 'block';
+	}
+	if (step !== undefined && step !== null) {
+		step.innerHTML = '&nbsp;';
+	}
+	if (progress !== undefined && progress !== null) {
+		progress.style = 'width:0;';
+		progress.innerHTML = '';
+	}
+	if (report !== undefined && report !== null) {
+		if (displayReport) { 
+			elements = report.querySelectorAll('span,br');
+			if (elements) {
+				[].forEach.call(elements, function(element) {
+					element.parentNode.removeChild(element);
+				});
+			}
+	   		report.style.display = 'block';
+		} else {
+   			report.style.display = 'none';
+		}
+	}
+	if (wait !== undefined && wait !== null) {
+		if (displayReport) { 
+	   		wait.style.display = 'block';
+		} else {
+			wait.style.display = 'none';
+		}
+	}
 }
 
 var setSessionProperties = function(zord) {

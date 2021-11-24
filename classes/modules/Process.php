@@ -36,8 +36,40 @@ class Process extends Module {
         return ['error' => 'Unknow process '.$pid];
     }
     
+    public function clear() {
+        $pid = $this->params['pid'] ?? null;
+        $clear = false;
+        if (isset($pid)) {
+            ProcessExecutor::clear($pid);
+            $clear = true;
+        }
+        return ['clear' => $clear];
+    }
+    
+    public function report() {
+        $line = $this->params['line'] ?? null;
+        $report = false;
+        if (isset($line)) {
+            $line = json_decode($line, true);
+            if (!empty($line) && isset($line['process'])) {
+                $entities = (new ProcessHasReportEntity())->retrieve([
+                    'many'  => true,
+                    'where' => ['process' => $line['process']],
+                    'order' => ['desc' => 'index']
+                ]);
+                foreach ($entities as $last) {
+                    break;
+                }
+                $line['index'] = $last->index + 1;
+                (new ProcessHasReportEntity())->create($line);
+                $report = true;
+            }
+        }
+        return ['report' => $report];
+    }
+    
     public function kill() {
-        $pid = isset($this->params['pid']) ? $this->params['pid'] : null;
+        $pid = $this->params['pid'] ?? null;
         if ($pid) {
             $entity = (new ProcessEntity())->retrieve($pid);
             if ($entity) {

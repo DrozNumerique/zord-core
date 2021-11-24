@@ -39,57 +39,6 @@ function dress(element) {
 	});
 	activateStates(element);
 }
-	
-function reportLine(report, style, indent, message, newline, over) {
-	span = document.createElement("span");
-	span.classList.add(style);
-	span.style.paddingLeft = (indent * 2) + "em";
-	span.innerHTML = message;
-	spinner = report.querySelector('.spinner');
-	if (report.dataset.over == 'true') {
-		report.removeChild(report.lastElementChild);
-	}
-	if (spinner) {
-		report.insertBefore(span, spinner);
-	} else {
-		report.appendChild(span);
-	}
-	report.dataset.over = over ? 'true' : 'false';
-	if (newline) {
-		var br = document.createElement("br");
-		if (spinner) {
-			report.insertBefore(br, spinner);
-		} else {
-			report.appendChild(br);
-		}
-	}
-	report.scrollTop = report.scrollHeight - report.clientHeight;
-}
-
-function followProcess(params) {
-	if (params.stopped !== undefined && params.stopped !== null) {
-		var stopped = params.stopped;
-		if (stopped()) {
-			return;
-		}
-	}
-	checkProcess(params.process, params.offset, function(result) {
-		if (result.error !== undefined && params.error !== undefined && params.error !== null) {
-			var error = params.error;
-			error(result);
-		} else if (params.follow !== undefined && params.follow !== null) {
-			var follow = params.follow;
-			follow(result);
-			params.offset = params.offset + result.report.length;
-			if (result.step !== 'closed') {
-				setTimeout(followProcess, params.period, params);
-			} else if (params.closed !== undefined && params.closed !== null) {
-				var closed = params.closed;
-				closed();
-			}
-		}
-	});
-}
 
 
 document.addEventListener("DOMContentLoaded", function(event) {
