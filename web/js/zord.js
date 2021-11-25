@@ -161,21 +161,48 @@ var reportProcess = function(pid, style, indent, message, newline, over, callbac
 }
 
 var followProcess = function(params) {
-	if (params.stopped !== undefined && params.stopped !== null) {
-		var stopped = params.stopped;
-		if (stopped()) {
-			if (params.step !== undefined && params.step !== null) {
-				var step = params.step;
+	var report = null;
+	var step = null;
+	var progress = null;
+	var wait = null;
+	var start = null;
+	var stop = null;
+	if (params.offset == undefined || params.offset == null) {
+		params.offset = 0;
+	}
+	if (params.controls !== undefined && params.controls !== null) {
+		var controls = params.controls;
+		if (controls.report !== undefined && controls.report !== null) {
+			report = controls.report;
+		}
+		if (controls.step !== undefined && controls.step !== null) {
+			step = controls.step;
+		}
+		if (controls.progress !== undefined && controls.progress !== null) {
+			progress = controls.progress;
+		}
+		if (controls.wait !== undefined && controls.wait !== null) {
+			wait = controls.wait;
+		}
+		if (controls.start !== undefined && controls.start !== null) {
+			start = controls.start;
+		}
+		if (controls.stop !== undefined && controls.stop !== null) {
+			stop = controls.stop;
+		}
+	}
+	if (params.killed !== undefined && params.killed !== null) {
+		var killed = params.killed;
+		if (killed()) {
+			if (step !== undefined && step !== null) {
 				step.innerHTML = LOCALE.process.stopped;
 			}
-			if (params.wait !== undefined && params.wait !== null) {
-				var wait = params.wait;
+			if (wait !== undefined && wait !== null) {
 				if (wait.style.display == 'block') {
 					wait.style.display = 'none';
 				}
 			}
-			if (params.report !== undefined && params.report !== null) {
-				var report = params.report;
+			if (report !== undefined && report !== null) {
 				var lines = [['info',''],['error',LOCALE.process.stopped],['info','']];
 				[].forEach.call(lines, function(line) {
 					reportProcess(params.process, line[0], 0, line[1], true, false);
@@ -198,13 +225,11 @@ var followProcess = function(params) {
 				error(result);
 			}
 		} else {
-			var report = params.report;
 			if (report !== undefined && report !== null) {
 				[].forEach.call(result.report, function(line) {
 					reportLine(report, line.style, line.indent, line.message, line.newline, line.over);
 				});
 			}
-			var step = params.step;
 			if (step !== undefined && step !== null) {
 				if (result.step == 'closed') {
 					step.innerHTML = LOCALE.process.closed;
@@ -214,7 +239,6 @@ var followProcess = function(params) {
 					step.innerHTML = result.step;
 				}
 			}
-			var progress = params.progress;
 			if (progress !== undefined && progress !== null) {
 				progress.style = 'width:' + result.progress + '%;';
 				if (result.progress > 3) {
@@ -229,21 +253,96 @@ var followProcess = function(params) {
 			if (result.step !== 'closed') {
 				setTimeout(followProcess, params.period, params);
 			} else {	
-				if (params.wait !== undefined && params.wait !== null) {
-					var wait = params.wait;
+				if (wait !== undefined && wait !== null) {
 					wait.style.display = 'none';
 				}
-				if (params.closed !== undefined && params.closed !== null) {
-					var closed = params.closed;
-					closed();
+				if (start !== undefined && start !== null) {
+					start.style.display = 'inline';
+				}
+				if (stop !== undefined && stop !== null) {
+				    stop.style.display = 'none';
 				}
 				if (report !== undefined && report !== null) {
 					reportLine(report, 'info', 0, '', true, false);
 				}
 				clearProcess(params.process, params.clear);
+				var close = params.close;
+				if (close !== undefined && close !== null) {
+					close();
+				}
 			}
 		}
 	});
+}
+	
+var resetProcess = function(follow, process) {
+	var notify = null;
+	var step = null;
+	var progress = null;
+	var report = null;
+	var wait = null;
+	var start = null;
+	var stop = null;
+	var controls = follow.controls;
+	var starting = process !== undefined && process !== null;
+	if (controls !== undefined && controls !== null) {
+		notify = controls.notify;
+		step = controls.step;
+		progress = controls.progress;
+		report = controls.report;
+		wait = controls.wait;
+		start = controls.start;
+		stop = controls.stop;
+	}
+	if (start !== undefined && start !== null) {
+		if (starting) {
+			start.style.display = 'none';
+		} else {
+			start.style.display = 'inline';
+		} 
+	}
+	if (stop !== undefined && stop !== null) {
+		if (starting) {
+			stop.style.display = 'inline';
+		} else {
+			stop.style.display = 'none';
+		}
+	}
+	if (notify !== undefined && notify !== null) {
+		notify.style.display = 'block';
+	}
+	if (step !== undefined && step !== null) {
+		step.innerHTML = '&nbsp;';
+	}
+	if (progress !== undefined && progress !== null) {
+		progress.style = 'width:0;';
+		progress.innerHTML = '';
+	}
+	if (report !== undefined && report !== null) {
+		if (starting) { 
+			elements = report.querySelectorAll('span,br');
+			if (elements) {
+				[].forEach.call(elements, function(element) {
+					element.parentNode.removeChild(element);
+				});
+			}
+	   		report.style.display = 'block';
+		} else {
+   			report.style.display = 'none';
+		}
+	}
+	if (wait !== undefined && wait !== null) {
+		if (starting) { 
+	   		wait.style.display = 'block';
+		} else {
+			wait.style.display = 'none';
+		}
+	}
+	if (starting) {
+		follow.process = process;
+		follow.offset  = 0;
+	}
+	return follow;
 }
 	
 var reportLine = function(report, style, indent, message, newline, over) {
@@ -274,44 +373,6 @@ var reportLine = function(report, style, indent, message, newline, over) {
 		}
 	}
 	report.scrollTop = report.scrollHeight - report.clientHeight;
-}
-	
-var resetProcess = function(widgets, displayReport) {
-	var notify = widgets.notify;
-	var step = widgets.step;
-	var progress = widgets.progress;
-	var report = widgets.report;
-	var wait = widgets.wait;
-	if (notify !== undefined && notify !== null) {
-		notify.style.display = 'block';
-	}
-	if (step !== undefined && step !== null) {
-		step.innerHTML = '&nbsp;';
-	}
-	if (progress !== undefined && progress !== null) {
-		progress.style = 'width:0;';
-		progress.innerHTML = '';
-	}
-	if (report !== undefined && report !== null) {
-		if (displayReport) { 
-			elements = report.querySelectorAll('span,br');
-			if (elements) {
-				[].forEach.call(elements, function(element) {
-					element.parentNode.removeChild(element);
-				});
-			}
-	   		report.style.display = 'block';
-		} else {
-   			report.style.display = 'none';
-		}
-	}
-	if (wait !== undefined && wait !== null) {
-		if (displayReport) { 
-	   		wait.style.display = 'block';
-		} else {
-			wait.style.display = 'none';
-		}
-	}
 }
 
 var setSessionProperties = function(zord) {
