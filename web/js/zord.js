@@ -160,18 +160,18 @@ var reportProcess = function(pid, style, indent, message, newline, over, callbac
 	);
 }
 
-var followProcess = function(params) {
+var followProcess = function(follow) {
 	var report = null;
 	var step = null;
 	var progress = null;
 	var wait = null;
 	var start = null;
 	var stop = null;
-	if (params.offset == undefined || params.offset == null) {
-		params.offset = 0;
+	if (follow.offset == undefined || follow.offset == null) {
+		follow.offset = 0;
 	}
-	if (params.controls !== undefined && params.controls !== null) {
-		var controls = params.controls;
+	if (follow.controls !== undefined && follow.controls !== null) {
+		var controls = follow.controls;
 		if (controls.report !== undefined && controls.report !== null) {
 			report = controls.report;
 		}
@@ -191,37 +191,39 @@ var followProcess = function(params) {
 			stop = controls.stop;
 		}
 	}
-	if (params.killed !== undefined && params.killed !== null) {
-		var killed = params.killed;
-		if (killed()) {
-			if (step !== undefined && step !== null) {
-				step.innerHTML = LOCALE.process.stopped;
-			}
-			if (wait !== undefined && wait !== null) {
-				if (wait.style.display == 'block') {
-					wait.style.display = 'none';
-				}
-			}
-			if (report !== undefined && report !== null) {
-				var lines = [['info',''],['error',LOCALE.process.stopped],['info','']];
-				[].forEach.call(lines, function(line) {
-					reportProcess(params.process, line[0], 0, line[1], true, false);
-				});
-				checkProcess(params.process, params.offset, function(result) {
-					[].forEach.call(result.report, function(line) {
-						reportLine(report, line.style, line.indent, line.message, line.newline, line.over);
-					});
-				});
-			}
-			clearProcess(params.process, params.clear);
-			return;
+	var process = getProcess(follow);
+	if (process == undefined || process == null) {
+		if (step !== undefined && step !== null) {
+			step.innerHTML = LOCALE.process.stopped;
 		}
+		if (wait !== undefined && wait !== null) {
+			if (wait.style.display == 'block') {
+				wait.style.display = 'none';
+			}
+		}
+		if (report !== undefined && report !== null) {
+			var lines = [['info',''],['error',LOCALE.process.stopped],['info','']];
+			[].forEach.call(lines, function(line) {
+				reportProcess(follow.process, line[0], 0, line[1], true, false);
+			});
+			checkProcess(follow.process, follow.offset, function(result) {
+				[].forEach.call(result.report, function(line) {
+					reportLine(report, line.style, line.indent, line.message, line.newline, line.over);
+				});
+			});
+		}
+		clearProcess(follow.process, follow.clear);
+		if (follow.killed !== undefined && follow.killed !== null) {
+			var killed = follow.killed;
+			killed();
+		}
+		return;
 	}
-	checkProcess(params.process, params.offset, function(result) {
+	checkProcess(follow.process, follow.offset, function(result) {
 		if (result.error !== undefined) {
 			alert(result.error);
-			if (params.error !== undefined && params.error !== null) {
-				var error = params.error;
+			if (follow.error !== undefined && follow.error !== null) {
+				var error = follow.error;
 				error(result);
 			}
 		} else {
@@ -241,17 +243,11 @@ var followProcess = function(params) {
 			}
 			if (progress !== undefined && progress !== null) {
 				progress.style = 'width:' + result.progress + '%;';
-				if (result.progress > 3) {
-					progress.innerHTML = result.progress + '%';
-				}
+				progress.innerHTML = result.percent > 3 ? result.percent + '%' : '';
 			}
-			if (params.follow !== undefined && params.follow !== null) {
-				var follow = params.follow;
-				follow(result);
-			}
-			params.offset = params.offset + result.report.length;
+			follow.offset = follow.offset + result.report.length;
 			if (result.step !== 'closed') {
-				setTimeout(followProcess, params.period, params);
+				setTimeout(followProcess, follow.period, follow);
 			} else {	
 				if (wait !== undefined && wait !== null) {
 					wait.style.display = 'none';
@@ -265,11 +261,12 @@ var followProcess = function(params) {
 				if (report !== undefined && report !== null) {
 					reportLine(report, 'info', 0, '', true, false);
 				}
-				clearProcess(params.process, params.clear);
-				var close = params.close;
+				clearProcess(follow.process, follow.clear);
+				var close = follow.close;
 				if (close !== undefined && close !== null) {
 					close();
 				}
+				setProcess(follow, null);
 			}
 		}
 	});
@@ -339,10 +336,42 @@ var resetProcess = function(follow, process) {
 		}
 	}
 	if (starting) {
+		setProcess(follow, process);
 		follow.process = process;
 		follow.offset  = 0;
 	}
 	return follow;
+}
+
+var getProcess = function(follow) {
+	var key = 'process.' + follow.name;
+	return getSessionProperty(key, null);
+}
+
+var setProcess = function(follow, pid) {
+	var key = 'process.' + follow.name;
+	setSessionProperty(key, pid);
+}
+
+var handleProcess = function(params, follow) {
+	var pid = getProcess(follow);
+	if (pid == undefined || pid == null) {
+		params.success = function(result) {
+			follow = resetProcess(follow, result);
+			setTimeout(followProcess(follow), 200);
+		};
+		invokeZord(params);
+	} else {
+		var controls = follow.controls;
+		if (follow.controls !== undefined && follow.controls !== null) {
+			resetProcess({controls: {
+				start: controls.start,
+				stop : controls.stop
+			}});
+		}
+		killProcess(pid);
+		setProcess(follow, null);
+	}
 }
 	
 var reportLine = function(report, style, indent, message, newline, over) {
