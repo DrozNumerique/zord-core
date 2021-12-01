@@ -82,7 +82,7 @@ window.$dialog = (function(undefined) {
 	};
 
 	var dialog = {
-		hide : function() {
+		hide : function(callback) {
 			setTimeout(function() {
 				var dialogEl = document.getElementById(dialogID);
 				if(dialogEl)
@@ -90,11 +90,14 @@ window.$dialog = (function(undefined) {
 				var dialogModalEl = document.getElementById(dialogModalID);
 				if(dialogModalEl)
 					dialogModalEl.parentNode.removeChild( dialogModalEl );
+				if (callback !== undefined && callback !== null) {
+					callback();
+				}
 			},20);
 		},
-		hideDelay: function() {
+		hideDelay: function(callback) {
 			setTimeout(function() {
-				dialog.hide();
+				dialog.hide(callback);
 			},350);
 		},
 		box : function(msg,callback) {
@@ -106,11 +109,11 @@ window.$dialog = (function(undefined) {
 		wait : function(callback) {
 			show('<div class="dialog-wait"></div>','box',true,callback);
 		},
-		help : function(element) {
+		help : function(element, callback) {
 			show(document.getElementById('template_dialog_help').innerHTML, 'box', true, function(dialogEl) {
 				dialogEl.querySelector('div[data-id="content"]').innerHTML = element.firstElementChild.innerHTML;
 				dialogEl.querySelector('button[data-id="dialog_help_close"]').addEventListener("click", function(event) {
-					$dialog.hide();
+					$dialog.hide(callback);
 				});
 			});
 		}
