@@ -6,8 +6,8 @@
            			<br/>
            			<br/>
 <?php } ?>
-<?php $this->render('search'); ?>
-<?php $this->render('pagination'); ?>
+<?php $this->render('/portal/widget/admin/search'); ?>
+<?php $this->render('/portal/widget/admin/pagination'); ?>
    					<ul class="admin-list" id="account" data-columns="210px,210px,210px">
    						<li class="header">
            					<div class="column"><?php echo $locale->tab->users->login; ?></div>

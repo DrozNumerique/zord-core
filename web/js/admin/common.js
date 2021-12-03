@@ -61,6 +61,69 @@ document.addEventListener("DOMContentLoaded", function(event) {
 			});
 		});
 	});
+	
+	[].forEach.call(document.querySelectorAll('#pagination li.cursor'), function(cursor) {
+		cursor.addEventListener('click', function(event) {
+			controls = cursor.parentNode;
+			data = controls.dataset;
+			offset = Number.parseInt(data.offset);
+			limit  = Number.parseInt(data.limit);
+			count  = Number.parseInt(data.count);
+			if (cursor.classList.contains('previous') && offset - limit >= 0) {
+				offset -= limit;
+			}
+			if (cursor.classList.contains('next') && offset + limit < count) {
+				offset += limit;
+			}
+			if (offset !== Number.parseInt(data.offset)) {
+				lookup = document.querySelector('#lookup input');
+				keyword = lookup ? lookup.value : '';
+				current = cursor.parentNode.dataset.tab;
+				invokeZord({
+					module:'Admin',
+					action:'index',
+					tab:current,
+					operation:'list',
+					offset:offset,
+					keyword:keyword.trim()
+				});
+			}
+		});
+	});
+	
+	[].forEach.call(document.querySelectorAll('#pagination li.index select'), function(index) {
+		index.addEventListener('change', function(event) {
+			lookup = document.querySelector('#lookup input');
+			keyword = lookup ? lookup.value : '';
+			current = index.parentNode.parentNode.dataset.tab;
+			invokeZord({
+				module:'Admin',
+				action:'index',
+				tab:current,
+				operation:'list',
+				offset:index.value,
+				keyword:keyword.trim()
+			});
+		});
+	});
+	
+	[].forEach.call(document.querySelectorAll('#lookup i'), function(button) {
+		button.addEventListener('click', function(event) {
+			keyword = button.previousElementSibling.value;
+			current = button.parentNode.dataset.tab;
+			if (keyword == undefined || keyword == null) {
+				keyword = '';
+			}
+			invokeZord({
+				module:'Admin',
+				action:'index',
+				tab:current,
+				operation:'list',
+				offset:0,
+				keyword:keyword.trim()
+			});
+		});
+	});
 
 	dress(document);
 	

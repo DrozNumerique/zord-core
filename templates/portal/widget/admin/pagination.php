@@ -1,4 +1,4 @@
-                    <ul id="pagination" data-count="<?php echo $models['count']; ?>" data-limit="<?php echo $models['limit']; ?>" data-offset="<?php echo $models['offset']; ?>">
+                    <ul id="pagination" data-tab="<?php echo $models['current'] ?>" data-count="<?php echo $models['count']; ?>" data-limit="<?php echo $models['limit']; ?>" data-offset="<?php echo $models['offset']; ?>">
                     	<li class="cursor previous">
                     		<span><?php echo $locale->tab->users->previous; ?></span>
                     	</li>
