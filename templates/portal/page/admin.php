@@ -5,7 +5,7 @@
         <span data-tab="<?php echo $name; ?>" class="admin-menu-entry<?php if ($current == $name) echo ' admin-menu-entry-selected'; ?>"><?php echo $locale->menu->$name; ?></span>
 <?php } ?>
     </div>
-    <div id="panel" class="admin-panel">
+    <div id="panel" class="admin-panel" data-tab="<?php echo $current; ?>">
         <div class="admin-tab">
             <div class="admin-panel-title"><?php echo $locale->tab->$current->title; ?></div>
             <div class="admin-panel-content <?php echo $current; ?>">

@@ -6,7 +6,7 @@
            			<br/>
            			<br/>
 <?php } ?>
-<?php $this->render('/portal/widget/admin/search'); ?>
+<?php $this->render('/portal/widget/admin/lookup'); ?>
 <?php $this->render('/portal/widget/admin/pagination'); ?>
    					<ul class="admin-list" id="account" data-columns="210px,210px,210px">
    						<li class="header">
