@@ -37,8 +37,7 @@
 				"to": "To",
 				"activation": "Activation link "
 			},
-			"previous": "Previous",
-			"next": "Next"
+			"keyword": "Login, name, email..."
 		},
 		"content": {
 			"title": "Contents edition",
@@ -55,5 +54,9 @@
 		"update": "Update",
 		"add": "Add",
 		"remove": "Remove"
+	},
+	"pagination": {
+		"previous": "Previous",
+		"next": "Next"
 	}
 }

@@ -40,8 +40,7 @@
 				"to": "Destinataire",
 				"activation": "Lien d'activation"
 			},
-			"previous": "Précédents",
-			"next": "Suivants"
+			"keyword": "Identifiant, nom, courriel..."
 		},
 		"content": {
 			"title": "Édition de contenus",
@@ -58,5 +57,9 @@
 		"update": "Modifier",
 		"add": "Ajouter",
 		"remove": "Enlever"
+	},
+	"pagination": {
+		"previous": "Précédents",
+		"next": "Suivants"
 	}
 }

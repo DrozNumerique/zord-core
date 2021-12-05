@@ -1,6 +1,6 @@
                     <ul id="pagination" data-count="<?php echo $models['count']; ?>" data-limit="<?php echo $models['limit']; ?>" data-offset="<?php echo $models['offset']; ?>">
                     	<li class="cursor previous">
-                    		<span><?php echo $locale->tab->users->previous; ?></span>
+                    		<span><?php echo $locale->pagination->previous; ?></span>
                     	</li>
                     	<li class="index">
                     		<select>
@@ -10,6 +10,6 @@
 							</select>
 						</li>
                     	<li class="cursor next">
-                    		<span><?php echo $locale->tab->users->next; ?></span>
+                    		<span><?php echo $locale->pagination->next; ?></span>
                     	</li>
                     </ul>
