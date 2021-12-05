@@ -58,6 +58,17 @@ function getProfile() {
 	
 document.addEventListener("DOMContentLoaded", function(event) {
 
+	window.extras.users = function() {
+		return {
+			operation:'list',
+			outer:'users',
+			keyword:document.querySelector('#lookup .keyword input').value.trim(),
+			success: function(result) {
+				adjust(document.getElementById('users'));	
+			}
+		};
+	};
+
 	attach(['profile','notify'], function(entry, operation) {
 		var data = {
 			login:entry.parentNode.children[0].firstElementChild.value,

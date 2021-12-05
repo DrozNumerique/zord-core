@@ -184,6 +184,11 @@
 				"urls": "FILTER_SANITIZE_STRING"
 			}
 		},
+		"users": {
+			"parameters": {
+				"keyword": "FILTER_SANITIZE_STRING"
+			}
+		},
 		"content": {
 			"response": "DATA",
 			"parameters": {

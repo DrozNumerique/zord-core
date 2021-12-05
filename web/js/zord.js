@@ -8,7 +8,9 @@ var invokeZord = function(params) {
 	var uploading = params.uploading == undefined ? null : params.uploading;
 	var uploaded = params.uploaded == undefined ? null : params.uploaded;
 	var success = params.success == undefined ? null : params.success;
-	var failure  = params.failure  == undefined ? null : params.failure;
+	var failure  = params.failure == undefined ? null : params.failure;
+	var inner  = params.inner == undefined ? null : params.inner;
+	var outer  = params.outer == undefined ? null : params.outer;
 	var target = BASEURL['zord'] + '/index.php';
 	
 	if (before !== null) {
@@ -51,11 +53,18 @@ var invokeZord = function(params) {
 						success(JSON.parse(this.responseText));
 					}
 				} else if (type.startsWith('text/html')) {
-					if (success !== null) {
-						success(this.responseText);
-					} else {
+					if (success == null && inner == null && outer == null) {
 						document.write(this.responseText);
 						document.close();
+					} else {
+						if (inner !== null) {
+							document.getElementById(inner).innerHTML = this.responseText;
+						} else if (outer !== null) {
+							document.getElementById(outer).outerHTML = this.responseText;
+						}
+						if (success !== null) {
+							success(this.responseText);
+						}
 					}
 				} else if (type.startsWith('download/error')) {
 					var error = JSON.parse(this.responseText);

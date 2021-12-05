@@ -277,6 +277,10 @@ class Admin extends Module {
         return '';
     }
     
+    public function users() {
+        return $this->view('/portal/page/admin/users/list/items', $this->dataUsers(), 'text/html;charset=UTF-8', false, false);
+    }
+    
     protected function usersCriteria($keyword) {
         if (isset($keyword)) {
             $match = '%'.$keyword.'%';
@@ -286,6 +290,25 @@ class Admin extends Module {
             ]];
         }
         return [null, null];
+    }
+    
+    protected function dataUsers() {
+        $limit = Zord::value('admin', ['users','limit']);
+        $offset = $this->params['offset'] ?? 0;
+        $keyword = $this->params['keyword'] ?? null;
+        list($join, $where) = $this->usersCriteria($keyword);
+        $criteria = ['many' => true, 'join' => $join, 'where' => $where];
+        $count = (new UserEntity())->retrieve($criteria)->count();
+        $criteria['limit']  = $limit;
+        $criteria['offset'] = $offset;
+        $users = (new UserEntity())->retrieve($criteria);
+        return [
+            'count'   => $count,
+            'limit'   => $limit,
+            'offset'  => $offset,
+            'keyword' => $keyword,
+            'users'   => $users
+        ];
     }
     
     protected function prepareIndex($current, $models) {
@@ -300,20 +323,7 @@ class Admin extends Module {
                 }
             }
         } else if ($current == 'users') {
-            $limit = Zord::value('admin', ['users','limit']);
-            $offset = $this->params['offset'] ?? 0;
-            $keyword = $this->params['keyword'] ?? null;
-            list($join, $where) = $this->usersCriteria($keyword);
-            $criteria = ['many' => true, 'join' => $join, 'where' => $where];
-            $count = (new UserEntity())->retrieve($criteria)->count();
-            $criteria['limit']  = $limit;
-            $criteria['offset'] = $offset;
-            $users = (new UserEntity())->retrieve($criteria);
-            $models['count']    = $count;
-            $models['limit']    = $limit;
-            $models['offset']   = $offset;
-            $models['keyword']  = $keyword;
-            $models['users']    = $users;
+            $models = Zord::array_merge($models, $this->dataUsers());
         }
         return $models;
     }

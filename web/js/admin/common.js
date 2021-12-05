@@ -40,28 +40,32 @@ function dress(element) {
 	activateStates(element);
 }
 
-window.extras = {
-	users: function() {
-		return {
-			operation:'list',
-			keyword:document.querySelector('#lookup .keyword input').value.trim()
-		};
-	}
-};
+window.extras = {};
 
 function list(offset) {
 	var tab = document.getElementById('panel').dataset.tab;
 	var params = {
 		module:'Admin',
-		action:'index',
-		tab:tab,
-		offset:offset
+		action:tab,
+		offset:offset,
+		success: function(result) {
+			
+		}
 	}
 	if (window.extras[tab] !== undefined) {
 		var extras = window.extras[tab];
 		params = Object.assign(params, extras());
 	}
 	invokeZord(params);
+}
+
+function adjust(list) {
+	var widths = list.getAttribute('data-columns').split(',');
+	[].forEach.call(list.querySelectorAll('li'), function(line) {
+		[].forEach.call(line.querySelectorAll('.column'), function(column, index) {
+			column.style = "width:" + widths[index];
+		});
+	});
 }
 
 document.addEventListener("DOMContentLoaded", function(event) {
@@ -77,12 +81,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	});
 
 	[].forEach.call(document.querySelectorAll('.admin-list'), function(list) {
-		var widths = list.getAttribute('data-columns').split(',');
-		[].forEach.call(list.querySelectorAll('li'), function(line) {
-			[].forEach.call(line.querySelectorAll('.column'), function(column, index) {
-				column.style = "width:" + widths[index];
-			});
-		});
+		adjust(list);
 	});
 	
 	var pagination = document.getElementById('pagination');
