@@ -241,7 +241,8 @@
 }
 
 .admin-list li div input,
-.admin-list li div select {
+.admin-list li div select,
+.admin-list li div i {
 	appearance: none;
     -moz-appearance: none;
     -webkit-appearance: none;
@@ -250,7 +251,6 @@
 	width:-webkit-fill-available;
     height: 2em;
 	font-size:1em;
-	color:black;
 	background:white;
 	border:1px solid gray;
 	border-radius: 3px;
@@ -278,9 +278,12 @@
 .admin-list li div.add,
 .admin-list li div.remove {
 	width:30px;
-	padding-top:8px;
-	font-size:1em;
 	color:lightgrey;
+}
+
+.admin-list li div i {
+	padding-top: 7px;
+	height: 23px;
 }
 
 .admin-list li div.add {

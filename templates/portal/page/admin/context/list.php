@@ -1,13 +1,9 @@
 				<div align="center">
-   					<ul class="admin-list" id="context" data-columns="200px,300px">
+   					<ul class="admin-list" id="context" data-columns="200px,300px,97px">
    						<li class="header">
            					<div class="column"><?php echo $locale->tab->context->name; ?></div>
            					<div class="column"><?php echo $locale->tab->context->label; ?></div>
-<?php if ($user->isManager()) { ?>
-           					<div class="blank"></div>
-           					<div class="blank"></div>
-<?php } ?>
-           					<div class="blank"></div>
+           					<div class="column"><?php echo $locale->list->action; ?></div>
        					</li>
 <?php if ($user->isManager()) { ?>
        					<li>
