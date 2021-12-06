@@ -4,7 +4,7 @@
              				<div class="column"><?php echo $locale->tab->users->ip; ?></div>
              				<div class="column"><?php echo $locale->tab->users->mask; ?></div>
              				<div class="column">+/-</div>
-             				<div class="add"><i class="fa fa-plus fa-fw" title="<?php echo $locale->list->add; ?>"></i></div>
+             				<div class="add"><a class="fa fa-plus fa-fw" title="<?php echo $locale->list->add; ?>"></a></div>
          				</li>
          				<li class="hidden">
              				<div class="column">
@@ -48,7 +48,7 @@
              				<div class="column"><?php echo $locale->tab->users->ip; ?></div>
              				<div class="column"><?php echo $locale->tab->users->mask; ?></div>
              				<div class="column">+/-</div>
-             				<div class="add"><i class="fa fa-plus fa-fw" title="<?php echo $locale->list->add; ?>"></i></div>
+             				<div class="add"><a class="fa fa-plus fa-fw" title="<?php echo $locale->list->add; ?>"></a></div>
          				</li>
          				<li class="hidden">
              				<div class="column">
