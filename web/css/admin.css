@@ -381,6 +381,10 @@
 	cursor: pointer;
 }
 
+#pagination li.index select {
+	max-width: 500px;
+}
+
 #roles.admin-list {
 	width: 730px;
 }

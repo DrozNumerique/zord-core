@@ -189,6 +189,11 @@
 				"keyword": "FILTER_SANITIZE_STRING"
 			}
 		},
+		"paginate": {
+			"parameters": {
+				"type": "FILTER_SANITIZE_STRING"
+			}
+		},
 		"content": {
 			"response": "DATA",
 			"parameters": {

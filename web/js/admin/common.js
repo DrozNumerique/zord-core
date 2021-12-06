@@ -48,8 +48,16 @@ function list(offset) {
 		module:'Admin',
 		action:tab,
 		offset:offset,
-		success: function(result) {
-			
+		after: function() {
+			invokeZord({
+				module:'Admin',
+				action:'paginate',
+				type:tab,
+				outer:'pagination',
+				after:function() {
+					paginate();
+				}
+			});
 		}
 	}
 	if (window.extras[tab] !== undefined) {
@@ -68,22 +76,7 @@ function adjust(list) {
 	});
 }
 
-document.addEventListener("DOMContentLoaded", function(event) {
-	
-	[].forEach.call(document.querySelectorAll('.admin-menu-entry'), function(entry) {
-		entry.addEventListener("click", function(event) {
-			invokeZord({
-				module:'Admin',
-				action:'index',
-				tab:entry.getAttribute('data-tab')
-			});
-		});
-	});
-
-	[].forEach.call(document.querySelectorAll('.admin-list'), function(list) {
-		adjust(list);
-	});
-	
+function paginate() {
 	var pagination = document.getElementById('pagination');
 	if (pagination) {
 		var select = pagination.querySelector('select');
@@ -110,7 +103,25 @@ document.addEventListener("DOMContentLoaded", function(event) {
 			});
 		});
 	}
+}
 
+document.addEventListener("DOMContentLoaded", function(event) {
+	
+	[].forEach.call(document.querySelectorAll('.admin-menu-entry'), function(entry) {
+		entry.addEventListener("click", function(event) {
+			invokeZord({
+				module:'Admin',
+				action:'index',
+				tab:entry.getAttribute('data-tab')
+			});
+		});
+	});
+
+	[].forEach.call(document.querySelectorAll('.admin-list'), function(list) {
+		adjust(list);
+	});
+	
+	paginate();
 	dress(document);
 	
 });

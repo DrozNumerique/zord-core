@@ -278,7 +278,24 @@ class Admin extends Module {
     }
     
     public function users() {
-        return $this->view('/portal/page/admin/users/list/items', $this->dataUsers(), 'text/html;charset=UTF-8', false, false);
+        return $this->view('/portal/page/admin/users/list/items', $this->paginate('users', $this->dataUsers()), 'text/html;charset=UTF-8', false, false);
+    }
+    
+    public function paginate($type = null, $models = null) {
+        if (isset($type) && isset($models)) {
+            $_SESSION['__PAGINATION__'][$type] = [
+                'count'  => $models['count'],
+                'limit'  => $models['limit'],
+                'offset' => $models['offset'],
+                'index'  => $models['index']
+            ];
+            return $models;
+        }
+        $type = $this->params['type'] ?? null;
+        if (!isset($type)) {
+            return $this->error(409);
+        }
+        return $this->view('/portal/widget/admin/pagination', $_SESSION['__PAGINATION__'][$type], 'text/html;charset=UTF-8', false, false);
     }
     
     protected function usersCriteria($keyword) {
@@ -298,14 +315,20 @@ class Admin extends Module {
         $keyword = $this->params['keyword'] ?? null;
         list($join, $where) = $this->usersCriteria($keyword);
         $criteria = ['many' => true, 'join' => $join, 'where' => $where];
-        $count = (new UserEntity())->retrieve($criteria)->count();
+        $entities = (new UserEntity())->retrieve($criteria);
+        $count = $entities->count();
         $criteria['limit']  = $limit;
         $criteria['offset'] = $offset;
         $users = (new UserEntity())->retrieve($criteria);
+        $index = [];
+        foreach ($entities as $user) {
+            $index[] = $user->login;
+        }
         return [
             'count'   => $count,
             'limit'   => $limit,
             'offset'  => $offset,
+            'index'   => $index,
             'keyword' => $keyword,
             'users'   => $users
         ];

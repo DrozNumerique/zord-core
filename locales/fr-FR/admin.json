@@ -52,6 +52,7 @@
 		}
 	},
 	"list": {
+		"action": "Actions",
 		"create": "Ajouter",
 		"delete": "Supprimer",
 		"update": "Modifier",

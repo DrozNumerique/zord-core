@@ -1,13 +1,10 @@
 <?php $locale = Zord::getLocale('admin', $lang); ?> 
-   					<ul class="admin-list" id="users" data-columns="210px,210px,210px">
+   					<ul class="admin-list" id="users" data-columns="210px,210px,210px,132px">
    						<li class="header">
            					<div class="column"><?php echo $locale->tab->users->login; ?></div>
            					<div class="column"><?php echo $locale->tab->users->name; ?></div>
            					<div class="column"><?php echo $locale->tab->users->email; ?></div>
-           					<div class="blank"></div>
-           					<div class="blank"></div>
-           					<div class="blank"></div>
-           					<div class="blank"></div>
+           					<div class="column"><?php echo $locale->list->action; ?></div>
        					</li>
        					<li>
           					<div class="column"><input name="login" data-empty="no" type="text"/></div>

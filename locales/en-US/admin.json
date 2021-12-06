@@ -49,6 +49,7 @@
 		}
 	},
 	"list": {
+		"action": "Actions",
 		"create": "Create",
 		"delete": "Delete",
 		"update": "Update",
