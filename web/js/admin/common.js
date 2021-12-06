@@ -71,7 +71,12 @@ function adjust(list) {
 	var widths = list.getAttribute('data-columns').split(',');
 	[].forEach.call(list.querySelectorAll('li'), function(line) {
 		[].forEach.call(line.querySelectorAll('.column'), function(column, index) {
-			column.style = "width:" + widths[index];
+			var width = widths[index];
+			if (width.endsWith('fa')) {
+				var num = Number.parseInt(width.substr(0, width.length - 2));
+				width = (num * 30 + (num - 1) * 4) + 'px';
+			}
+			column.style = "width:" + width;
 		});
 	});
 }
