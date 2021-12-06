@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 			operation:'list',
 			outer:'users',
 			keyword:document.querySelector('#lookup .keyword input').value.trim(),
-			success: function(result) {
+			success: function() {
 				adjust(document.getElementById('users'));
 				attachActions();	
 			}
