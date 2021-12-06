@@ -1,5 +1,5 @@
 				<div align="center">
-   					<ul class="admin-list" id="context" data-columns="200px,300px,<?php echo $user->isManager() ? '3' : '1' ?>fa">
+   					<ul class="admin-list" id="context" data-columns="<?php echo Zord::value('admin', ['context', 'list', 'columns', $user->isManager() ? 'manager' : 'admin']); ?>">
    						<li class="header">
            					<div class="column"><?php echo $locale->tab->context->name; ?></div>
            					<div class="column"><?php echo $locale->tab->context->label; ?></div>

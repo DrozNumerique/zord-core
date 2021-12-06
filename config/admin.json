@@ -5,7 +5,14 @@
 				"src": "/js/admin/context.js",
 				"type": "text/javascript"
 			}
-		]
+		],
+		"list": {
+			"columns": {
+				"admin": "200px,300px,1fa",
+				"manager": "200px,300px,3fa",
+				"urls": "1fa,300px,300px,1fa"
+			}
+		}
 	},
 	"users": {
 		"scripts": [
@@ -14,7 +21,14 @@
 				"type": "text/javascript"
 			}
 		],
-		"limit":  100
+		"list": {
+			"limit": 10,
+			"columns": {
+				"items": "210px,210px,210px,4fa",
+				"roles": "170px,170px,170px,170px,1fa",
+				"ip": "560px,60px,80px,1fa"
+			}
+		}
 	},
 	"content": {
 		"scripts": [

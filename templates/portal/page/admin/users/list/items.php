@@ -1,5 +1,5 @@
 <?php $locale = Zord::getLocale('admin', $lang); ?> 
-   					<ul class="admin-list" id="users" data-columns="210px,210px,210px,4fa">
+   					<ul class="admin-list" id="users" data-columns="<?php echo Zord::value('admin', ['users','list','columns','items']); ?>">
    						<li class="header">
            					<div class="column"><?php echo $locale->tab->users->login; ?></div>
            					<div class="column"><?php echo $locale->tab->users->name; ?></div>

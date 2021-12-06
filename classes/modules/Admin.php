@@ -310,7 +310,7 @@ class Admin extends Module {
     }
     
     protected function dataUsers() {
-        $limit = Zord::value('admin', ['users','limit']);
+        $limit = Zord::value('admin', ['users','list','limit']);
         $offset = $this->params['offset'] ?? 0;
         $keyword = $this->params['keyword'] ?? null;
         list($join, $where) = $this->usersCriteria($keyword);

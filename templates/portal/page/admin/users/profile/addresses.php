@@ -1,10 +1,10 @@
             		<div class="admin-panel-title"><?php echo $locale->tab->users->ipv4; ?></div>
-     				<ul class="admin-list" id="ipv4" data-columns="550px,60px,80px">
+     				<ul class="admin-list" id="ipv4" data-columns="<?php echo Zord::value('admin', ['users','list','columns','ip']); ?>">
      					<li class="header">
              				<div class="column"><?php echo $locale->tab->users->ip; ?></div>
              				<div class="column"><?php echo $locale->tab->users->mask; ?></div>
              				<div class="column">+/-</div>
-             				<div class="add"><a class="fa fa-plus fa-fw" title="<?php echo $locale->list->add; ?>"></a></div>
+             				<div class="column add"><a class="fa fa-plus fa-fw" title="<?php echo $locale->list->add; ?>"></a></div>
          				</li>
          				<li class="hidden">
              				<div class="column">
@@ -20,7 +20,7 @@
              						<option value="0"><?php echo $locale->tab->users->exclude; ?></option>
              					</select>
              				</div>
-             				<div class="remove"><i class="fa fa-times fa-fw" title="<?php echo $locale->list->remove; ?>"></i></div>
+             				<div class="column remove"><i class="fa fa-times fa-fw" title="<?php echo $locale->list->remove; ?>"></i></div>
          				</li>
 <?php foreach($models['ipv4'] as $entry) { ?>
          				<li class="data">
@@ -38,17 +38,17 @@
              						<option value="0" <?php if (!$entry['include']) echo 'selected'; ?>><?php echo $locale->tab->users->exclude; ?></option>
              					</select>
              				</div>
-             				<div class="remove"><i class="fa fa-times fa-fw" title="<?php echo $locale->list->remove; ?>"></i></div>
+             				<div class="column remove"><i class="fa fa-times fa-fw" title="<?php echo $locale->list->remove; ?>"></i></div>
          				</li>
 <?php } ?>
      				</ul>
             		<div class="admin-panel-title"><?php echo $locale->tab->users->ipv6; ?></div>
-     				<ul class="admin-list" id="ipv6" data-columns="550px,60px,80px">
+     				<ul class="admin-list" id="ipv6" data-columns="<?php echo Zord::value('admin', ['users','list','columns','ip']); ?>">
      					<li class="header">
              				<div class="column"><?php echo $locale->tab->users->ip; ?></div>
              				<div class="column"><?php echo $locale->tab->users->mask; ?></div>
              				<div class="column">+/-</div>
-             				<div class="add"><a class="fa fa-plus fa-fw" title="<?php echo $locale->list->add; ?>"></a></div>
+             				<div class="column add"><a class="fa fa-plus fa-fw" title="<?php echo $locale->list->add; ?>"></a></div>
          				</li>
          				<li class="hidden">
              				<div class="column">
@@ -68,7 +68,7 @@
              						<option value="0"><?php echo $locale->tab->users->exclude; ?></option>
              					</select>
              				</div>
-             				<div class="remove"><i class="fa fa-times fa-fw" title="<?php echo $locale->list->remove; ?>"></i></div>
+             				<div class="column remove"><i class="fa fa-times fa-fw" title="<?php echo $locale->list->remove; ?>"></i></div>
          				</li>
 <?php foreach($models['ipv6'] as $entry) { ?>
          				<li class="data">
@@ -86,7 +86,7 @@
              						<option value="0" <?php if (!$entry['include']) echo 'selected'; ?>><?php echo $locale->tab->users->exclude; ?></option>
              					</select>
              				</div>
-             				<div class="remove"><i class="fa fa-times fa-fw" title="<?php echo $locale->list->remove; ?>"></i></div>
+             				<div class="column remove"><i class="fa fa-times fa-fw" title="<?php echo $locale->list->remove; ?>"></i></div>
          				</li>
 <?php } ?>
      				</ul>

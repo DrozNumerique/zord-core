@@ -1,11 +1,11 @@
            			<div class="admin-panel-title"><?php echo $locale->tab->users->roles; ?></div>
-    				<ul class="admin-list" id="roles" data-columns="170px,170px,170px,170px">
+    				<ul class="admin-list" id="roles" data-columns="<?php echo Zord::value('admin', ['users','list','columns','roles']); ?>">
     					<li class="header">
              				<div class="column"><?php echo $locale->tab->users->role; ?></div>
             				<div class="column"><?php echo $locale->tab->users->context; ?></div>
              				<div class="column"><?php echo $locale->tab->users->start; ?></div>
              				<div class="column"><?php echo $locale->tab->users->end; ?></div>
-             				<div class="add"><a class="fa fa-plus fa-fw" title="<?php echo $locale->list->add; ?>"></a></div>
+             				<div class="column add"><a class="fa fa-plus fa-fw" title="<?php echo $locale->list->add; ?>"></a></div>
          				</li>
          				<li class="hidden">
              				<div class="column">
@@ -24,7 +24,7 @@
 							</div>
              				<div class="column"><input data-empty="no" type="date" value=""/></div>
              				<div class="column"><input data-empty="no" type="date" value=""/></div>
-             				<div class="remove"><i class="fa fa-times fa-fw" title="<?php echo $locale->list->remove; ?>"></i></div>
+             				<div class="column remove"><i class="fa fa-times fa-fw" title="<?php echo $locale->list->remove; ?>"></i></div>
          				</li>
 <?php foreach ((new UserHasRoleEntity())->retrieve(['where' => ['user' => $models['login']], 'many' => true]) as $entry) { ?>
 <?php   if ((null !== Zord::value('context', $entry->context)) || ($entry->context == '*')) { ?>
@@ -45,7 +45,7 @@
              				</div>
              				<div class="column"><input data-empty="no" type="date" value="<?php echo $entry->start; ?>"/></div>
              				<div class="column"><input data-empty="no" type="date" value="<?php echo $entry->end; ?>"/></div>
-             				<div class="remove"><i class="fa fa-times fa-fw" title="<?php echo $locale->list->remove; ?>"></i></div>
+             				<div class="column remove"><i class="fa fa-times fa-fw" title="<?php echo $locale->list->remove; ?>"></i></div>
          				</li>
 <?php   } ?>
 <?php } ?>
