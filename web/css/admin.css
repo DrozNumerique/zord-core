@@ -230,7 +230,7 @@
 
 .admin-list li div {
 	float:left;
-	margin: 0px 2px 0px 2px;
+	margin: 0px 2px;
 	padding:0;
 }
 
@@ -254,7 +254,7 @@
 	background:white;
 	border:1px solid gray;
 	border-radius: 3px;
-	padding: 0px 5px 0px 5px;
+	padding: 0px 5px;
 	margin: 0px;
 }
 
@@ -284,6 +284,10 @@
 .admin-list li div i {
 	padding-top: 7px;
 	height: 23px;
+}
+
+.admin-list li div a {
+	color: #686968;
 }
 
 .admin-list li div.add {

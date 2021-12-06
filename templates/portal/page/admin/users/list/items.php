@@ -10,10 +10,7 @@
           					<div class="column"><input name="login" data-empty="no" type="text"/></div>
           					<div class="column"><input name="name" data-empty="no" type="text"/></div>
           					<div class="column"><input name="email" data-empty="no" type="email"/></div>
-          					<div class="create"><i class="fa fa-plus fa-fw" title="<?php echo $locale->list->create; ?>"></i></div>
-           					<div class="blank"></div>
-           					<div class="blank"></div>
-           					<div class="blank"></div>
+          					<div class="column create"><i class="fa fa-plus fa-fw" title="<?php echo $locale->list->create; ?>"></i></div>
        					</li>
 <?php foreach($models['users'] as $account) { ?>
       					<li>

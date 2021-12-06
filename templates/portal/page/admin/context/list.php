@@ -1,17 +1,15 @@
 				<div align="center">
-   					<ul class="admin-list" id="context" data-columns="200px,300px,97px">
+   					<ul class="admin-list" id="context" data-columns="200px,300px,<?php echo $user->isManager() ? '98' : '30' ?>px">
    						<li class="header">
            					<div class="column"><?php echo $locale->tab->context->name; ?></div>
            					<div class="column"><?php echo $locale->tab->context->label; ?></div>
-           					<div class="column"><?php echo $locale->list->action; ?></div>
+           					<div class="column"><a class="fa fa-cog fa-fw" title="<?php echo $locale->list->action; ?>"></a></div>
        					</li>
 <?php if ($user->isManager()) { ?>
        					<li>
           					<div class="column"><input name="name"  data-empty="no" type="text"/></div>
           					<div class="column"><input name="title" data-empty="no" type="text"/></div>
-          					<div class="create"><i class="fa fa-plus fa-fw" title="<?php echo $locale->list->create; ?>"></i></div>
-           					<div class="blank"></div>
-           					<div class="blank"></div>
+          					<div class="column create"><i class="fa fa-plus fa-fw" title="<?php echo $locale->list->create; ?>"></i></div>
        					</li>
 <?php } ?>
 <?php foreach(Zord::getConfig('context') as $name => $config) { ?>
