@@ -55,20 +55,8 @@ function getProfile() {
 	};
 	return profile;
 }
-	
-document.addEventListener("DOMContentLoaded", function(event) {
 
-	window.extras.users = function() {
-		return {
-			operation:'list',
-			outer:'users',
-			keyword:document.querySelector('#lookup .keyword input').value.trim(),
-			success: function(result) {
-				adjust(document.getElementById('users'));	
-			}
-		};
-	};
-
+function attachActions() {
 	attach(['profile','notify'], function(entry, operation) {
 		var data = {
 			login:entry.parentNode.children[0].firstElementChild.value,
@@ -86,6 +74,23 @@ document.addEventListener("DOMContentLoaded", function(event) {
 			});
 		}
 	});
+}
+	
+document.addEventListener("DOMContentLoaded", function(event) {
+
+	window.extras.users = function() {
+		return {
+			operation:'list',
+			outer:'users',
+			keyword:document.querySelector('#lookup .keyword input').value.trim(),
+			success: function(result) {
+				adjust(document.getElementById('users'));
+				attachActions();	
+			}
+		};
+	};
+
+	attachActions();
 	
 	var submitProfile = document.getElementById('submit-profile');
 	if (submitProfile != undefined) {
