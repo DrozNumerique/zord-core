@@ -17,9 +17,8 @@
           					<div class="column"><input name="path" data-empty="no" type="path"/></div>
              				<div class="column remove"><i class="fa fa-times fa-fw" title="<?php echo $locale->list->remove; ?>"></i></div>
          				</li>
-<?php if (isset($models['urls'])) { ?>
-<?php   foreach ($models['urls'] as $url) { ?>
-<?php     $secure = (isset($url['secure']) && $url['secure']) ? 'true' : 'false'; ?>
+<?php foreach ($models['urls'] ?? [] as $url) { ?>
+<?php   $secure = ($url['secure'] ?? false) ? 'true' : 'false'; ?>
          				<li class="data">
          					<div class="column state" data-type="secure">
           						<input name="secure" data-empty="no" type="hidden" value="<?php echo $secure; ?>"/>
@@ -29,7 +28,6 @@
            					<div class="column"><input name="path" data-empty="no" type="text" value="<?php echo $url['path']; ?>"/></div>
              				<div class="column remove"><i class="fa fa-times fa-fw" title="<?php echo $locale->list->remove; ?>"></i></div>
          				</li>
-<?php   } ?>
 <?php } ?>
      				</ul>
       				<br/>

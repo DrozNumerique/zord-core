@@ -17,9 +17,9 @@
            					<div class="column"><input name="login" data-empty="no" type="text" value="<?php echo $account->login; ?>" disabled/></div>
           					<div class="column"><input name="name" data-empty="no" type="text" value="<?php echo $account->name; ?>"/></div>
            					<div class="column"><input name="email" data-empty="no" type="email" value="<?php echo $account->email; ?>"/></div>
-           					<div class="delete"><i class="fa fa-times fa-fw" title="<?php echo $locale->list->delete; ?>"></i></div>
-           					<div class="update"><i class="fa fa-check fa-fw" title="<?php echo $locale->list->update; ?>"></i></div>
-           					<div class="profile"><i class="fa fa-user fa-fw" title="<?php echo $locale->tab->users->profile; ?>"></i></div>
-           					<div class="notify"><i class="fa fa-envelope fa-fw" title="<?php echo $locale->tab->users->notify; ?>"></i></div>
+               				<div class="delete"><i class="fa fa-times fa-fw" title="<?php echo $locale->list->delete; ?>"></i></div>
+               				<div class="update"><i class="fa fa-check fa-fw" title="<?php echo $locale->list->update; ?>"></i></div>
+               				<div class="profile"><i class="fa fa-user fa-fw" title="<?php echo $locale->tab->users->profile; ?>"></i></div>
+               				<div class="notify"><i class="fa fa-envelope fa-fw" title="<?php echo $locale->tab->users->notify; ?>"></i></div>
        					</li>
 <?php } ?>

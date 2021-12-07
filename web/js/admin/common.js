@@ -74,7 +74,7 @@ function adjust(list) {
 			var width = widths[index];
 			if (width.endsWith('fa')) {
 				var num = Number.parseInt(width.substr(0, width.length - 2));
-				width = (num * 30 + (num - 1) * 4) + 'px';
+				width = (num * 30 + (num - 1) * 2) + 'px';
 			}
 			column.style = "width:" + width;
 		});
