@@ -278,7 +278,7 @@ class Admin extends Module {
     }
     
     public function users() {
-        return $this->view('/portal/page/admin/users/list/items', $this->paginate('users', $this->dataUsers()), 'text/html;charset=UTF-8', false, false);
+        return $this->view('/portal/page/admin/users/list/items', $this->paginate('users', $this->dataUsers()), 'text/html;charset=UTF-8', false, false, 'admin');
     }
     
     public function paginate($type = null, $models = null) {
@@ -295,7 +295,7 @@ class Admin extends Module {
         if (!isset($type)) {
             return $this->error(409);
         }
-        return $this->view('/portal/widget/admin/pagination', $_SESSION['__PAGINATION__'][$type], 'text/html;charset=UTF-8', false, false);
+        return $this->view('/portal/widget/admin/pagination', $_SESSION['__PAGINATION__'][$type], 'text/html;charset=UTF-8', false, false, 'admin');
     }
     
     protected function usersCriteria($keyword) {

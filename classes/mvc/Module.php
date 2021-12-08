@@ -163,13 +163,14 @@ class Module {
 	    ];
 	}
 	
-	public function view($template, $models = [], $type = 'text/html;charset=UTF-8', $history = null, $mark = true) {
+	public function view($template, $models = [], $type = 'text/html;charset=UTF-8', $history = null, $mark = true, $locale = null) {
 	    return [
 	        '__template__' => $template,
 	        '__models__'   => $models,
 	        '__type__'     => $type,
 	        '__history__'  => $history,
-	        '__mark__'     => $mark
+	        '__mark__'     => $mark,
+	        '__locale__'   => $locale
 	    ];
 	}
 	

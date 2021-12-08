@@ -79,6 +79,10 @@ class View {
         return Zord::resolve($raw, $models, $locale);
     }
     
+    public function locale($domain) {
+        return Zord::getLocale($domain, $this->lang);
+    }
+    
     public function setMark($mark = true) {
         $this->mark = $mark;
     }

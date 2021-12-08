@@ -1,4 +1,3 @@
-<?php $locale = Zord::getLocale('admin', $lang); ?>
                     <ul id="pagination" data-count="<?php echo $models['count']; ?>" data-limit="<?php echo $models['limit']; ?>" data-offset="<?php echo $models['offset']; ?>">
                     	<li class="cursor previous">
                     		<span><?php echo $locale->pagination->previous; ?></span>
