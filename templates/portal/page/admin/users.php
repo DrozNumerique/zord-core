@@ -1,6 +1,6 @@
 <?php
 if (isset($models['login'])) {
-    $this->render('profile');
+    $this->render('extras');
 } else {
     $this->render('list');
 }

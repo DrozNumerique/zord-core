@@ -52,12 +52,13 @@
 		}
 	},
 	"list": {
-		"action": "Actions",
+		"actions": "Actions",
 		"create": "Ajouter",
 		"delete": "Supprimer",
 		"update": "Modifier",
 		"add": "Ajouter",
-		"remove": "Enlever"
+		"remove": "Enlever",
+		"title": "Titre"
 	},
 	"pagination": {
 		"previous": "Précédents",

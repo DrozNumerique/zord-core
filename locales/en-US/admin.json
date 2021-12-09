@@ -49,12 +49,13 @@
 		}
 	},
 	"list": {
-		"action": "Actions",
+		"actions": "Actions",
 		"create": "Create",
 		"delete": "Delete",
 		"update": "Update",
 		"add": "Add",
-		"remove": "Remove"
+		"remove": "Remove",
+		"title": "Title"
 	},
 	"pagination": {
 		"previous": "Previous",

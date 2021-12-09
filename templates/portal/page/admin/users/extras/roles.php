@@ -1,4 +1,3 @@
-           			<div class="admin-panel-title"><?php echo $locale->tab->users->roles; ?></div>
     				<ul class="admin-list" id="roles" data-columns="<?php echo Zord::value('admin', ['users','list','columns','roles']); ?>">
     					<li class="header">
              				<div class="column"><?php echo $locale->tab->users->role; ?></div>

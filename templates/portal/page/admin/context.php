@@ -1,6 +1,6 @@
 <?php
 if (isset($models['ctx'])) {
-    $this->render('urls');
+    $this->render('extras');
 } else {
     $this->render('list');
 }

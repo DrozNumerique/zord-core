@@ -1,29 +1,3 @@
 				<div align="center">
-   					<ul class="admin-list" id="context" data-columns="<?php echo Zord::value('admin', ['context', 'list', 'columns', $user->isManager() ? 'manager' : 'admin']); ?>">
-   						<li class="header">
-           					<div class="column"><?php echo $locale->tab->context->name; ?></div>
-           					<div class="column"><?php echo $locale->tab->context->label; ?></div>
-           					<div class="column"><a class="fa fa-cog fa-fw" title="<?php echo $locale->list->action; ?>"></a></div>
-       					</li>
-<?php if ($user->isManager()) { ?>
-       					<li>
-          					<div class="column"><input name="name"  data-empty="no" type="text"/></div>
-          					<div class="column"><input name="title" data-empty="no" type="text"/></div>
-          					<div class="column create"><i class="fa fa-plus fa-fw" title="<?php echo $locale->list->create; ?>"></i></div>
-       					</li>
-<?php } ?>
-<?php foreach(Zord::getConfig('context') as $name => $config) { ?>
-<?php   if ($user->hasRole('admin', $name)) { ?>
-      					<li>
-           					<div class="column"><input name="name"  data-empty="no" type="text" value="<?php echo $name; ?>" disabled/></div>
-           					<div class="column"><input name="title" data-empty="no" type="text" value="<?php echo isset($config['title'][$lang]) ? $config['title'][$lang] : (isset($config['title'][DEFAULT_LANG]) ? $config['title'][DEFAULT_LANG] : ''); ?>" <?php echo !$user->isManager() ? 'disabled' : ''; ?>/></div>
-<?php     if ($user->isManager()) { ?>
-           					<div class="delete"><i class="fa fa-times fa-fw" title="<?php echo $locale->list->delete; ?>"></i></div>
-           					<div class="update"><i class="fa fa-check fa-fw" title="<?php echo $locale->list->update; ?>"></i></div>
-<?php     } ?>
-           					<div class="urls"><i class="fa fa-arrow-circle-right fa-fw" title="<?php echo $locale->tab->context->urls; ?>"></i></div>
-       					</li>
-<?php   } ?>
-<?php } ?>
-   					</ul>
+<?php $this->render('/portal/widget/admin/list', Zord::listModels($current, ['context', $user->isManager() ? 'manager' : 'admin'], $data)); ?>
 				</div>

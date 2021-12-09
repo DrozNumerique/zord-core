@@ -278,7 +278,8 @@ class Admin extends Module {
     }
     
     public function users() {
-        return $this->view('/portal/page/admin/users/list/items', $this->paginate('users', $this->dataUsers()), 'text/html;charset=UTF-8', false, false, 'admin');
+        $data = $this->paginate('users', $this->dataUsers());
+        return $this->view('/portal/widget/admin/list', Zord::listModels('users', 'items', $data['users']), 'text/html;charset=UTF-8', false, false, 'admin');
     }
     
     public function paginate($type = null, $models = null) {
@@ -310,7 +311,7 @@ class Admin extends Module {
     }
     
     protected function dataUsers() {
-        $limit = Zord::value('admin', ['users','list','limit']);
+        $limit = Zord::value('admin', ['users','list','items','limit']) ?? 10;
         $offset = $this->params['offset'] ?? 0;
         $keyword = $this->params['keyword'] ?? null;
         list($join, $where) = $this->usersCriteria($keyword);
@@ -347,6 +348,15 @@ class Admin extends Module {
             }
         } else if ($current == 'users') {
             $models = Zord::array_merge($models, $this->dataUsers());
+        } else if ($current == 'context') {
+            foreach(Zord::getConfig('context') as $name => $config) {
+                if ($this->user->hasRole('admin', $name)) {
+                    $models['data'][] = [
+                        'name'  => $name,
+                        'title' => isset($config['title'][$this->lang]) ? $config['title'][$this->lang] : (isset($config['title'][DEFAULT_LANG]) ? $config['title'][DEFAULT_LANG] : '')
+                    ];
+                }
+            }
         }
         return $models;
     }

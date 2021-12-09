@@ -39,7 +39,7 @@ class View {
         foreach ([$this->implicits, $models] as $_vars) {
             if (is_array($_vars) && Zord::is_associative($_vars)) {
                 foreach ($_vars as $_name => $_value) {
-                    if (!is_object($_value)) {
+                    if (!is_object($_value) && $_name == 'locale') {
                         $_value = json_decode(Zord::json_encode($_value));
                     }
                     $$_name = $_value;
