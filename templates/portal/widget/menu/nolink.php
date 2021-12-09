@@ -1,1 +1,1 @@
-					<span><?php echo $entry->label; ?></span>
+					<span><?php echo $entry['label']; ?></span>
