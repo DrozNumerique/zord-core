@@ -12,27 +12,31 @@ function remove(line) {
 	list.removeChild(line);
 }
 
-function attach(operations, callback) {
-	var opList = ['create','update','delete'];
-	[].forEach.call(operations, function(op) {
-		opList.push(op);
-	});
-	[].forEach.call(opList, function(operation) {
-		[].forEach.call(document.querySelectorAll('.' + operation), function(entry) {				
+function attach(list, callback) {
+	[].forEach.call(list.querySelectorAll('.action'), function(entry) {
+		var action = null;
+		for (index = 0; index < entry.classList.length; index++) {
+			var className = entry.classList.item(index);
+			if (className !== 'column' && className !== 'action') {
+				action = className;
+				break;
+			}
+		}
+		if (action !== null) {			
 			entry.addEventListener("click", function(event) {
-				callback(entry, operation);
-			});				
-		});			
-	});
+				callback(entry, action);
+			});
+		}				
+	});			
 }
 
 function dress(element) {
-	[].forEach.call(element.querySelectorAll('.add'), function(entry) {
+	[].forEach.call(element.querySelectorAll('.action.add'), function(entry) {
 		entry.addEventListener("click", function(event) {
 			add(entry.parentNode);
 		});
 	});
-	[].forEach.call(element.querySelectorAll('.remove'), function(entry) {
+	[].forEach.call(element.querySelectorAll('.action.remove'), function(entry) {
 		entry.addEventListener("click", function(event) {
 			remove(entry.parentNode);
 		});
@@ -65,20 +69,6 @@ function list(offset) {
 		params = Object.assign(params, extras());
 	}
 	invokeZord(params);
-}
-
-function adjust(list) {
-	var widths = list.getAttribute('data-columns').split(',');
-	[].forEach.call(list.querySelectorAll('li'), function(line) {
-		[].forEach.call(line.querySelectorAll('.column'), function(column, index) {
-			var width = widths[index];
-			if (width.endsWith('fa')) {
-				var num = Number.parseInt(width.substr(0, width.length - 2));
-				width = (num * 30 + (num - 1) * 2) + 'px';
-			}
-			column.style = "width:" + width;
-		});
-	});
 }
 
 function paginate() {
@@ -121,21 +111,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
 			});
 		});
 	});
-
-	[].forEach.call(document.querySelectorAll('.admin-list'), function(list) {
-		adjust(list);
-	});
 	
 	paginate();
-	dress(document);
-	
-});
-
-document.addEventListener("load", function(event) {
-
-	lists = document.querySelectorAll('.admin-list');
-	[].forEach.call(lists, function(list) {
-		list.style.width = window.getComputedStyle(list.firstElementChild).width;
+	[].forEach.call(document.querySelectorAll('.list'), function(list) {
+		dress(list);
 	});
-
+	
 });

@@ -5,35 +5,7 @@
 				"src": "/js/admin/context.js",
 				"type": "text/javascript"
 			}
-		],
-		"list": {
-			"context": {
-				"id": "context",
-				"create": "visible",
-				"disabled": ["name"],
-				"columns": {
-					"name": "text",
-					"title": "text"
-				}
-			},
-			"admin": {
-				"widths": "200px,300px,1fa",
-				"actions": {
-					"urls": "arrow-circle-right"
-				}
-			},
-			"manager": {
-				"widths": "200px,300px,3fa",
-				"actions": {
-					"delete": "times", 
-					"update": "check",
-					"urls": "arrow-circle-right"
-				}
-			},
-			"columns": {
-				"urls": "1fa,300px,300px,1fa"
-			}
-		}
+		]
 	},
 	"users": {
 		"scripts": [
@@ -41,30 +13,7 @@
 				"src": "/js/admin/users.js",
 				"type": "text/javascript"
 			}
-		],
-		"list": {
-			"items": {
-				"id": "users",
-				"create": "visible",
-				"disabled": ["login"],
-				"columns": {
-					"login": "text",
-					"name": "text",
-					"email": "email"
-				},
-				"widths": "210px,210px,210px,4fa",
-				"actions": {
-					"delete": "times", 
-					"update": "check",
-					"profile": "user",
-					"notify": "envelope"
-				}
-			},
-			"columns": {
-				"roles": "170px,170px,170px,170px,1fa",
-				"ip": "560px,60px,80px,1fa"
-			}
-		}
+		]
 	},
 	"content": {
 		"scripts": [

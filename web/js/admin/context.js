@@ -36,24 +36,27 @@ function getContextData() {
 
 document.addEventListener("DOMContentLoaded", function(event) {
 	
-	attach(['urls'], function(entry, operation) {
-		var data = {
-			name:entry.parentNode.children[0].firstElementChild.value,
-			title:entry.parentNode.children[1].firstElementChild.value
-		};
-		if (checkContext(operation, data)) {
-			invokeZord({
-				module:'Admin',
-				action:'context',
-				operation:operation,
-				name:data.name,
-				title:data.title
-			});
-		}
-	});
+	var context = document.getElementById('context');
+	if (context !== undefined && context !== null) {
+		attach(context, function(entry, operation) {
+			var data = {
+				name:entry.parentNode.children[0].firstElementChild.value,
+				title:entry.parentNode.children[1].firstElementChild.value
+			};
+			if (checkContext(operation, data)) {
+				invokeZord({
+					module:'Admin',
+					action:'context',
+					operation:operation,
+					name:data.name,
+					title:data.title
+				});
+			}
+		});
+	}
 	
 	var submitURLs = document.getElementById('submit-urls');
-	if (submitURLs != undefined) {
+	if (submitURLs !== undefined && submitURLs !== null) {
 		submitURLs.addEventListener("click", function(event) {
 			var data = getContextData();
 			invokeZord({

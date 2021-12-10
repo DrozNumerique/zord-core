@@ -279,7 +279,7 @@ class Admin extends Module {
     
     public function users() {
         $data = $this->paginate('users', $this->dataUsers());
-        return $this->view('/portal/widget/admin/list', Zord::listModels('users', 'items', $data['users']), 'text/html;charset=UTF-8', false, false, 'admin');
+        return $this->view('/portal/widget/admin/list', Zord::listModels('users', $data['users']), 'text/html;charset=UTF-8', false, false, 'admin');
     }
     
     public function paginate($type = null, $models = null) {

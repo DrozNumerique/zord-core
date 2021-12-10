@@ -8,28 +8,15 @@
 		"context": {
 			"title": "Context management",
 			"urls": "URL",
-			"secure": "Secure",
-			"name": "Name",
-			"label": "Title",
-			"host": "Host",
-			"path": "Path",
 			"submit": "Save changes"
 		},
 		"users": {
 			"title": "Accounts management",
-			"login": "Login",
-			"name": "Name",
-			"email": "Email",
-			"create": "Create",
-			"delete": "Delete",
-			"update": "Update",
-			"profile": "Profile...",
-			"notify": "Resend",
-			"mask": "Mask",
+			"roles": "Roles",
+			"ipv4": "IPv4 Address(es)",
+			"ipv6": "IPv6 Address(es)",
 			"include": "Include",
 			"exclude": "Exclude",
-			"add": "Add",
-			"remove": "Remove",
 			"submit": "Save changes",
 			"match": "already matches IP address",
 			"mail": {
@@ -49,13 +36,33 @@
 		}
 	},
 	"list": {
-		"actions": "Actions",
-		"create": "Create",
-		"delete": "Delete",
-		"update": "Update",
-		"add": "Add",
-		"remove": "Remove",
-		"title": "Title"
+		"fields": {
+			"actions": "Actions",
+			"login"  : "Login",
+			"name"   : "Name",
+			"email"  : "Email",
+			"title"  : "Title",
+			"label"  : "Title",
+			"secure" : "Secure",
+			"host"   : "Host",
+			"path"   : "Path",
+			"role"   : "Role",
+			"context": "Context",
+			"ip"     : "IP Address(es)",
+			"mask"   : "Mask",
+			"start"  : "Start",
+			"end"    : "End"
+		},
+		"actions": {
+			"create" : "Create",
+			"delete" : "Delete",
+			"update" : "Update",
+			"add"    : "Add",
+			"remove" : "Remove",
+			"profile": "Profile...",
+			"notify" : "Resend",
+			"urls"   : "URLs..."
+		}
 	},
 	"pagination": {
 		"previous": "Previous",

@@ -1154,15 +1154,14 @@ class Zord {
         return $element;
     }
     
-    public static function listModels($tab, $config, $data) {
+    public static function listModels($config, $data) {
         if (!is_array($config)) {
             $config = [$config];
         }
         $models = [];
         foreach ($config as $entry) {
-            $models = Zord::array_merge($models, Zord::value('admin', [$tab,'list',$entry]) ?? []);
+            $models = Zord::array_merge($models, Zord::value('portal', ['list',$entry]) ?? []);
         }
-        $models['tab'] = $tab;
         $models['data'] = $data;
         return $models;
     }

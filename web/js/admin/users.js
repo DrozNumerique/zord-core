@@ -56,8 +56,8 @@ function getProfile() {
 	return profile;
 }
 
-function attachActions() {
-	attach(['profile','notify'], function(entry, operation) {
+function attachActions(users) {
+	attach(users, function(entry, operation) {
 		var data = {
 			login:entry.parentNode.children[0].firstElementChild.value,
 			name:entry.parentNode.children[1].firstElementChild.value,
@@ -78,19 +78,21 @@ function attachActions() {
 	
 document.addEventListener("DOMContentLoaded", function(event) {
 
+	var users = document.getElementById('users');
+	if (users !== undefined && users !== null) {
+		attachActions(users);
+	}
+	
 	window.extras.users = function() {
 		return {
 			operation:'list',
 			outer:'users',
 			keyword:document.querySelector('#lookup .keyword input').value.trim(),
 			success: function() {
-				adjust(document.getElementById('users'));
-				attachActions();	
+				attachActions(users);	
 			}
 		};
 	};
-
-	attachActions();
 	
 	var submitProfile = document.getElementById('submit-profile');
 	if (submitProfile != undefined) {

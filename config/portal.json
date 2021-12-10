@@ -49,5 +49,48 @@
 				"jump": false
 			}
 		}
+	},
+	"list": {
+		"context": {
+			"id": "context",
+			"class": ["admin-list"],
+			"create": "visible",
+			"disabled": ["name"],
+			"columns": {
+				"name": "text",
+				"title": "text"
+			}
+		},
+		"context-admin": {
+			"class": ["admin"],
+			"actions": {
+				"urls": "arrow-circle-right"
+			}
+		},
+		"context-manager": {
+			"class": ["manager"],
+			"actions": {
+				"delete": "times", 
+				"update": "check",
+				"urls": "arrow-circle-right"
+			}
+		},
+		"users": {
+			"id": "users",
+			"class": ["admin-list"],
+			"create": "visible",
+			"disabled": ["login"],
+			"columns": {
+				"login": "text",
+				"name": "text",
+				"email": "email"
+			},
+			"actions": {
+				"delete": "times", 
+				"update": "check",
+				"profile": "user",
+				"notify": "envelope"
+			}
+		}
 	}
 }

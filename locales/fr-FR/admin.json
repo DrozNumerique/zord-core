@@ -7,30 +7,14 @@
 	"tab": {
 		"context": {
 			"title": "Gestion des contextes",
-			"urls": "URLs",
-			"name": "Nom",
-			"label": "Titre",
-			"secure": "Sécurisé",
-			"host": "Domaine",
-			"path": "Chemin",
+			"urls": "URL",
 			"submit": "Enregistrer les modifications"
 		},
 		"users": {
 			"title": "Gestion des utilisateurs",
-			"login": "Identifiant",
-			"name": "Nom",
-			"email": "Courriel",
-			"profile": "Profil...",
-			"notify": "Renvoyer",
 			"roles": "Rôles",
-			"ipv4": "Adresses IPV4",
-			"ipv6": "Adresses IPV6",
-			"role": "Rôle",
-			"context": "Contexte",
-			"start": "Depuis",
-			"end": "Jusqu'à",
-			"ip": "Adresse(s) IP",
-			"mask": "Masque",
+			"ipv4": "Adresse(s) IPv4",
+			"ipv6": "Adresse(s) IPv6",
 			"include": "Inclure",
 			"exclude": "Exclure",
 			"submit": "Enregistrer les modifications",
@@ -52,13 +36,33 @@
 		}
 	},
 	"list": {
-		"actions": "Actions",
-		"create": "Ajouter",
-		"delete": "Supprimer",
-		"update": "Modifier",
-		"add": "Ajouter",
-		"remove": "Enlever",
-		"title": "Titre"
+		"fields": {
+			"actions": "Actions",
+			"login": "Identifiant",
+			"name": "Nom",
+			"email": "Courriel",
+			"title": "Titre",
+			"label": "Titre",
+			"secure": "Sécurisé",
+			"host": "Domaine",
+			"path": "Chemin",
+			"role": "Rôle",
+			"context": "Contexte",
+			"ip": "Adresse(s) IP",
+			"mask": "Masque",
+			"start": "Depuis",
+			"end": "Jusqu'à"
+		},
+		"actions": {
+			"create": "Ajouter",
+			"delete": "Supprimer",
+			"update": "Modifier",
+			"add": "Ajouter",
+			"remove": "Enlever",
+			"profile": "Profil...",
+			"notify": "Renvoyer",
+			"urls"  : "URLs..."
+		}
 	},
 	"pagination": {
 		"previous": "Précédents",
