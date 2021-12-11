@@ -14,6 +14,10 @@
 	visibility: visible;
 }
 
+.state {
+	cursor: pointer;
+}
+
 .state .display.hidden {
 	visibility: hidden;
 }
@@ -474,6 +478,7 @@ form.account div {
 
 .list li div.action {
 	width: 2em;
+	cursor: pointer;
 	margin: var(--action-margin-top) var(--action-margin-right) var(--action-margin-bottom) var(--action-margin-left);
 }
 

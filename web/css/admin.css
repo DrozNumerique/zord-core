@@ -202,115 +202,111 @@
 	margin:2em;
 }
 
-.admin-list li.header div {
+.list.admin li.header div {
 	background: darkgray;
 	font-weight: bold;
 	padding: 4px 0px;
 }
 
-.admin-list li div input,
-.admin-list li div select,
-.admin-list li div i {
+.list.admin li div input,
+.list.admin li div select,
+.list.admin li div i {
 	background:white;
 	border:1px solid gray;
 	border-radius: 3px;
 }
 
-.admin-list li div input.ipv4 {
+.list.admin li div input.ipv4 {
 	width:21%;
 }
 
-.admin-list li div input.ipv6 {
+.list.admin li div input.ipv6 {
 	width:8.4%;
 	font-size:96%;
 }
 
-.admin-list li div.action {
+.list.admin li div.action {
 	color:lightgrey;
 }
 
-.admin-list li div a {
+.list.admin li div a {
 	color: #686968;
 }
 
-.admin-list li div.profile:hover,
-.admin-list li div.notify:hover,
-.admin-list li div.counter:hover,
-.admin-list li div.urls:hover {
+.list.admin li div.profile:hover,
+.list.admin li div.notify:hover,
+.list.admin li div.counter:hover,
+.list.admin li div.urls:hover {
 	color:black;
 }
 
-.admin-list li div.delete:hover,
-.admin-list li div.remove:hover {
+.list.admin li div.delete:hover,
+.list.admin li div.remove:hover {
 	color:red;
 }
 
-.admin-list li div.update:hover {
+.list.admin li div.update:hover {
 	color:green;
 }
 
-.admin-list li div.create:hover,
-.admin-list li div.add:hover {
+.list.admin li div.create:hover,
+.list.admin li div.add:hover {
 	color:blue;
 }
 
-.admin-list.context.admin {
-	--num-actions: 1;
-}
-
-.admin-list.context.manager {
+.list.admin.context {
 	--num-actions: 3;
 }
 
-.admin-list.context li div.column.name {
+.list.admin.context li div.column.name {
 	width: 200px;
 }
 
-.admin-list.context li div.column.title {
+.list.admin.context li div.column.title {
 	width: 300px;
 }
 
-.admin-list.users {
+.list.admin.users {
 	--num-actions: 4;
 }
 
-.admin-list.users li div.column.login,
-.admin-list.users li div.column.name,
-.admin-list.users li div.column.email {
+.list.admin.users li div.column.login,
+.list.admin.users li div.column.name,
+.list.admin.users li div.column.email {
 	width: 210px;
 }
 
-.admin-list.urls,
-.admin-list.roles,
-.admin-list.ip {
+.list.admin.urls,
+.list.admin.roles,
+.list.admin.ip {
 	--num-actions: 1;
 }
 
-.admin-list.urls li div.column.secure {
+.list.admin.urls li div.column.secure {
 	width: 2em;
 }
 
-.admin-list.urls li div.column.host,
-.admin-list.urls li div.column.path {
+.list.admin.urls li div.column.host,
+.list.admin.urls li div.column.path {
 	width: 300px;
 }
 
-.admin-list.roles li div.column.role,
-.admin-list.roles li div.column.context,
-.admin-list.roles li div.column.start,
-.admin-list.roles li div.column.end {
+.list.admin.roles li div.column.role,
+.list.admin.roles li div.column.context,
+.list.admin.roles li div.column.start,
+.list.admin.roles li div.column.end {
 	width: 170px;
 }
 
-.admin-list.ip li div.column.ip {
+.list.admin.ip li div.column.ip {
 	width: 560px;
 }
 
-.admin-list.ip li div.column.mask {
+.list.admin.ip li div.column.mask {
 	width: 60px;
 }
 
-.admin-list.ip li div.column.include {
+.list.admin.ip li div.column.include {
 	width: 80px;
 }
 

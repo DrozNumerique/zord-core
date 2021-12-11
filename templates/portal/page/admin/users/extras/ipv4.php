@@ -1,7 +1,7 @@
-     				<ul class="list admin-list ip ipv4" id="ipv4">
+     				<ul class="list admin ip ipv4" id="ipv4">
      					<li class="header">
-             				<div class="column ip"><?php echo $locale->list->fields->ip; ?></div>
-             				<div class="column mask"><?php echo $locale->list->fields->mask; ?></div>
+             				<div class="column ip"><?php echo $locale->list->headers->ip; ?></div>
+             				<div class="column mask"><?php echo $locale->list->headers->mask; ?></div>
              				<div class="column include">+/-</div>
              				<div class="column action add"><a class="fa fa-plus fa-fw" title="<?php echo $locale->list->actions->add; ?>"></a></div>
          				</li>

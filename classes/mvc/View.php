@@ -23,12 +23,17 @@ class View {
         array_push($this->locales, $locale ?? $this->getLocale($template));
     }
     
-    public function render($template = null, $models = null, $locale = null) {
+    public function render($template = null, $models = null, $locale = null, $mark = null) {
         if ($template == null) {
             ob_start();
             $template = $this->template;
         }
         $template = $this->getTemplate($template);
+        $mark = $mark ?? Zord::value('plugin',['view',$template,'mark']);
+        if (isset($mark)) {
+            $previous = $this->mark;
+            $this->mark = $mark;
+        }
         $models = $models ?? $this->models;
         array_push($this->locales, $locale ?? $this->getLocale($template));
         $locale  = $locale ?? end($this->locales);
@@ -51,7 +56,7 @@ class View {
             $_file = Zord::template($template, $context, $lang);
             $_begin = VIEW_MARK_BEGIN;
             $_end = VIEW_MARK_END;
-            if (strpos($template, '/script/') > 0 || strpos($template, '/style/') > 0) {
+            if (strpos($template, '/script/') > 0 || strpos($template, '/style/') > 0 || strpos($template, 'dataset') > 0) {
                 $_begin = '/*# ';
                 $_end = ' #*/';
             }
@@ -69,6 +74,9 @@ class View {
         array_pop($this->locales);
         if ($template == $this->template) {
             return ob_get_clean();
+        }
+        if (isset($mark)) {
+            $this->mark = $previous;
         }
     }
     

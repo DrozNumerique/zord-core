@@ -1,0 +1,1 @@
+								<a class="fa fa-<?php echo $options['header']['icon']; ?> fa-fw" title="<?php echo $this->locale('admin')->list->headers->$field ?? $this->locale('admin')->list->actions->{$options['header']['title']} ?? ''; ?>"></a>

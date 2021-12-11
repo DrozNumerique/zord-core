@@ -1,4 +1,4 @@
-    				<ul class="list admin-list roles" id="roles">
+    				<ul class="list admin roles" id="roles">
     					<li class="header">
              				<div class="column role"><?php echo $locale->list->fields->role; ?></div>
             				<div class="column context"><?php echo $locale->list->fields->context; ?></div>

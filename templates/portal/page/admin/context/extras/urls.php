@@ -1,4 +1,4 @@
-   				<ul class="list admin-list urls" id="urls">
+   				<ul class="list admin urls" id="urls">
     					<li class="header">
                       		<div class="column secure"><a class="fa fa-lock fa-fw" title="<?php echo $locale->list->fields->secure; ?>"></a></div>
            					<div class="column host"><?php echo $locale->list->fields->host; ?></div>
@@ -6,7 +6,7 @@
              				<div class="column action add"><a class="fa fa-plus fa-fw" title="<?php echo $locale->list->actions->add; ?>"></a></div>
          				</li>
          				<li class="hidden">
-         					<div class="column secure state" data-type="secure">
+         					<div class="column secure state">
           						<input name="secure" data-empty="no" type="hidden" value="false"/>
           						<i class="display fa fa-chain-broken fa-fw"></i>
          					</div>
@@ -17,7 +17,7 @@
 <?php foreach ($models['urls'] ?? [] as $url) { ?>
 <?php   $secure = ($url['secure'] ?? false) ? 'true' : 'false'; ?>
          				<li class="data">
-         					<div class="column secure state" data-type="secure">
+         					<div class="column secure state">
           						<input name="secure" data-empty="no" type="hidden" value="<?php echo $secure; ?>"/>
           						<i class="display fa fa-fw <?php echo Zord::value('portal', ['states','secure',$secure]); ?>"></i>
          					</div>

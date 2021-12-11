@@ -2,6 +2,12 @@
 	"view": {
 		"/portal": {
 			"instruction": "<!DOCTYPE html>"
+		},
+		"/portal/widget/admin/list/fields/dataset": {
+			"mark": false
+		},
+		"/portal/widget/admin/list/fields/attributes": {
+			"mark": false
 		}
 	}
 }

@@ -186,17 +186,21 @@ var activateStates = function(element) {
 	if (typeof CONFIG.states !== 'undefined') {
 		[].forEach.call(element.querySelectorAll('.state'), function(entry) {
 			entry.addEventListener("click", function(event) {
-				types = entry.dataset.type.split('|');
+				display = entry.querySelector('.display');
+				input = entry.querySelector('input');
+				types = entry.dataset.type;
+				if (types == undefined || types == null) {
+					types = input.name;
+				}
+				types = types.split('|');
 				states = {};
 				[].forEach.call(types, function(type) {
 					states = Object.assign(states, CONFIG.states[type]);
 				});
 				keys = Object.keys(states);
-				input = entry.querySelector('input');
 				current = input.value;
 				next = keys[(keys.indexOf(current) + 1) % keys.length]
 				input.value = next;
-				display = entry.querySelector('.display');
 				display.classList.remove(states[current]);
 				display.classList.add(states[next]);
 			});

@@ -36,7 +36,7 @@
 		}
 	},
 	"list": {
-		"fields": {
+		"headers": {
 			"actions": "Actions",
 			"login": "Identifiant",
 			"name": "Nom",
@@ -50,6 +50,7 @@
 			"context": "Contexte",
 			"ip": "Adresse(s) IP",
 			"mask": "Masque",
+			"include": "+/-",
 			"start": "Depuis",
 			"end": "Jusqu'à"
 		},

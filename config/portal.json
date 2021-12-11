@@ -51,24 +51,22 @@
 		}
 	},
 	"list": {
+		"input": ["text","email","password","checkbox","date","time","datetime-local","week","month","hidden","number","tel","url","file","color","range"],
+		"attributes": ["disabled","readonly","required","min","max"],
+		"dataset": {"empty": "no"},
 		"context": {
 			"id": "context",
-			"class": ["admin-list"],
+			"class": "admin",
 			"create": "visible",
-			"disabled": ["name"],
-			"columns": {
+			"fields": {
 				"name": "text",
 				"title": "text"
-			}
-		},
-		"context-admin": {
-			"class": ["admin"],
-			"actions": {
-				"urls": "arrow-circle-right"
-			}
-		},
-		"context-manager": {
-			"class": ["manager"],
+			},
+			"options": {
+				"name": {
+					"disabled": true
+				}
+			},
 			"actions": {
 				"delete": "times", 
 				"update": "check",
@@ -76,11 +74,9 @@
 			}
 		},
 		"users": {
-			"id": "users",
-			"class": ["admin-list"],
+			"class": "admin",
 			"create": "visible",
-			"disabled": ["login"],
-			"columns": {
+			"fields": {
 				"login": "text",
 				"name": "text",
 				"email": "email"
@@ -90,6 +86,142 @@
 				"update": "check",
 				"profile": "user",
 				"notify": "envelope"
+			},
+			"options": {
+				"login": {
+					"disabled": true
+				}
+			}
+		},
+		"urls": {
+			"class": "admin",
+			"create": "hidden",
+			"headers": {
+				"secure": "icon",
+				"action": "icon"
+			},
+			"fields": {
+				"secure": "states",
+				"host": "text",
+				"path": "text",
+				"action": "icon"
+			},
+			"options": {
+				"secure": {
+					"class": "state",
+					"default": "false",
+					"header": {
+						"icon": "lock"
+					}
+				},
+				"action": {
+					"header": {
+						"class": "add",
+						"icon": "plus",
+						"title": "add"
+					},
+					"class": "remove",
+					"icon": "times",
+					"title": "remove"
+				}
+			}
+		},
+		"roles": {
+			"class": "admin",
+			"create": "hidden",
+			"headers": {
+				"action": "icon"
+			},
+			"fields": {
+				"role": "select",
+				"context": "select",
+				"start": "date",
+				"end": "date",
+				"action": "icon"
+			},
+			"options": {
+				"action": {
+					"header": {
+						"class": "add",
+						"icon": "plus",
+						"title": "add"
+					},
+					"class": "remove",
+					"icon": "times",
+					"title": "remove"
+				}
+			}
+		},
+		"ipv4": {
+			"class": ["admin","ip"],
+			"create": "hidden",
+			"headers": {
+				"action": "icon"
+			},
+			"fields": {
+				"ip": "ipv4",
+				"mask": "number",
+				"include": "select",
+				"action": "icon"
+			},
+			"options": {
+				"ip": {
+					"default": "0.0.0.0"
+				},
+				"mask": {
+					"default": "24",
+					"min": 0,
+					"max": 32
+				},
+				"include": {
+					"default": "1"
+				},
+				"action": {
+					"header": {
+						"class": "add",
+						"icon": "plus",
+						"title": "add"
+					},
+					"class": "remove",
+					"icon": "times",
+					"title": "remove"
+				}
+			}
+		},
+		"ipv6": {
+			"class": ["admin","ip"],
+			"create": "hidden",
+			"headers": {
+				"action": "icon"
+			},
+			"fields": {
+				"ip": "ipv6",
+				"mask": "number",
+				"include": "select",
+				"action": "icon"
+			},
+			"options": {
+				"ip": {
+					"default": "0:0:0:0:0:0:0:0"
+				},
+				"mask": {
+					"default": "64",
+					"min": 0,
+					"max": 128
+				},
+				"include": {
+					"default": "1"
+				},
+				"action": {
+					"header": {
+						"class": "add",
+						"icon": "plus",
+						"title": "add"
+					},
+					"class": "remove",
+					"icon": "times",
+					"title": "remove"
+				}
 			}
 		}
 	}

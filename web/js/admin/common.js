@@ -112,9 +112,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		});
 	});
 	
+	dress(document);
 	paginate();
-	[].forEach.call(document.querySelectorAll('.list'), function(list) {
-		dress(list);
-	});
 	
 });

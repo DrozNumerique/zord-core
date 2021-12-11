@@ -1,28 +1,42 @@
-   					<ul class="list <?php echo $id; ?> <?php echo implode(' ', $class); ?>" id="<?php echo $id; ?>">
-   						<li class="header">
-<?php foreach (array_keys($columns) as $field) { ?>
-           					<div class="column <?php echo $field; ?>"><?php echo $this->locale('admin')->list->fields->$field; ?></div>
+					<ul class="list <?php echo $id; ?><?php echo Zord::classList($class ?? null); ?>" id="<?php echo $id; ?>">
+						<li class="header">
+<?php foreach (array_keys($fields) as $field) { ?>
+							<div class="column <?php echo $field; ?><?php echo Zord::classList($options[$field]['header']['class'] ?? null); ?>">
+<?php   $this->render('headers/'.($headers[$field] ?? 'label'), ['field' => $field, 'options' => $options[$field] ?? []]); ?>
+							</div>
 <?php } ?>
 <?php if (!empty($actions)) { ?>
-           					<div class="column actions"><a class="fa fa-cog fa-fw" title="<?php echo $this->locale('admin')->list->fields->actions; ?>"></a></div>
+							<div class="column actions<?php echo Zord::classList($options['actions']['header']['class'] ?? null); ?>">
+<?php   $this->render('headers/'.($headers['actions'] ?? 'label'), ['field' => 'actions', 'options' => $options['actions'] ?? []]); ?>
+							</div>
 <?php } ?>
-       					</li>
+						</li>
 <?php if ($create ?? false) { ?>
-       					<li class="<?php echo $create ?>">
-<?php   foreach ($columns as $field => $type) { ?>
-          					<div class="column <?php echo $field; ?>"><input name="<?php echo $field; ?>" data-empty="no" type="<?php echo $type; ?>"/></div>
+						<li class="<?php echo $create ?>">
+<?php   foreach ($fields as $field => $type) { ?>
+							<div class="column <?php echo $field; ?><?php echo Zord::classList($options[$field]['class'] ?? null); ?>">
+<?php	 $this->render('fields/'.(in_array($type, Zord::value('portal', ['list','input'])) ? 'input' : $type), ['field' => $field, 'type' => $type, 'options' => $options[$field] ?? [], 'choices' => $choices[$field] ?? []]); ?>
+							</div>
 <?php   } ?>
-          					<div class="column action create"><i class="fa fa-plus fa-fw" title="<?php echo $this->locale('admin')->list->actions->create; ?>"></i></div>
-       					</li>
+<?php   if (!empty($actions)) { ?>
+							<div class="column action create">
+								<i class="fa fa-plus fa-fw" title="<?php echo $this->locale('admin')->list->actions->create; ?>"></i>
+							</div>
+<?php   } ?>
+						</li>
 <?php } ?>
 <?php foreach($data as $entry) { ?>
-      					<li>
-<?php   foreach ($columns as $field => $type) { ?>
-           					<div class="column <?php echo $field; ?>"><input name="<?php echo $field; ?>" data-empty="no" type="<?php echo $type; ?>" value="<?php echo is_object($entry) ? $entry->$field : $entry[$field]; ?>"<?php echo in_array($field, $disabled ?? []) ? ' disabled' : ''; ?>/></div>
+	  					<li class="data">
+<?php   foreach ($fields as $field => $type) { ?>
+							<div class="column <?php echo $field; ?><?php echo Zord::classList($options[$field]['class'] ?? null); ?>">
+<?php     $this->render('fields/'.(in_array($type, Zord::value('portal', ['list','input'])) ? 'input' : $type), ['field' => $field, 'type' => $type, 'entry' => $entry, 'options' => $options[$field] ?? [], 'choices' => $choices[$field] ?? []]); ?>
+							</div>
 <?php   } ?>
-<?php   foreach ($actions as $action => $icon) { ?>
-               				<div class="action <?php echo $action; ?>"><i class="fa fa-<?php echo $icon; ?> fa-fw" title="<?php echo $this->locale('admin')->list->actions->$action; ?>"></i></div>
+<?php   foreach ($actions ?? [] as $action => $icon) { ?>
+							<div class="action <?php echo $action; ?>">
+								<i class="fa fa-<?php echo $icon; ?> fa-fw" title="<?php echo $this->locale('admin')->list->actions->$action; ?>"></i>
+							</div>
 <?php   } ?>
-       					</li>
+						</li>
 <?php } ?>
 					</ul>

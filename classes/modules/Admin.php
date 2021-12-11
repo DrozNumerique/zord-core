@@ -162,9 +162,8 @@ class Admin extends Module {
                 'ipv4' => implode(',', $user_ipv4),
                 'ipv6' => implode(',', $user_ipv6)
             ]);
-            $result = array_merge($result, $this->dataProfile($login));
         }
-        return $this->index('users', $result);
+        return $this->index('users', array_merge($result, $this->dataProfile($login)));
     }
     
     public function context() {
@@ -220,7 +219,6 @@ class Admin extends Module {
     }
     
     public function urls() {
-        $result = [];
         if (isset($this->params['ctx']) &&
             isset($this->params['urls'])) {
             $context = Zord::getConfig('context');
@@ -238,10 +236,8 @@ class Admin extends Module {
                 $this->response = 'DATA';
                 return $this->error(500, $context);
             }
-            $result['ctx'] = $name;
-            $result['urls'] = $urls;
         }
-        return $this->index('context', $result);
+        return $this->index('context', $this->dataURLs($name));
     }
     
     public function content() {
@@ -346,9 +342,9 @@ class Admin extends Module {
                     }
                 }
             }
-        } else if ($current == 'users') {
+        } else if ($current == 'users' && !isset($models['login"'])) {
             $models = Zord::array_merge($models, $this->dataUsers());
-        } else if ($current == 'context') {
+        } else if ($current == 'context' && !isset($models['ctx'])) {
             foreach(Zord::getConfig('context') as $name => $config) {
                 if ($this->user->hasRole('admin', $name)) {
                     $models['data'][] = [
@@ -370,18 +366,43 @@ class Admin extends Module {
         $user = User::get($login);
         $result['login'] = $login;
         $result['name'] = $user->name;
-        $result['ipv4'] = $this->explodeIP($user->ipv4);
-        $result['ipv6'] = $this->explodeIP($user->ipv6);
-        $result['roles'] = array_merge(Zord::getConfig('role'), ['*']);
-        $result['contexts'] = array_merge(array_keys(Zord::getConfig('context')), ['*']);
+        $result['data']['ipv4'] = $this->explodeIP($user->ipv4);
+        $result['data']['ipv6'] = $this->explodeIP($user->ipv6);
+        $result['data']['roles'] = [];
+        foreach ((new UserHasRoleEntity())->retrieve(['where' => ['user' => $login], 'many' => true]) as $entry) {
+            if ($entry->context == '*' || null !== Zord::value('context', $entry->context)) {
+                $result['data']['roles'][] = [
+                    'context' => $entry->context,
+                    'role'    => $entry->role,
+                    'start'   => $entry->start,
+                    'end'     => $entry->end
+                ];
+            }
+        }
+        $roles = array_merge(Zord::getConfig('role'), ['*']);
+        $result['choices']['role'] = array_combine($roles, $roles);
+        $contexts = array_merge(array_keys(Zord::getConfig('context')), ['*']);
+        $result['choices']['context'] = array_combine($contexts, $contexts);
+        $result['choices']['include'] = [
+            "1" => $this->locale->tab->users->include,
+            "0" => $this->locale->tab->users->exclude
+        ];
         return $result;
     }
     
     protected function dataURLs($name) {
-        $result = [];
-        $result['ctx'] = $name;
-        $result['urls'] = Zord::value('context', [$name,'url']);
-        return $result;
+        $data = [];
+        foreach (Zord::value('context', [$name,'url']) ?? [] as $url) {
+            $data[] = [
+                'secure' => ($url['secure'] ?? false) ? 'true' : 'false',
+                'host'   => $url['host'],
+                'path'   => $url['path']
+            ];
+        }
+        return [
+            'ctx'  => $name,
+            'data' => $data
+        ];
     }
     
     protected function explodeIP($ips) {
