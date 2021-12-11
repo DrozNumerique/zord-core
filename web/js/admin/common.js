@@ -47,12 +47,14 @@ function dress(element) {
 window.extras = {};
 
 function list(offset) {
-	var tab = document.getElementById('panel').dataset.tab;
+	var panel = document.getElementById('panel');
+	var tab = panel.dataset.tab;
 	var params = {
 		module:'Admin',
 		action:tab,
 		offset:offset,
 		after: function() {
+			dress(panel);
 			invokeZord({
 				module:'Admin',
 				action:'paginate',

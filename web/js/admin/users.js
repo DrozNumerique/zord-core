@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 			outer:'users',
 			keyword:document.querySelector('#lookup .keyword input').value.trim(),
 			success: function() {
-				attachActions(users);	
+				attachActions(document.getElementById('users'));	
 			}
 		};
 	};
