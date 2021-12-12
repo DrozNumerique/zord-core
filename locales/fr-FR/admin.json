@@ -34,39 +34,5 @@
 				"unsaved": "Le contenu n'a pas pu être sauvegardé"
 			}
 		}
-	},
-	"list": {
-		"headers": {
-			"actions": "Actions",
-			"login": "Identifiant",
-			"name": "Nom",
-			"email": "Courriel",
-			"title": "Titre",
-			"label": "Titre",
-			"secure": "Sécurisé",
-			"host": "Domaine",
-			"path": "Chemin",
-			"role": "Rôle",
-			"context": "Contexte",
-			"ip": "Adresse(s) IP",
-			"mask": "Masque",
-			"include": "+/-",
-			"start": "Depuis",
-			"end": "Jusqu'à"
-		},
-		"actions": {
-			"create": "Ajouter",
-			"delete": "Supprimer",
-			"update": "Modifier",
-			"add": "Ajouter",
-			"remove": "Enlever",
-			"profile": "Profil...",
-			"notify": "Renvoyer",
-			"urls"  : "URLs..."
-		}
-	},
-	"pagination": {
-		"previous": "Précédents",
-		"next": "Suivants"
 	}
 }

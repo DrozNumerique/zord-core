@@ -1,0 +1,1 @@
+								<i class="fa fa-<?php echo $options['icon']; ?> fa-fw" title="<?php echo $this->locale('portal')->list->fields->$field ?? $this->locale('admin')->list->actions->{$options['title']} ?? ''; ?>"></i>

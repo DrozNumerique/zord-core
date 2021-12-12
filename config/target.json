@@ -111,6 +111,11 @@
 				"scope": "FILTER_SANITIZE_STRING",
 				"key": "FILTER_SANITIZE_STRING"
 			}
+		},
+		"cursor": {
+			"parameters": {
+				"type": "FILTER_SANITIZE_STRING"
+			}
 		}
 	},
 	"Process": {
@@ -187,11 +192,6 @@
 		"users": {
 			"parameters": {
 				"keyword": "FILTER_SANITIZE_STRING"
-			}
-		},
-		"paginate": {
-			"parameters": {
-				"type": "FILTER_SANITIZE_STRING"
 			}
 		},
 		"content": {

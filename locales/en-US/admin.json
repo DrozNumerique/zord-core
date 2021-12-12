@@ -34,39 +34,5 @@
 				"unsaved": "Content not saved"
 			}
 		}
-	},
-	"list": {
-		"headers": {
-			"actions": "Actions",
-			"login"  : "Login",
-			"name"   : "Name",
-			"email"  : "Email",
-			"title"  : "Title",
-			"label"  : "Title",
-			"secure" : "Secure",
-			"host"   : "Host",
-			"path"   : "Path",
-			"role"   : "Role",
-			"context": "Context",
-			"ip"     : "IP Address(es)",
-			"mask"   : "Mask",
-			"include": "+/-",
-			"start"  : "Start",
-			"end"    : "End"
-		},
-		"actions": {
-			"create" : "Create",
-			"delete" : "Delete",
-			"update" : "Update",
-			"add"    : "Add",
-			"remove" : "Remove",
-			"profile": "Profile...",
-			"notify" : "Resend",
-			"urls"   : "URLs..."
-		}
-	},
-	"pagination": {
-		"previous": "Previous",
-		"next": "Next"
 	}
 }

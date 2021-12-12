@@ -20,7 +20,7 @@
 <?php   } ?>
 <?php   if (!empty($actions)) { ?>
 							<div class="column action create">
-								<i class="fa fa-plus fa-fw" title="<?php echo $this->locale('admin')->list->actions->create; ?>"></i>
+								<i class="fa fa-plus fa-fw" title="<?php echo $this->locale('portal')->list->actions->create; ?>"></i>
 							</div>
 <?php   } ?>
 						</li>
@@ -34,7 +34,7 @@
 <?php   } ?>
 <?php   foreach ($actions ?? [] as $action => $icon) { ?>
 							<div class="action <?php echo $action; ?>">
-								<i class="fa fa-<?php echo $icon; ?> fa-fw" title="<?php echo $this->locale('admin')->list->actions->$action; ?>"></i>
+								<i class="fa fa-<?php echo $icon; ?> fa-fw" title="<?php echo $this->locale('portal')->list->actions->$action; ?>"></i>
 							</div>
 <?php   } ?>
 						</li>

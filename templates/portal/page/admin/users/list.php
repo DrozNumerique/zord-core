@@ -6,8 +6,8 @@
            			<br/>
            			<br/>
 <?php } ?>
-<?php $this->render('/portal/widget/admin/lookup'); ?>
-<?php $this->render('/portal/widget/admin/pagination'); ?>
-<?php $this->render('/portal/widget/admin/list', Zord::listModels('users', $users)); ?>
+<?php $this->render('/portal/widget/lookup'); ?>
+<?php $this->render('/portal/widget/cursor'); ?>
+<?php $this->render('/portal/widget/list', Zord::listModels('users', $users)); ?>
    					</ul>
 				</div>

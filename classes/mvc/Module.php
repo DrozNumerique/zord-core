@@ -321,4 +321,22 @@ class Module {
 	    $this->controler->setUser(User::bind($login));
 	    $this->user = $this->controler->getUser();
 	}
+	
+	public function cursor($models = null) {
+	    if (isset($models)) {
+	        $_SESSION['__CURSOR__'][$models['list']] = [
+	            'list'   => $models['list'],
+	            'count'  => $models['count'],
+	            'limit'  => $models['limit'],
+	            'offset' => $models['offset'],
+	            'index'  => $models['index']
+	        ];
+	        return $models;
+	    }
+	    $id = $this->params['id'] ?? null;
+	    if (!isset($id)) {
+	        return $this->error(409);
+	    }
+	    return $this->view('/portal/widget/cursor', $_SESSION['__CURSOR__'][$id], 'text/html;charset=UTF-8', false, false);
+	}
 }

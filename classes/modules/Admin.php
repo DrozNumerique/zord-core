@@ -274,25 +274,8 @@ class Admin extends Module {
     }
     
     public function users() {
-        $data = $this->paginate('users', $this->dataUsers());
-        return $this->view('/portal/widget/admin/list', Zord::listModels('users', $data['users']), 'text/html;charset=UTF-8', false, false, 'admin');
-    }
-    
-    public function paginate($type = null, $models = null) {
-        if (isset($type) && isset($models)) {
-            $_SESSION['__PAGINATION__'][$type] = [
-                'count'  => $models['count'],
-                'limit'  => $models['limit'],
-                'offset' => $models['offset'],
-                'index'  => $models['index']
-            ];
-            return $models;
-        }
-        $type = $this->params['type'] ?? null;
-        if (!isset($type)) {
-            return $this->error(409);
-        }
-        return $this->view('/portal/widget/admin/pagination', $_SESSION['__PAGINATION__'][$type], 'text/html;charset=UTF-8', false, false, 'admin');
+        $data = $this->cursor($this->dataUsers());
+        return $this->view('/portal/widget/list', Zord::listModels('users', $data['users']), 'text/html;charset=UTF-8', false, false, 'admin');
     }
     
     protected function usersCriteria($keyword) {
@@ -322,6 +305,7 @@ class Admin extends Module {
             $index[] = $user->login;
         }
         return [
+            'list'    => 'users',
             'count'   => $count,
             'limit'   => $limit,
             'offset'  => $offset,

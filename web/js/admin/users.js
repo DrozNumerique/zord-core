@@ -56,8 +56,8 @@ function getProfile() {
 	return profile;
 }
 
-function attachActions(users) {
-	attach(users, function(entry, operation) {
+function attachUsersActions(users) {
+	attachActions(users, function(entry, operation) {
 		var data = {
 			login:entry.parentNode.children[0].firstElementChild.value,
 			name:entry.parentNode.children[1].firstElementChild.value,
@@ -77,25 +77,32 @@ function attachActions(users) {
 }
 	
 document.addEventListener("DOMContentLoaded", function(event) {
-
-	var users = document.getElementById('users');
-	if (users !== undefined && users !== null) {
-		attachActions(users);
-	}
 	
 	window.extras.users = function() {
 		return {
+			module: 'Admin',
+			action: 'users',
 			operation:'list',
-			outer:'users',
-			keyword:document.querySelector('#lookup .keyword input').value.trim(),
+			lookup: function(form) {
+				return {
+					keyword:form.querySelector('.keyword input').value.trim(),
+				};
+			},
 			success: function() {
-				attachActions(document.getElementById('users'));	
+				attachUsersActions(document.getElementById('users'));	
 			}
 		};
 	};
+
+	var users = document.getElementById('users');
+	if (users !== undefined && users !== null) {
+		attachUsersActions(users);
+		dressCursor('users');
+	}
 	
 	var submitProfile = document.getElementById('submit-profile');
-	if (submitProfile != undefined) {
+	if (submitProfile) {
+		dressActions(document);
 		submitProfile.addEventListener("click", function(event) {
 			var profile = getProfile();
 			invokeZord({
@@ -108,4 +115,5 @@ document.addEventListener("DOMContentLoaded", function(event) {
 			});
 		});
 	}
+	
 });

@@ -510,5 +510,19 @@ form.account div {
 	height: calc(3em / 2);
 }
 
+.cursor {
+	list-style-type: none;
+	text-align: center;
+	padding: 0;
+}
+
+.cursor li {
+	display: inline-block;
+}
+
+.cursor li.step {
+	cursor: pointer;
+}
+
 
 
