@@ -420,64 +420,65 @@ function dressActions(element) {
 	activateStates(element);
 }
 
-window.extras = {};
-
-function updateList(id, offset) {
-	var params = {
-		offset:offset,
-		outer:id,
-		after: function() {
-			var list = document.getElementById(id);
-			dressActions(list);
-			invokeZord({
-				module:'Portal',
-				action:'cursor',
-				id:id,
-				outer:'cursor_' + id,
-				after:function() {
-					dressCursor(id);
-				}
-			});
-		}
+function attachUpdate(element, callback) {
+	element.update = function(params) {
+		params = Object.assign(params, callback());
+		invokeZord(params);
 	}
-	if (window.extras[id] !== undefined) {
-		var extras = window.extras[id];
-		params = Object.assign(params, extras());
-		if (params.lookup !== undefined && params.lookup !== null) {
-			var lookup = params.lookup;
-			params = Object.assign(params, lookup(document.getElementById('lookup_' + id)));
-		}
-	}
-	invokeZord(params);
 }
 
-function dressCursor(id) {
-	var cursor = document.getElementById('cursor_' + id);
-	if (cursor) {
-		var select = cursor.querySelector('select');
-		if (select) {
-			select.addEventListener('change', function(event) {
-				updateList(id, select.value);
-			});
+function attachListUpdate(list, callback) {
+	var listId = list.id;
+	var cursorId = 'cursor_' + listId;
+	var params = {
+		outer:listId,
+		after: function() {
+			var list = document.getElementById(listId);
+			attachListUpdate(list, callback);
+			var cursor = document.getElementById(cursorId);
+			if (cursor) {
+				invokeZord({
+					module:'Portal',
+					action:'cursor',
+					list:listId,
+					outer:cursorId,
+					after:function() {
+						dressCursor(document.getElementById(cursorId));
+					}
+				});
+			}
 		}
-		[].forEach.call(cursor.querySelectorAll('.step'), function(step) {
-			step.addEventListener('click', function(event) {
-				data = cursor.dataset;
-				offset = Number.parseInt(data.offset);
-				limit  = Number.parseInt(data.limit);
-				count  = Number.parseInt(data.count);
-				if (step.classList.contains('previous') && offset - limit >= 0) {
-					offset -= limit;
-				}
-				if (step.classList.contains('next') && offset + limit < count) {
-					offset += limit;
-				}
-				if (offset !== Number.parseInt(data.offset)) {
-					updateList(id, offset);
-				}
-			});
+	};
+	attachUpdate(list, function() {
+		return Object.assign(params, callback());
+	});
+}
+
+function dressCursor(cursor) {
+	var select = cursor.querySelector('select');
+	var list = document.getElementById(cursor.dataset.list);
+	if (select) {
+		select.addEventListener('change', function(event) {
+			list.update({offset: select.value});
 		});
 	}
+	[].forEach.call(cursor.querySelectorAll('.step'), function(step) {
+		step.addEventListener('click', function(event) {
+			data = cursor.dataset;
+			offset = Number.parseInt(data.offset);
+			limit  = Number.parseInt(data.limit);
+			count  = Number.parseInt(data.count);
+			if (step.classList.contains('previous') && offset - limit >= 0) {
+				offset -= limit;
+			}
+			if (step.classList.contains('next') && offset + limit < count) {
+				offset += limit;
+			}
+			if (offset !== Number.parseInt(data.offset)) {
+				list.update({offset: offset});
+			}
+		});
+	});
 }
 
 document.addEventListener("DOMContentLoaded", function(event) {
@@ -508,7 +509,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	
 	[].forEach.call(document.querySelectorAll('.lookup'), function(lookup) {
 		lookup.querySelector('button.search').addEventListener('click', function(event) {
-			updateList(lookup.dataset.list, 0);
+			document.getElementById(lookup.dataset.list).update({offset: 0});
 		});
 	});
 	

@@ -77,27 +77,24 @@ function attachUsersActions(users) {
 }
 	
 document.addEventListener("DOMContentLoaded", function(event) {
-	
-	window.extras.users = function() {
-		return {
-			module: 'Admin',
-			action: 'users',
-			operation:'list',
-			lookup: function(form) {
-				return {
-					keyword:form.querySelector('.keyword input').value.trim(),
-				};
-			},
-			success: function() {
-				attachUsersActions(document.getElementById('users'));	
-			}
-		};
-	};
 
 	var users = document.getElementById('users');
-	if (users !== undefined && users !== null) {
+	if (users) {
+		var lookup = document.getElementById('lookup_users');
+		var cursor = document.getElementById('cursor_users');
+		attachListUpdate(users, function() {
+			return {
+				module: 'Admin',
+				action: 'users',
+				operation:'list',
+				keyword:lookup.querySelector('.keyword input').value.trim(),
+				success: function() {
+					attachUsersActions(document.getElementById('users'));	
+				}
+			};
+		});
 		attachUsersActions(users);
-		dressCursor('users');
+		dressCursor(cursor);
 	}
 	
 	var submitProfile = document.getElementById('submit-profile');

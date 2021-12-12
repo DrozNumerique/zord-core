@@ -333,10 +333,10 @@ class Module {
 	        ];
 	        return $models;
 	    }
-	    $id = $this->params['id'] ?? null;
-	    if (!isset($id)) {
+	    $list = $this->params['list'] ?? null;
+	    if (!isset($list)) {
 	        return $this->error(409);
 	    }
-	    return $this->view('/portal/widget/cursor', $_SESSION['__CURSOR__'][$id], 'text/html;charset=UTF-8', false, false);
+	    return $this->view('/portal/widget/cursor', $_SESSION['__CURSOR__'][$list], 'text/html;charset=UTF-8', false, false);
 	}
 }

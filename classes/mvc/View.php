@@ -2,14 +2,14 @@
 
 class View {
     
-    private $template  = null;
-    private $models    = [];
-    private $controler = null;
-    private $context   = null;
-    private $lang      = DEFAULT_LANG;
-    private $locales   = [];
-    private $mark      = true;
-    private $implicits = [];
+    protected $template  = null;
+    protected $models    = [];
+    protected $controler = null;
+    protected $context   = null;
+    protected $lang      = DEFAULT_LANG;
+    protected $locales   = [];
+    protected $mark      = true;
+    protected $implicits = [];
     
     public function __construct($template, $models, $controler = null, $locale = null) {
         $this->template  = $template;
