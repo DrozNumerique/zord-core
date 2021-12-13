@@ -182,27 +182,45 @@ var activateChosen = function() {
 	}
 };
 
-var activateStates = function(element) {
+var entryStates = function(entry) {
+	var input = entry.querySelector('input');
+	var types = entry.dataset.type;
+	if (types == undefined || types == null) {
+		types = input.name;
+	}
+	types = types.split('|');
+	var states = {};
+	[].forEach.call(types, function(type) {
+		states = Object.assign(states, CONFIG.states[type]);
+	});
+	return states;
+}
+
+var nextState = function(states, entry) {
+	var input = entry.querySelector('input');
+	var keys = Object.keys(states);
+	return keys[(keys.indexOf(input.value) + 1) % keys.length]
+}
+
+var changeState = function(states, entry, next) {
+	var display = entry.querySelector('.display');
+	var input = entry.querySelector('input');
+	var current = input.value;
+	input.value = next;
+	display.classList.remove(states[current]);
+	display.classList.add(states[next]);
+};
+
+var activateStates = function(element, callback) {
 	if (typeof CONFIG.states !== 'undefined') {
 		[].forEach.call(element.querySelectorAll('.state'), function(entry) {
 			entry.addEventListener("click", function(event) {
-				display = entry.querySelector('.display');
-				input = entry.querySelector('input');
-				types = entry.dataset.type;
-				if (types == undefined || types == null) {
-					types = input.name;
+				var states = entryStates(entry);
+				var next = nextState(states, entry);
+				if (callback == undefined || callback == null || callback(entry, next)) {
+					changeState(states, entry, next);
+					entry.parentNode.dataset.included = next !== 'no' ? 'yes' : 'no';
 				}
-				types = types.split('|');
-				states = {};
-				[].forEach.call(types, function(type) {
-					states = Object.assign(states, CONFIG.states[type]);
-				});
-				keys = Object.keys(states);
-				current = input.value;
-				next = keys[(keys.indexOf(current) + 1) % keys.length]
-				input.value = next;
-				display.classList.remove(states[current]);
-				display.classList.add(states[next]);
 			});
 		});
 	}
