@@ -389,7 +389,7 @@ div#wrapper > div#preview {
 	color: gray;
 	border: 1px solid lightgray;
 	padding: 2px;
-	width: 100px;
+	width: calc(1em + 4px);
 	margin: 0 10px;
 }
 

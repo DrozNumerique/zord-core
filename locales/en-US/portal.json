@@ -65,7 +65,9 @@
 		}
 	},
 	"cursor": {
+		"first": "First",
 		"previous": "Previous",
-		"next": "Next"
+		"next": "Next",
+		"last": "last"
 	}
 }

@@ -65,7 +65,9 @@
 		}
 	},
 	"cursor": {
+		"first": "Premiers",
 		"previous": "Précédents",
-		"next": "Suivants"
+		"next": "Suivants",
+		"last": "Derniers"
 	}
 }

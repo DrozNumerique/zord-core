@@ -489,11 +489,17 @@ function dressCursor(cursor) {
 			offset = Number.parseInt(data.offset);
 			limit  = Number.parseInt(data.limit);
 			count  = Number.parseInt(data.count);
+			if (step.classList.contains('first')) {
+				offset = 0;
+			}
 			if (step.classList.contains('previous') && offset - limit >= 0) {
 				offset -= limit;
 			}
 			if (step.classList.contains('next') && offset + limit < count) {
 				offset += limit;
+			}
+			if (step.classList.contains('last')) {
+				offset = Math.floor(count / limit) * limit;
 			}
 			if (offset !== Number.parseInt(data.offset)) {
 				list.update({offset: offset});
