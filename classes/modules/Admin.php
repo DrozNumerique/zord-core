@@ -292,6 +292,8 @@ class Admin extends Module {
     protected function dataUsers() {
         $limit = Zord::value('admin', ['users','list','items','limit']) ?? 10;
         $offset = $this->params['offset'] ?? 0;
+        $order = $this->params['order'] ?? 'login';
+        $direction = $this->params['direction'] ?? 'asc';
         $keyword = $this->params['keyword'] ?? null;
         list($join, $where) = $this->usersCriteria($keyword);
         $criteria = ['many' => true, 'join' => $join, 'where' => $where];
@@ -299,6 +301,7 @@ class Admin extends Module {
         $count = $entities->count();
         $criteria['limit']  = $limit;
         $criteria['offset'] = $offset;
+        $criteria['order'] = [$direction => $order];
         $users = (new UserEntity())->retrieve($criteria);
         $index = [];
         foreach ($entities as $user) {

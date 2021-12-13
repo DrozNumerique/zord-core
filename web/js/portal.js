@@ -420,21 +420,45 @@ function dressActions(element) {
 	activateStates(element);
 }
 
-function attachUpdate(element, callback) {
-	element.update = function(params) {
-		params = Object.assign(params, callback());
-		invokeZord(params);
+function attachZord(element, method, common, callback) {
+	element[method] = function(params) {
+		var extras = callback();
+		var merge = {};
+		Object.assign(merge, common);
+		Object.assign(merge, extras);
+		[].forEach.call(['before','after','success','failure'], function(key) {
+			var commonCallback = common[key];
+			var extrasCallback = extras[key];
+			merge[key] = function() {
+				if (commonCallback !== undefined) {
+					commonCallback();
+				}
+				if (extrasCallback !== undefined) {
+					extrasCallback();
+				}
+			}
+		});
+		invokeZord(Object.assign(merge,params));
 	}
+}
+
+function attachUpdate(element, common, callback) {
+	var id = element.id;
+	var base = {
+		outer: id,
+		success: function() {
+			attachUpdate(document.getElementById(id), callback);
+		}
+	};
+	attachZord(element, 'update', Object.assign(base, common), callback);
 }
 
 function attachListUpdate(list, callback) {
 	var listId = list.id;
 	var cursorId = 'cursor_' + listId;
-	var params = {
-		outer:listId,
-		after: function() {
-			var list = document.getElementById(listId);
-			attachListUpdate(list, callback);
+	attachUpdate(list, {
+		success: function() {
+			attachListUpdate(document.getElementById(listId), callback);
 			var cursor = document.getElementById(cursorId);
 			if (cursor) {
 				invokeZord({
@@ -448,10 +472,7 @@ function attachListUpdate(list, callback) {
 				});
 			}
 		}
-	};
-	attachUpdate(list, function() {
-		return Object.assign(params, callback());
-	});
+	}, callback);
 }
 
 function dressCursor(cursor) {
@@ -510,6 +531,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	[].forEach.call(document.querySelectorAll('.lookup'), function(lookup) {
 		lookup.querySelector('button.search').addEventListener('click', function(event) {
 			document.getElementById(lookup.dataset.list).update({offset: 0});
+		});
+		[].forEach.call(lookup.querySelectorAll('input[type="radio"],input[type="checkbox"]'), function(element) {
+			element.addEventListener('click', function(event) {
+				document.getElementById(lookup.dataset.list).update({offset: 0});
+			});
+		});
+		[].forEach.call(lookup.querySelectorAll('select'), function(element) {
+			element.addEventListener('change', function(event) {
+				document.getElementById(lookup.dataset.list).update({offset: 0});
+			});
 		});
 	});
 	

@@ -24,7 +24,8 @@
 				"to": "Destinataire",
 				"activation": "Lien d'activation"
 			},
-			"keyword": "Identifiant, nom, courriel..."
+			"keyword": "Identifiant, nom, courriel...",
+			"order": "Classer par..."
 		},
 		"content": {
 			"title": "Édition de contenus",

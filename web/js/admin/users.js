@@ -80,6 +80,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 	var users = document.getElementById('users');
 	if (users) {
+		$("input[type='radio']").checkboxradio();
 		var lookup = document.getElementById('lookup_users');
 		var cursor = document.getElementById('cursor_users');
 		attachListUpdate(users, function() {
@@ -88,6 +89,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
 				action: 'users',
 				operation:'list',
 				keyword:lookup.querySelector('.keyword input').value.trim(),
+				order:lookup.querySelector('input[name="order"]:checked').value,
+				direction:lookup.querySelector('input[name="direction"]:checked').value,
 				success: function() {
 					attachUsersActions(document.getElementById('users'));	
 				}

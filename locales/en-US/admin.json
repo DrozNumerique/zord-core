@@ -24,7 +24,8 @@
 				"to": "To",
 				"activation": "Activation link "
 			},
-			"keyword": "Login, name, email..."
+			"keyword": "Login, name, email...",
+			"order": "Order by..."
 		},
 		"content": {
 			"title": "Contents edition",
