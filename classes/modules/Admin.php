@@ -296,16 +296,15 @@ class Admin extends Module {
         $direction = $this->params['direction'] ?? 'asc';
         $keyword = $this->params['keyword'] ?? null;
         list($join, $where) = $this->usersCriteria($keyword);
-        $criteria = ['many' => true, 'join' => $join, 'where' => $where];
+        $criteria = ['many' => true, 'join' => $join, 'where' => $where, 'order' => [$direction => $order]];
         $entities = (new UserEntity())->retrieve($criteria);
         $count = $entities->count();
         $criteria['limit']  = $limit;
         $criteria['offset'] = $offset;
-        $criteria['order'] = [$direction => $order];
         $users = (new UserEntity())->retrieve($criteria);
         $index = [];
         foreach ($entities as $user) {
-            $index[] = $user->login;
+            $index[] = $user->$order;
         }
         return [
             'list'    => 'users',

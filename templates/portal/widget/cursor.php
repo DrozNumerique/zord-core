@@ -5,7 +5,7 @@
                     	<li class="index">
                     		<select>
 <?php   for ($offset = 0 ; $offset < $models['count'] ; $offset += $models['limit']) { ?>
-								<option value="<?php echo $offset; ?>"<?php echo $offset == $models['offset'] ? ' selected' : ''; ?>><?php echo $models['index'][$offset]; ?> => <?php echo $models['index'][min([$offset + $models['limit'], $models['count']]) - 1]; ?></option>
+								<option value="<?php echo $offset; ?>"<?php echo $offset == $models['offset'] ? ' selected' : ''; ?>><?php echo $models['index'][$offset]; ?> &rarr; <?php echo $models['index'][min([$offset + $models['limit'], $models['count']]) - 1]; ?></option>
 <?php   } ?>
 							</select>
 						</li>
