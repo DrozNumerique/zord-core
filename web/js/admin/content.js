@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		[].forEach.call(items, function(item) {
 			item.classList.remove('selected');
 		});
-		item = contents.querySelector('li[data-value="' + page + '"]');
+		var item = contents.querySelector('li[data-value="' + page + '"]');
 		if (item) {
 			item.classList.add('selected');
 			selected = contents.querySelector('div.selected');
@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		[].forEach.call(dates, function(date) {
 			date.style.display = 'none';
 		});
-		editor = getEditor(page);
+		var editor = getEditor(page);
 		if (editor) {
 			editor.style.display = 'block';
 			preview.classList = [];
@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 			preview.classList.add(page);
 			preview.innerHTML = converter.makeHtml(editor.value);
 		}
-		date = getDate(page);
+		var date = getDate(page);
 		if (date) {
 			date.style.display = 'inline-block';
 		}
@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	}
 	
 	if (name) {
-		display(getSessionProperty('content.name', 'home'));
+		display(getSessionProperty('content.name', CONFIG.contents[0]));
 		[].forEach.call(items, function(item) {
 			item.addEventListener('click', function(event) {
 				display(item.dataset.value);
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	
 	if (name && save) {
 		save.addEventListener('click', function(event) {
-			editor = getEditor(name.value);
+			var editor = getEditor(name.value);
 			if (editor) {
 				invokeZord({
 					module: 'Admin',
@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 					name: name.value,
 					content: editor.value,
 					success: function(result) {
-						date = getDate(name.value);
+						var date = getDate(name.value);
 						if (date) {
 							date.innerHTML = result.date;
 						}
