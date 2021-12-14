@@ -16,6 +16,6 @@
 <?php } ?>
 	<div id="save" class="admin-button"><?php echo $locale->save; ?></div>
 	<div id="preview">
-	    <div class="content"></div>
+	    <div class="content static"></div>
 	</div>
 </div>

@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	var contents = document.getElementById('contents');
 	var preview = document.getElementById('preview').querySelector('div.content');
 	var save = document.getElementById('save');
-	var converter = new showdown.Converter();
+	var converter = new showdown.Converter({tables: true});
 	var editors = document.querySelectorAll('textarea.editor');
 	var dates = document.querySelectorAll('div.date');
 	var items = contents.querySelectorAll('li[data-value]');
@@ -42,6 +42,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 			editor.style.display = 'block';
 			preview.classList = [];
 			preview.classList.add('content');
+			preview.classList.add('static');
 			preview.classList.add(page);
 			preview.innerHTML = converter.makeHtml(editor.value);
 		}

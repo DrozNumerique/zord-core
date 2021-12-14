@@ -24,6 +24,10 @@
 			{
 				"src": "/js/showdown.js",
 				"type": "text/javascript"
+			},
+			{
+				"src": "/js/showdown-table.js",
+				"type": "text/javascript"
 			}
 		]
 	}
