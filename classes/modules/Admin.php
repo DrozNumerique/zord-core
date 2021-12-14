@@ -4,12 +4,8 @@ class Admin extends Module {
         
     public function index($current = null, $models = null) {
         $tabs = Zord::getConfig('admin');
-        $scopes = [
-            'global'  => '*',
-            'context' => $this->context
-        ];
         foreach ($tabs as $name => $tab) {
-            if (!$this->user->hasRole('admin', $scopes[$tab['scope'] ?? 'global'])) {
+            if (!$this->isAvailable($name)) {
                 unset($tabs[$name]);
             }
         }
@@ -276,6 +272,20 @@ class Admin extends Module {
     public function users() {
         $data = $this->cursor($this->dataUsers());
         return $this->view('/portal/widget/list', Zord::listModels('users', $data['users']), 'text/html;charset=UTF-8', false, false, 'admin');
+    }
+    
+    protected function isAvailable($tab) {
+        $scopes = [
+            'global'  => '*',
+            'context' => $this->context
+        ];
+        if (!$this->user->hasRole('admin', $scopes[$tab['scope'] ?? 'global'])) {
+            return false;
+        }
+        if ($tab == 'content' && empty($this->contentList())) {
+            return false;
+        }
+        return true;
     }
     
     protected function usersCriteria($keyword) {

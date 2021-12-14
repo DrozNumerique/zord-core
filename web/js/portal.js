@@ -219,7 +219,6 @@ var activateStates = function(element, callback) {
 				var next = nextState(states, entry);
 				if (callback == undefined || callback == null || callback(entry, next)) {
 					changeState(states, entry, next);
-					entry.parentNode.dataset.included = next !== 'no' ? 'yes' : 'no';
 				}
 			});
 		});

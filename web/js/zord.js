@@ -11,6 +11,7 @@ var invokeZord = function(params) {
 	var failure  = params.failure == undefined ? null : params.failure;
 	var inner  = params.inner == undefined ? null : params.inner;
 	var outer  = params.outer == undefined ? null : params.outer;
+	var open = params.open == undefined ? null : params.open;
 	var target = BASEURL['zord'] + '/index.php';
 	
 	if (before !== null) {
@@ -53,7 +54,7 @@ var invokeZord = function(params) {
 						success(JSON.parse(this.responseText));
 					}
 				} else if (type.startsWith('text/html')) {
-					if (success == null && inner == null && outer == null) {
+					if (success == null && inner == null && outer == null && open == null) {
 						document.write(this.responseText);
 						document.close();
 					} else {
@@ -61,6 +62,10 @@ var invokeZord = function(params) {
 							document.getElementById(inner).innerHTML = this.responseText;
 						} else if (outer !== null) {
 							document.getElementById(outer).outerHTML = this.responseText;
+						} else if (open !== null) {
+							var reference = window.open('', open, '');
+							reference.document.write(this.responseText);
+							reference.document.close();
 						}
 						if (success !== null) {
 							success(this.responseText);
