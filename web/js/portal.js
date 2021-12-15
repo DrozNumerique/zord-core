@@ -492,6 +492,19 @@ function attachListUpdate(list, callback) {
 	}, callback);
 }
 
+function activateListSort(list, lookup) {
+	[].forEach.call(list.querySelectorAll('.sortable'), function(sortable) {
+		sortable.classList.add('active');
+		sortable.addEventListener('click', function(event) {
+			var order = lookup.querySelector('input[name="order"]');
+			var direction = lookup.querySelector('input[name="direction"]');
+			order.value = sortable.dataset.field;
+			direction.value = direction.value == 'asc' ? 'desc' : 'asc';
+			list.update();
+		});
+	});
+}
+
 function dressCursor(cursor) {
 	var select = cursor.querySelector('select');
 	var list = document.getElementById(cursor.dataset.list);
@@ -552,8 +565,17 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	});
 	
 	[].forEach.call(document.querySelectorAll('.lookup'), function(lookup) {
-		lookup.querySelector('button.search').addEventListener('click', function(event) {
-			document.getElementById(lookup.dataset.list).update({offset: 0});
+		[].forEach.call(lookup.querySelectorAll('button.search'), function(button) {
+			button.addEventListener('click', function(event) {
+				document.getElementById(lookup.dataset.list).update({offset: 0});
+			});
+		});
+		[].forEach.call(lookup.querySelectorAll('input.search'), function(input) {
+			input.addEventListener('keydown', function(event) {
+				if (event.keyCode == 13) {
+					document.getElementById(lookup.dataset.list).update({offset: 0});
+				}
+			});
 		});
 		[].forEach.call(lookup.querySelectorAll('input[type="radio"],input[type="checkbox"]'), function(element) {
 			element.addEventListener('click', function(event) {

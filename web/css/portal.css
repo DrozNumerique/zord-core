@@ -524,5 +524,9 @@ form.account div {
 	cursor: pointer;
 }
 
+.sortable.active {
+	cursor: pointer;
+}
+
 
 

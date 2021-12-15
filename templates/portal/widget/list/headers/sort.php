@@ -1,0 +1,1 @@
+								<a class="sort fa fa-sort-alpha-<?php echo $direction; ?> fa-fw" title="<?php echo $this->locale('portal')->list->sort->$direction; ?>" data-field="<?php echo $field; ?>" data-sorted="<?php echo $direction; ?>"></a>

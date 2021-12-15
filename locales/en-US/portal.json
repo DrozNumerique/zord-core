@@ -35,6 +35,10 @@
 		"enginedByZord" : "engined by ꓜꓳꓤꓷ"
 	},
 	"list": {
+		"sort": {
+			"asc": "Ascending",
+			"desc": "Descending"
+		},
 		"headers": {
 			"actions": "Actions",
 			"login"  : "Login",

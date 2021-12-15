@@ -89,14 +89,18 @@ document.addEventListener("DOMContentLoaded", function(event) {
 				action: 'users',
 				operation:'list',
 				keyword:lookup.querySelector('.keyword input').value.trim(),
-				order:lookup.querySelector('input[name="order"]:checked').value,
-				direction:lookup.querySelector('input[name="direction"]:checked').value,
+				order:lookup.querySelector('input[name="order"]').value,
+				direction:lookup.querySelector('input[name="direction"]').value,
 				success: function() {
-					attachUsersActions(document.getElementById('users'));	
+					var users = document.getElementById('users');
+					var lookup = document.getElementById('lookup_users')
+					attachUsersActions(users);	
+					activateListSort(users, lookup);
 				}
 			};
 		});
 		attachUsersActions(users);
+		activateListSort(users, lookup);
 		dressCursor(cursor);
 	}
 	

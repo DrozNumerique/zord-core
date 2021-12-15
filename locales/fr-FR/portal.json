@@ -35,6 +35,10 @@
 		"enginedByZord" : "Propulsé par ꓜꓳꓤꓷ"
 	},
 	"list": {
+		"sort": {
+			"asc": "Croissant",
+			"desc": "Décroissant"
+		},
 		"headers": {
 			"actions": "Actions",
 			"login": "Identifiant",

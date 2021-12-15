@@ -270,8 +270,8 @@ class Admin extends Module {
     }
     
     public function users() {
-        $data = $this->cursor($this->dataUsers());
-        return $this->view('/portal/widget/list', Zord::listModels('users', $data['users']), 'text/html;charset=UTF-8', false, false, 'admin');
+        $models = $this->cursor($this->dataUsers());
+        return $this->view('/portal/widget/list', Zord::listModels('users', $models), 'text/html;charset=UTF-8', false, false, 'admin');
     }
     
     protected function isAvailable($tab) {
@@ -317,13 +317,15 @@ class Admin extends Module {
             $index[] = $user->$order;
         }
         return [
-            'list'    => 'users',
-            'count'   => $count,
-            'limit'   => $limit,
-            'offset'  => $offset,
-            'index'   => $index,
-            'keyword' => $keyword,
-            'users'   => $users
+            'list'      => 'users',
+            'count'     => $count,
+            'order'     => $order,
+            'direction' => $direction,
+            'limit'     => $limit,
+            'offset'    => $offset,
+            'index'     => $index,
+            'keyword'   => $keyword,
+            'data'      => $users
         ];
     }
     
@@ -362,12 +364,12 @@ class Admin extends Module {
         $user = User::get($login);
         $result['login'] = $login;
         $result['name'] = $user->name;
-        $result['data']['ipv4'] = $this->explodeIP($user->ipv4);
-        $result['data']['ipv6'] = $this->explodeIP($user->ipv6);
-        $result['data']['roles'] = [];
+        $result['ipv4'] = $this->explodeIP($user->ipv4);
+        $result['ipv6'] = $this->explodeIP($user->ipv6);
+        $result['roles'] = [];
         foreach ((new UserHasRoleEntity())->retrieve(['where' => ['user' => $login], 'many' => true]) as $entry) {
             if ($entry->context == '*' || null !== Zord::value('context', $entry->context)) {
-                $result['data']['roles'][] = [
+                $result['roles'][] = [
                     'context' => $entry->context,
                     'role'    => $entry->role,
                     'start'   => $entry->start,

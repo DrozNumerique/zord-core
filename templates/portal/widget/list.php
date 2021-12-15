@@ -1,8 +1,11 @@
 					<ul class="list <?php echo $id; ?><?php echo Zord::classList($class ?? null); ?>" id="<?php echo $id; ?>">
 						<li class="header">
 <?php foreach (array_keys($fields) as $field) { ?>
-							<div class="column <?php echo $field; ?><?php echo Zord::classList($options[$field]['header']['class'] ?? null); ?>">
+							<div class="column sortable <?php echo $field; ?><?php echo Zord::classList($options[$field]['header']['class'] ?? null); ?>" data-field="<?php echo $field; ?>">
 <?php   $this->render('headers/'.($headers[$field] ?? 'label'), ['field' => $field, 'options' => $options[$field] ?? []]); ?>
+<?php   if (($order ?? null) == $field) { ?>
+<?php     $this->render('headers/sort', ['field' => $field, 'options' => $options[$field] ?? [], 'direction' => $direction]); ?>
+<?php   } ?>
 							</div>
 <?php } ?>
 <?php if (!empty($actions)) { ?>
@@ -14,7 +17,7 @@
 <?php if ($create ?? false) { ?>
 						<li class="<?php echo $create ?>">
 <?php   foreach ($fields as $field => $type) { ?>
-							<div class="column <?php echo $field; ?><?php echo Zord::classList($options[$field]['class'] ?? null); ?>">
+							<div class="column <?php echo $field; ?><?php echo Zord::classList($options[$field]['class'] ?? null); ?>" data-field="<?php echo $field; ?>">
 <?php	 $this->render('fields/'.(in_array($type, Zord::value('portal', ['list','input'])) ? 'input' : $type), ['field' => $field, 'type' => $type, 'options' => $options[$field] ?? [], 'choices' => $choices[$field] ?? []]); ?>
 							</div>
 <?php   } ?>
@@ -28,7 +31,7 @@
 <?php foreach($data as $entry) { ?>
 	  					<li class="data">
 <?php   foreach ($fields as $field => $type) { ?>
-							<div class="column <?php echo $field; ?><?php echo Zord::classList($options[$field]['class'] ?? null); ?>">
+							<div class="column <?php echo $field; ?><?php echo Zord::classList($options[$field]['class'] ?? null); ?>" data-field="<?php echo $field; ?>">
 <?php     $this->render('fields/'.(in_array($type, Zord::value('portal', ['list','input'])) ? 'input' : $type), ['field' => $field, 'type' => $type, 'entry' => $entry, 'options' => $options[$field] ?? [], 'choices' => $choices[$field] ?? []]); ?>
 							</div>
 <?php   } ?>
