@@ -529,7 +529,7 @@ function dressCursor(cursor) {
 				offset += limit;
 			}
 			if (step.classList.contains('last')) {
-				offset = Math.floor(count / limit) * limit;
+				offset = count > 0 ? Math.floor((count - 1) / limit) * limit : 0;
 			}
 			if (offset !== Number.parseInt(data.offset)) {
 				list.update({offset: offset});
