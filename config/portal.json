@@ -52,7 +52,13 @@
 	},
 	"list": {
 		"input": ["text","email","password","checkbox","date","time","datetime-local","week","month","hidden","number","tel","url","file","color","range"],
-		"attributes": ["disabled","readonly","required","min","max"],
+		"attributes": {
+			"disabled": ["update"],
+			"readonly": ["update"],
+			"required": ["create","update"],
+			"min"     : ["create","update"],
+			"max"     : ["create","update"]
+		},
 		"dataset": {"empty": "no"},
 		"context": {
 			"id": "context",
