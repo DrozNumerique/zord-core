@@ -5,7 +5,7 @@ class Admin extends Module {
     public function index($current = null, $models = null) {
         $tabs = Zord::getConfig('admin');
         foreach ($tabs as $name => $tab) {
-            if (!$this->isAvailable($name)) {
+            if (!$this->isAvailable($name, $tab['scope'] ?? 'global')) {
                 unset($tabs[$name]);
             }
         }
@@ -274,15 +274,15 @@ class Admin extends Module {
         return $this->view('/portal/widget/list', Zord::listModels('users', $models), 'text/html;charset=UTF-8', false, false, 'admin');
     }
     
-    protected function isAvailable($tab) {
+    protected function isAvailable($name, $scope) {
         $scopes = [
             'global'  => '*',
             'context' => $this->context
         ];
-        if (!$this->user->hasRole('admin', $scopes[$tab['scope'] ?? 'global'])) {
+        if (!$this->user->hasRole('admin', $scopes[$scope])) {
             return false;
         }
-        if ($tab == 'content' && empty($this->contentList())) {
+        if ($name == 'content' && empty($this->contentList())) {
             return false;
         }
         return true;
