@@ -1,4 +1,4 @@
-<?php $current = $models['current'] ?? array_keys(Zord::getConfig('admin'))[0]; ?>
+<?php $current = $models['current']; ?>
 <div class="admin-page">
     <div id="menu" class="admin-menu">
 <?php foreach($models['tabs'] as $name) { ?>
