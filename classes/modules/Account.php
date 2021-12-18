@@ -170,17 +170,18 @@ class Account extends Module {
             'message' => $message,
             'login'   => $login
         ];
-        if (isset($login) && !empty($password)) {
+        if (!empty($login) && !empty($password)) {
             $user = User::authenticate($login, $password);
             if ($user) {
                 $this->controler->setUser($user);
                 return $this->redirect($success ?? $this->baseURL, true);
             } else {
-                $models = [
-                    'message' => $this->locale->messages->auth_failed
-                ];
-                if (!empty($login)) {
-                    $models['login'] = $login;
+                $models['message'] = $this->locale->messages->auth_failed;
+                if (!isset($login)) {
+                    unset($models['login']);
+                }
+                if (!isset($success)) {
+                    unset($models['success']);
                 }
                 if (isset($failure)) {
                     return $this->redirect($failure.(empty(parse_url($failure, PHP_URL_QUERY)) ? '?' : '&').http_build_query($models));
