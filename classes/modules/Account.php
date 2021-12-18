@@ -159,27 +159,29 @@ class Account extends Module {
     }
     
     public function connect() {
-        $login    = trim($this->params['login']    ?? null);
-        $password = trim($this->params['password'] ?? null);
-        $success  = trim($this->params['success']  ?? null);
-        $failure  = trim($this->params['failure']  ?? null);
-        $message  = trim($this->params['message']  ?? null);
+        $login    = Zord::trim($this->params['login']    ?? null);
+        $password = Zord::trim($this->params['password'] ?? null);
+        $success  = Zord::trim($this->params['success']  ?? null);
+        $failure  = Zord::trim($this->params['failure']  ?? null);
+        $message  = Zord::trim($this->params['message']  ?? null);
         $models = [
             'success' => $success,
             'failure' => $failure,
             'message' => $message,
             'login'   => $login
         ];
-        if (isset($login) && isset($password)) {
+        if (isset($login) && !empty($password)) {
             $user = User::authenticate($login, $password);
             if ($user) {
                 $this->controler->setUser($user);
                 return $this->redirect($success ?? $this->baseURL, true);
             } else {
                 $models = [
-                    'login'   => $login,
                     'message' => $this->locale->messages->auth_failed
                 ];
+                if (!empty($login)) {
+                    $models['login'] = $login;
+                }
                 if (isset($failure)) {
                     return $this->redirect($failure.(empty(parse_url($failure, PHP_URL_QUERY)) ? '?' : '&').http_build_query($models));
                 }
