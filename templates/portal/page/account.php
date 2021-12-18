@@ -16,7 +16,7 @@
 <?php   } ?>
 <?php   if (!empty($models['message'])) { ?>
 <?php     foreach (explode('|', $models['message']) as $message) { ?>	
-			<div><?php echo $message; ?></div><br/>
+			<div class="message"><?php echo $message; ?></div><br/>
 <?php     } ?>
 <?php   } ?>
 <?php   $this->render($action, Zord::array_merge($models, ['switch' => $action])); ?>

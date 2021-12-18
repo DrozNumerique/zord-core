@@ -158,27 +158,30 @@ class Account extends Module {
         return $this->form($scope, $models);
     }
     
-    public function connect($success = null, $failure = null) {
-        $login    = trim($this->params['login']    ?? '');
+    public function connect() {
+        $login    = trim($this->params['login']    ?? null);
         $password = trim($this->params['password'] ?? null);
-        $success = $this->params['success'] ?? null;
-        $failure = $this->params['failure'] ?? null;
-        $message = $this->params['message'] ?? null;
+        $success  = trim($this->params['success']  ?? null);
+        $failure  = trim($this->params['failure']  ?? null);
+        $message  = trim($this->params['message']  ?? null);
         $models = [
             'success' => $success,
             'failure' => $failure,
-            'message' => $message
+            'message' => $message,
+            'login'   => $login
         ];
-        if (!empty($login) && !empty($password)) {
+        if (isset($login) && isset($password)) {
             $user = User::authenticate($login, $password);
             if ($user) {
                 $this->controler->setUser($user);
                 return $this->redirect($success ?? $this->baseURL, true);
             } else {
+                $models = [
+                    'login'   => $login,
+                    'message' => $this->locale->messages->auth_failed
+                ];
                 if (isset($failure)) {
-                    return $this->redirect($failure.'?message='.urlencode($this->locale->messages->auth_failed));
-                } else {
-                    $models['message'] = $this->locale->messages->auth_failed;
+                    return $this->redirect($failure.(empty(parse_url($failure, PHP_URL_QUERY)) ? '?' : '&').http_build_query($models));
                 }
             }
         }
