@@ -176,7 +176,7 @@ class Account extends Module {
                 return $this->redirect($success ?? $this->baseURL, true);
             } else {
                 if (isset($failure)) {
-                    return $this->redirect($failure.'?message='.$this->locale->messages->auth_failed);
+                    return $this->redirect($failure.'?message='.urlencode($this->locale->messages->auth_failed));
                 } else {
                     $models['message'] = $this->locale->messages->auth_failed;
                 }
