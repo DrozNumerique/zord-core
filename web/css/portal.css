@@ -168,6 +168,15 @@ form.account div.switch.after {
 	text-align:left;
 }
 
+form.account div.message {
+	color: black;
+	padding: 20px 0;
+	font-size: 1.2em;
+	font-weight: bold;
+	background: #CCC;
+	margin-bottom: 20px;
+}
+
 form.account label {
 	width:280px;
 	display: inline-block;
