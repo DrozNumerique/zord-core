@@ -3,7 +3,7 @@ if (isset($skin->scripts)) {
     foreach ($skin->scripts as $script) {
         if (isset($script->src)) {
 ?>
-	<script type="<?php echo $script->type; ?>" src="<?php echo $script->src; ?>"></script>
+	<script type="<?php echo $script->type; ?>" src="<?php echo $script->src.Zord::clientCacheQuery(); ?>"></script>
 <?php
         } else if (isset($script->template)) {
 ?>
@@ -24,7 +24,7 @@ if (isset($models['portal']['scripts'])) {
     foreach ($models['portal']['scripts'] as $script) {
         if (isset($script['src'])) {
 ?>
-	<script type="<?php echo $script['type']; ?>" src="<?php echo $script['src']; ?>"></script>
+	<script type="<?php echo $script['type']; ?>" src="<?php echo $script['src'].Zord::clientCacheQuery(); ?>"></script>
 <?php
         } else if (isset($script['template'])) {
         ?>

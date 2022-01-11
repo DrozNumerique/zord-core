@@ -1172,4 +1172,8 @@ class Zord {
     public static function entryValue($entry, $field, $options) {
         return isset($entry) ? (is_object($entry) ? $entry->$field : $entry[$field]) : ($options['default'] ?? '');
     }
+    
+    public static function clientCacheQuery() {
+        return defined("CLIENT_CACHE_VERSION") ? '?clientCacheVersion='.CLIENT_CACHE_VERSION : '';
+    }
 }
