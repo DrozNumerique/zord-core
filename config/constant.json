@@ -26,5 +26,6 @@
     "MAIL_TEXT_END": "TEXT_END",
     "MAIL_TRACE": true,
     "MAIL_FOLDER": "mails",
-    "PASSWORD_MIN_LENGTH": 8
+    "PASSWORD_MIN_LENGTH": 8,
+    "CHECK_IP_WHEN_RESET_PASSWORD": true
 }

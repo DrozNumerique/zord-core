@@ -158,6 +158,10 @@ class Account extends Module {
         return $this->form($scope, $models);
     }
     
+    protected function fullCheck($reset) {
+        return $reset.' @ '.$_SERVER['REMOTE_ADDR'];
+    }
+    
     public function connect() {
         $login    = Zord::trim($this->params['login']    ?? null);
         $password = Zord::trim($this->params['password'] ?? null);
@@ -201,8 +205,18 @@ class Account extends Module {
                     $login = $data['login'];
                     $reset = $data['reset'];
                     $user = (new UserEntity())->retrieve($login);
-                    if ($user !== false && $reset.' @ '.$_SERVER['REMOTE_ADDR'] === $user->reset) {
-                        $this->bind($login);
+                    if ($user !== false) {
+                        $check = $user->reset;
+                        if (CHECK_IP_WHEN_RESET_PASSWORD) {
+                            $reset = $this->fullCheck($reset);
+                        } else {
+                            $check = substr($check, 0, strlen($reset));
+                        }
+                        if ($reset === $check) {
+                            $this->bind($login);
+                        } else {
+                            return $this->error(403);
+                        }
                     } else {
                         return $this->error(404);
                     }
@@ -292,7 +306,7 @@ class Account extends Module {
     
     public function notifyReset($user) {
         $now = date('Y-m-d H:i:s');
-        (new UserEntity())->update($user->login, ['reset' => $now.' @ '.$_SERVER['REMOTE_ADDR']]);
+        (new UserEntity())->update($user->login, ['reset' => $this->fullCheck($now)]);
         $data = Zord::json_encode(['login' => $user->login, 'reset' => $now]);
         $crypted = Zord::encrypt($data, Zord::realpath(OPENSSL_PUBLIC_KEY));
         if ($crypted !== false) {
