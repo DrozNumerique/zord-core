@@ -59,7 +59,8 @@
 		"notify_profile": {
 			"subject": "Information du compte",
 			"text": "Votre identifiant est "
-		}
+		},
+		"noreply": "Ceci est un message automatique, merci de ne pas y répondre. Pour toute question, veuillez contacter droz@droz.org."
 	},
 	"switch": {
 		"connect": "Vous avez déjà un compte ? Connectez-vous",

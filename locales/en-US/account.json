@@ -61,7 +61,8 @@
 		"notify_profile": {
 			"subject": "Account information",
 			"text": "Your login is "
-		}
+		},
+		"noreply": "This is an automatic message, please do not reply to it. For any questions, please contact droz@droz.org."
 	},
 	"switch": {
 		"connect": "Already have an account ? Log in",

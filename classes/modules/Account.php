@@ -288,7 +288,7 @@ class Account extends Module {
                 ]
             ],
             'subject'    => $this->locale->mail->notify_profile->subject,
-            'text'       => $this->locale->mail->notify_profile->text.$user->login."\n",
+            'text'       => $this->locale->mail->notify_profile->text.$user->login."\n".$this->locale->mail->noreply,
             'content'    => '/mail/account/notify',
             'models'     => [
                 'login' => $user->login
@@ -320,7 +320,7 @@ class Account extends Module {
                     ]
                 ],
                 'subject'    => $this->locale->mail->reset_password->subject,
-                'text'       => $this->locale->mail->reset_password->copy_paste."\n".$url,
+                'text'       => $this->locale->mail->reset_password->copy_paste."\n".$url."\n".$this->locale->mail->noreply,
                 'content'    => '/mail/account/reset',
                 'models'     => [
                     'url' => $url
