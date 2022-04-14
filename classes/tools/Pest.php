@@ -393,7 +393,7 @@ class Pest
         if (!is_array($data)) $headers[] = 'Content-Length: ' . strlen($data);
         $curl_opts[CURLOPT_HTTPHEADER] = $this->prepHeaders($headers);
         $curl_opts[CURLOPT_POSTFIELDS] = $data;
-
+        
         $curl = $this->prepRequest($curl_opts, $url);
         $body = $this->doRequest($curl);
 
@@ -413,7 +413,7 @@ class Pest
             $multipart = false;
 
             foreach ($data as $item) {
-                if (is_string($item) && strncmp($item, "@", 1) == 0 && is_file(substr($item, 1))) {
+                if ((is_object($item) && $item instanceof CURLFile) || (is_string($item) && strncmp($item, "@", 1) == 0 && is_file(substr($item, 1)))) {
                     $multipart = true;
                     break;
                 }

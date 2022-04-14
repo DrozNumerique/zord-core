@@ -11,7 +11,7 @@ class RestWrapper {
         $config = Zord::value('rest', get_class($this));
         if (isset($config['baseURL'])) {
             $options = [];
-            $class = 'Pest'.($config['type'] ?? 'JSON');
+            $class = 'Pest'.($config['type'] ?? '');
             if (isset($config['options'])) {
                 foreach ($config['options'] as $key => $value) {
                     if (defined($key)) {
@@ -29,17 +29,20 @@ class RestWrapper {
         }
     }
     
-    protected function invoke($name, $data = [], $headers = []) {
+    protected function invoke($name, $data = null, $headers = []) {
         $this->function = $this->functions[$name] ?? false;
         if ($this->function && $this->function['path']) {
             $method = $this->function['method'] ?? 'GET';
-            $path = Zord::substitute($this->function['path'], $data);
-            $unset = $this->function['unset'] ?? [];
-            if (!is_array($unset)) {
-                $unset = [$unset];
-            }
-            foreach ($unset as $key) {
-                unset($data[$key]);
+            $path = $this->function['path'];
+            if (is_array($data)) {
+                $path = Zord::substitute($path, $data);
+                $unset = $this->function['unset'] ?? [];
+                if (!is_array($unset)) {
+                    $unset = [$unset];
+                }
+                foreach ($unset as $key) {
+                    unset($data[$key]);
+                }
             }
             switch ($method) {
                 case 'GET': {
