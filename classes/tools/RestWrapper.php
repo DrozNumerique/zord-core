@@ -44,28 +44,38 @@ class RestWrapper {
                     unset($data[$key]);
                 }
             }
+            if (($this->function['in'] ?? '') === 'JSON') {
+                $data = json_encode($data);
+                $headers[] = 'Content-Type: application/json';
+            }
+            $result = null;
             switch ($method) {
                 case 'GET': {
-                    return $this->client->get($path, $data, $headers);
+                    $result =  $this->client->get($path, $data, $headers);
                     break;
                 }
                 case 'HEAD': {
-                    return $this->client->head($path);
+                    $result =  $this->client->head($path);
                     break;
                 }
                 case 'POST': {
-                    return $this->client->post($path, $data, $headers);
+                    $result =  $this->client->post($path, $data, $headers);
                     break;
                 }
                 case 'PUT': {
-                    return $this->client->put($path, $data, $headers);
+                    $result =  $this->client->put($path, $data, $headers);
                     break;
                 }
                 case 'DELETE': {
-                    return $this->client->delete($path, $headers);
+                    $result =  $this->client->delete($path, $headers);
                     break;
                 }
             }
+            if (!empty($this->function['out'] ?? '')) {
+                $class = 'Pest'.$this->function['out'];
+                $result = (new $class(null))->processBody($result);
+            }
+            return $result;
         }
     }
 }
