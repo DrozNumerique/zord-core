@@ -30,6 +30,7 @@ abstract class ProcessExecutor {
     
     public static function stop($pid, $step = 'closed') {
         (new ProcessEntity())->update($pid, ['step' => $step]);
+        self::clear($pid);
     }
     
     public static function clear($pid) {
@@ -39,7 +40,7 @@ abstract class ProcessExecutor {
             'where' => ['process' => $pid],
             'order' => ['asc' => 'index']
         ]);
-        $log = LOGS_FOLDER.$process->class.'-'.Zord::timestamp('Y-m-d-H-i-s').'.log';
+        $log = LOGS_FOLDER.$process->class.'-'.str_replace([' ',':'], '-', $process->last).'.log';
         foreach ($entities as $entity) {
             $content = ProcessExecutor::indent($entity->indent).$entity->message.($entity->newline == 1 || $entity->over == 1 ? "\n" : "");
             file_put_contents($log, $content, FILE_APPEND);
