@@ -31,6 +31,7 @@ if (isset($_SERVER['argv']) && count($_SERVER['argv']) > 1) {
             $process->run(Zord::objectToArray(json_decode($entity->params ?? '{}')));
             usleep(500000);
             ProcessExecutor::stop($pid);
+            ProcessExecutor::clear($pid);
         }
     }
 }
