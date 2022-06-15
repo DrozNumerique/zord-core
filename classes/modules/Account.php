@@ -209,7 +209,7 @@ class Account extends Module {
                         $check = $user->reset;
                         if (CHECK_IP_WHEN_RESET_PASSWORD) {
                             $reset = $this->fullCheck($reset);
-                        } else {
+                        } else if (is_string($check)) {
                             $check = substr($check, 0, strlen($reset));
                         }
                         if ($reset === $check) {
