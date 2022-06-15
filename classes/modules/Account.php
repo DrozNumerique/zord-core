@@ -319,11 +319,12 @@ class Account extends Module {
                         WEBMASTER_MAIL_ADDRESS => WEBMASTER_MAIL_NAME
                     ]
                 ],
-                'subject'    => $this->locale->mail->reset_password->subject,
+                'subject'    => $this->locale->mail->reset_password->subject.' ('.$user->login.')',
                 'text'       => $this->locale->mail->reset_password->copy_paste."\n".$url."\n".$this->locale->mail->noreply,
                 'content'    => '/mail/account/reset',
                 'models'     => [
-                    'url' => $url
+                    'url'   => $url,
+                    'login' => $user->login
                 ],
                 'styles'     => Zord::value('mail', ['styles','account']) ?? null
             ]);
