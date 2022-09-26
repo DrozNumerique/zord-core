@@ -243,6 +243,21 @@ class User {
         return false;
     }
     
+    public function isAuthorized($context, $action) {
+        $roles = [];
+        foreach (array_keys(Zord::getConfig('role')) as $role) {
+            if ($this->hasRole($role, $context)) {
+                $roles[] = $role;
+            }
+        }
+        foreach ($roles as $role) {
+            if (in_array($action, Zord::value('role', $role))) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public function getContext($role, $wild = true) {
         $list = [];
         foreach (array_keys($this->roles) as $context) {

@@ -377,9 +377,9 @@ class Admin extends Module {
                 ];
             }
         }
-        $roles = array_merge(Zord::getConfig('role'), ['*']);
-        $result['choices']['role'] = array_combine($roles, $roles);
+        $roles    = array_merge(array_keys(Zord::getConfig('role')),    ['*']);
         $contexts = array_merge(array_keys(Zord::getConfig('context')), ['*']);
+        $result['choices']['role']    = array_combine($roles, $roles);
         $result['choices']['context'] = array_combine($contexts, $contexts);
         $result['choices']['include'] = [
             "1" => $this->locale->tab->users->include,
