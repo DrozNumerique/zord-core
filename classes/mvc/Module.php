@@ -268,7 +268,7 @@ class Module {
 	    }
 	}
 	
-	public function file($path, $role = null, $messages = null, $params = null) {
+	public function file($path, $access = '', $messages = null, $params = null) {
 	    $compliant = true;
 	    if ($messages == null ) {
 	        $messages = Zord::getConfig('status');
@@ -290,7 +290,10 @@ class Module {
 	    );
 	    $code = '520';
 	    if ($compliant) {
-	        if ($this->user->hasRole($role, $this->context)) {
+	        $tokens = explode(':', $access);
+	        $role = $tokens[0];
+	        $privilege = (count($tokens) > 1) ? $tokens[1] : null;
+	        if ((!empty($role) ? $this->user->hasRole($role, $this->context) : true) && (!empty($privilege) ? $this->user->isAuthorized($privilege, $this->context) : true)) {
 	            if (file_exists($file)) {
 	                $code = '200';
 	            } else {

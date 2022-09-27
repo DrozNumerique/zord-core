@@ -243,7 +243,7 @@ class User {
         return false;
     }
     
-    public function isAuthorized($context, $action) {
+    public function isAuthorized($action, $context) {
         $roles = [];
         foreach (array_keys(Zord::getConfig('role')) as $role) {
             if ($this->hasRole($role, $context)) {

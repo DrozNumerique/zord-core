@@ -423,6 +423,17 @@ class Controler {
                 }
             }
         }
+        if (isset($auth['privilege']) && isset($this->user)) {
+            $privileges = $auth['privilege'];
+            if (!is_array($privileges)) {
+                $privileges = [$privileges];
+            }
+            foreach($privileges as $privilege) {
+                if ($this->user->isAuthorized($privilege, $this->context)) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 	

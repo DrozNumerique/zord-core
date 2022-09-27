@@ -36,6 +36,9 @@ class Menu {
         if (isset($entry['role']) && !$this->user->hasRole($entry['role'], $this->context)) {
             $entry['active'] = false;
         }
+        if (isset($entry['privilege']) && !$this->user->isAuthorized($entry['privilege'], $this->context)) {
+            $entry['active'] = false;
+        }
         return $entry;
     }
     
