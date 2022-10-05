@@ -51,12 +51,7 @@ class User {
             }
             $entity = false;
             if (!isset($date)) {
-                $entity = (new UserHasProfileEntity())->retrieve([
-                    'where' => [
-                        'raw'        => 'user = ? AND date IN (SELECT MAX(date) FROM '.Zord::value('orm', ['UserHasProfileEntity','table']).' WHERE user = ? GROUP BY user)',
-                        'parameters' => [$this->login, $this->login]
-                    ]
-                ]);
+                $entity = $this->lastProfile();
             } else {
                 $iterator = (new UserHasProfileEntity())->retrieve([
                     'many'  => true,
@@ -194,6 +189,16 @@ class User {
             }
         }
         return $profile;
+    }
+    
+    public function lastProfile($property = null) {
+        $entity = (new UserHasProfileEntity())->retrieve([
+            'where' => [
+                'raw'        => 'user = ? AND date IN (SELECT MAX(date) FROM '.Zord::value('orm', ['UserHasProfileEntity','table']).' WHERE user = ? GROUP BY user)',
+                'parameters' => [$this->login, $this->login]
+            ]
+        ]);
+        return !isset($property) ? $entity : ($property == '__ALL__' ? $entity->profile : Zord::objectToArray($entity->profile)[$property]); 
     }
     
     public function saveProfile() {
