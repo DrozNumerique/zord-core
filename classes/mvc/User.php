@@ -198,7 +198,7 @@ class User {
                 'parameters' => [$this->login, $this->login]
             ]
         ]);
-        return !isset($property) ? $entity : ($property == '__ALL__' ? $entity->profile : Zord::objectToArray($entity->profile)[$property]); 
+        return $entity === false ? null : (!isset($property) ? $entity : ($property == '__ALL__' ? $entity->profile : Zord::objectToArray($entity->profile)[$property])); 
     }
     
     public function saveProfile() {
