@@ -83,6 +83,11 @@ class Account extends Module {
                 $user = (new UserEntity())->retrieve($data['login']);
                 if ($user !== false) {
                     $checked = $this->locale->messages->already_login;
+                } else if (ACCOUNT_EMAIL_AS_LOGIN) {
+                    $user = (new UserEntity())->retrieve($data['email']);
+                    if ($user !== false) {
+                        $checked = $this->locale->messages->already_email;
+                    }
                 }
                 break;
             }
@@ -112,6 +117,9 @@ class Account extends Module {
     protected function check($data, $scope) {
         $checked = true;
         $properties = Zord::value('account', ['properties',$scope]);
+        if ($scope == 'create' && ACCOUNT_EMAIL_AS_LOGIN) {
+            $data['login'] = $data['email'];
+        }
         foreach ($properties as $property) {
             if (empty($data[$property])) {
                 $checked = Zord::resolve($this->locale->messages->missing, ['property' => $property], $this->locale);

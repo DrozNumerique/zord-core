@@ -20,6 +20,7 @@
     "OPENSSL_PRIVATE_KEY": "~/.ssh/id_rsa",
     "OPENSSL_PUBLIC_KEY": "~/.ssh/id_rsa.pub.pem",
     "ACCOUNT_AUTO_CREATE": false,
+    "ACCOUNT_EMAIL_AS_LOGIN": false,
     "VIEW_MARK_BEGIN": "<!--#",
     "VIEW_MARK_END": "#-->",
     "MAIL_TEXT_BEGIN": "TEXT_BEGIN",
