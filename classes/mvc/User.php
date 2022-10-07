@@ -170,6 +170,14 @@ class User {
                 'parameters' => [$login, self::crypt($password)]
             ]
         ]);
+        if ($result === false && ACCOUNT_EMAIL_AS_LOGIN) {
+            $result = (new UserEntity())->retrieve([
+                'where' => [
+                    'raw' => '(email = ? AND password = ?)',
+                    'parameters' => [$login, self::crypt($password)]
+                ]
+            ]);
+        }
         if ($result) {
             if ($transient) {
                 return self::bind($login);

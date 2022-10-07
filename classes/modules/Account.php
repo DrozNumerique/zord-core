@@ -4,43 +4,36 @@ class Account extends Module {
     
     public $disconnecting = false;
     
-    public static function actions($action) {
-        $actions = [$action];
-        if ($action == 'connect') {
-            $actions[] = 'reset';
-            if (ACCOUNT_AUTO_CREATE) {
-                $actions[] = 'create';
-            }
+    public function actions() {
+        $actions = ['connect','reset'];
+        if (ACCOUNT_AUTO_CREATE) {
+            $actions[] = 'create';
         }
         return $actions;
     }
     
-    public static function switch($action, $point) {
-        $switch = [];
-        switch ($action) {
-            case 'connect': {
-                if ($point == 'before') {
-                    $switch[] = 'reset';
-                }
-                if ($point == 'after' && ACCOUNT_AUTO_CREATE) {
-                    $switch[] = 'create';
-                }
-                break;
-            }
-            case 'create':
-            case 'reset': {
-                if ($point == 'after') {
-                    $switch[] = 'connect';
-                }
-                break;
-            }
+    public function switch() {
+        $switch = [
+            'connect' => [
+                'before' => ['reset']
+            ],
+            'create'  => [
+                'after' => ['connect']
+            ],
+            'reset'   => [
+                'after' => ['connect']
+            ]
+        ];
+        if (ACCOUNT_AUTO_CREATE) {
+            $switch['connect']['after'] = ['create'];
         }
         return $switch;
     }
     
     protected function form($action = null, $models = []) {
         $models['action']  = $action ?? 'connect';
-        $models['actions'] = self::actions($models['action']);
+        $models['actions'] = $this->actions();
+        $models['switch'] = $this->switch();
         return $this->page('account', $models);
     }
     
@@ -243,6 +236,8 @@ class Account extends Module {
     }
     
     public function create() {
+        $success = Zord::trim($this->params['success'] ?? null);
+        $failure = Zord::trim($this->params['failure'] ?? null);
         if ($this->user->isConnected()) {
             return $this->redirect($this->baseURL.'/home');
         }
@@ -250,9 +245,17 @@ class Account extends Module {
         $data = $this->check($models, 'create');
         if (is_string($data)) {
             $models['message'] = $data;
+            if (isset($failure)) {
+                return $this->redirect($failure.(empty(parse_url($failure, PHP_URL_QUERY)) ? '?' : '&').http_build_query($models));
+            }
         } else {
             $result = $this->notifyReset((new UserEntity())->create($data));
             $models['message'] = $result['error'] ?? $this->locale->messages->account_created;
+            if (isset($result['error']) && isset($failure)) {
+                return $this->redirect($failure.(empty(parse_url($failure, PHP_URL_QUERY)) ? '?' : '&').http_build_query($models));
+            } else if (isset($failure)) {
+                return $this->redirect($success.(empty(parse_url($success, PHP_URL_QUERY)) ? '?' : '&').http_build_query($models));
+            }
         }
         return $this->form('create', $models);
     }

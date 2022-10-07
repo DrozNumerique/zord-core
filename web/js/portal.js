@@ -228,6 +228,9 @@ var activateStates = function(element, callback) {
 var displayAccount = function(action) {
 	[].forEach.call(document.querySelectorAll('li.account'), function(element) {
 		element.classList.remove('active');
+		[].forEach.call(element.querySelectorAll('div.message'), function(message) {
+			message.parentNode.removeChild(message);
+		});
 		if (element.classList.contains(action)) {
 			element.classList.add('active');
 		}

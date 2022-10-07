@@ -20,13 +20,13 @@
 <?php     } ?>
 <?php   } ?>
 <?php   $this->render($action, Zord::array_merge($models, ['switch' => $action])); ?>
-<?php   foreach (Account::switch($action, 'before') as $switch) { ?>
+<?php   foreach ($models['switch'][$action]['before'] ?? [] as $switch) { ?>
 			<div class="switch before" data-action="<?php echo $switch; ?>"><?php echo $locale->switch->$switch; ?></div>
 <?php   } ?>
 			<div>
 				<input type="submit" name="submit" value="<?php echo $locale->actions->$action ?>"/>
 			</div>
-<?php   foreach (Account::switch($action, 'after') as $switch) { ?>
+<?php   foreach ($models['switch'][$action]['after'] ?? [] as $switch) { ?>
 			<div class="switch after" data-action="<?php echo $switch; ?>"><?php echo $locale->switch->$switch; ?></div>
 <?php   } ?>
 		</form>
