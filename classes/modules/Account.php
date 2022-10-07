@@ -283,7 +283,7 @@ class Account extends Module {
     public function disconnect() {
         $this->user->disconnect();
         $this->disconnecting = true;
-        return $this->redirect($this->baseURL, true);
+        return $this->redirect($this->params['redirect'] ?? $this->baseURL, true);
     }
     
     public function notifyProfile($user) {
