@@ -75,7 +75,7 @@ class User {
             }
             $profile = [];
             if ($entity !== false) {
-                $profile = Zord::objectToArray($entity->profile);
+                $profile = Zord::objectToArray($entity->profile ?? []);
             } else {
                 $profile = $this->profile();
             }
