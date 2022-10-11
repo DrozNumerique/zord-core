@@ -4,36 +4,18 @@ class Account extends Module {
     
     public $disconnecting = false;
     
-    public function actions() {
-        $actions = ['connect','reset'];
-        if (ACCOUNT_AUTO_CREATE) {
-            $actions[] = 'create';
+    protected function form($action = 'connect', $models = []) {
+        $switch = [$action => []];
+        if ($action == 'connect') {
+            $switch['connect']['before'] = ['reset'];
+            $switch['reset']['after'] = ['connect'];
+            if (ACCOUNT_AUTO_CREATE) {
+                $switch['create']['after'] = ['connect'];
+                $switch['connect']['after'] = ['create'];
+            }
         }
-        return $actions;
-    }
-    
-    public function switch() {
-        $switch = [
-            'connect' => [
-                'before' => ['reset']
-            ],
-            'create'  => [
-                'after' => ['connect']
-            ],
-            'reset'   => [
-                'after' => ['connect']
-            ]
-        ];
-        if (ACCOUNT_AUTO_CREATE) {
-            $switch['connect']['after'] = ['create'];
-        }
-        return $switch;
-    }
-    
-    protected function form($action = null, $models = []) {
-        $models['action']  = $action ?? 'connect';
-        $models['actions'] = $this->actions();
-        $models['switch'] = $this->switch();
+        $models['action'] = $action;
+        $models['switch'] = $switch;
         return $this->page('account', $models);
     }
     
