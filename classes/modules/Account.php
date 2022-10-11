@@ -14,7 +14,6 @@ class Account extends Module {
                 $switch['connect']['after'] = ['create'];
             }
         }
-        $models['action'] = $action;
         $models['switch'] = $switch;
         return $this->page('account', $models);
     }
