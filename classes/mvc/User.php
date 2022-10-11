@@ -177,6 +177,9 @@ class User {
                     'parameters' => [$login, self::crypt($password)]
                 ]
             ]);
+            if ($result) {
+                $login = $result->login;
+            }
         }
         if ($result) {
             if ($transient) {
