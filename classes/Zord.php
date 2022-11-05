@@ -28,6 +28,11 @@ class Zord {
 	        session_start();
 	    }
 	    spl_autoload_register([new self(), 'autoload']);
+	    foreach (COMPONENT_FOLDERS as $folder) {
+	        if (file_exists($folder.'vendor/autoload.php')) {
+	            require_once($folder.'vendor/autoload.php');
+	        }
+	    }
 	}
 	
 	public function autoload($className, $rebuild = true) {
