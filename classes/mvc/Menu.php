@@ -95,7 +95,7 @@ class Menu {
         $class   = isset($entry['class']) ? (is_array($entry['class']) ? $entry['class'] : [$entry['class']]) : [];
         $label   = isset($entry['label'][$this->lang]) ? $entry['label'][$this->lang] : (isset($entry['label']) ? $entry['label'] : ($this->locale->$name ?? $name));
         $display = isset($entry['display']) ? (new View($entry['display'], $models, $this->controler))->render() : null;
-        $render  = $type == 'nolink' ? 'nolink' : ($type == 'menu' ? 'sub' : 'link');
+        $render  = isset($entry['render']) ? $entry['render'] : ($type == 'nolink' ? 'nolink' : ($type == 'menu' ? 'sub' : 'link'));
         return [$type, $url, $class, $display ?? $label, $render];
     }
 }
