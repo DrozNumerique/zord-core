@@ -705,6 +705,32 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	
 });
 
+/***************************************
+ * Share session storage between tabs
+ * cf. https://stackoverflow.com/questions/20325763/browser-sessionstorage-share-between-tabs
+ **************************************/
+
+window.addEventListener("storage", function(event) {
+	
+	if (event.key == 'getSessionStorage') {
+		localStorage.setItem('sessionStorage', JSON.stringify(sessionStorage));
+		setTimeout(function() {
+			localStorage.removeItem('sessionStorage')
+		}, 10);
+	} else if (event.key == 'sessionStorage' && !sessionStorage.length) {
+		var data = JSON.parse(event.newValue);
+		for (var key in data) {
+			sessionStorage.setItem(key, data[key]);
+		}
+	}
+	
+});
+
+if (!sessionStorage.length) {
+	localStorage.setItem('getSessionStorage', 'foobar');
+	localStorage.removeItem('getSessionStorage', 'foobar');
+};
+
 window.addEventListener("load", function(event) {
 		
 	setTimeout(function() {
