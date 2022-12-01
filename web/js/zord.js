@@ -419,16 +419,41 @@ var reportLine = function(report, style, indent, message, newline, over) {
 }
 
 var setSessionProperties = function(zord) {
-	sessionStorage.setItem('zord', JSON.stringify(zord));
+	localStorage.setItem('zord', JSON.stringify(zord));
+	//dispatchSessionProperties();
 }
 
 var getSessionProperties = function() {
-	zord = JSON.parse(sessionStorage.getItem('zord'));
+	zord = JSON.parse(localStorage.getItem('zord'));
 	if (zord == undefined || zord == null) {
 		zord = {};
 		setSessionProperties(zord);
 	}
 	return zord;
+}
+
+/***************************************
+ * Share zord properties between tabs
+ * cf. https://stackoverflow.com/questions/20325763/browser-sessionstorage-share-between-tabs
+ **************************************/
+
+var dispatchSessionProperties = function() {
+	localStorage.setItem('dispatchSessionProperties', 'foobar');
+	localStorage.removeItem('dispatchSessionProperties');
+}
+
+var retrieveSessionProperties = function(event) {
+	if (!event.newValue) {
+		return;
+	}
+	if (event.key == 'dispatchSessionProperties') {
+		if (sessionStorage.getItem('zord')) {
+			localStorage.setItem('zordSessionProperties', sessionStorage.getItem('zord'));
+			localStorage.removeItem('zordSessionProperties');
+		}
+	} else if (event.key == 'zordSessionProperties') {
+		sessionStorage.setItem('zord', event.newValue);
+	}
 }
 
 var setValue = function(object, key, value, merge) {
