@@ -531,13 +531,14 @@ class Zord {
 	            }
 	            break;
 	        }
+	        case 'async':
 	        case 'popen': {
-	            $proc = popen($command, $params['mode'] ?? 'w');
+	            $proc = popen($command, $strategy === 'async' ? 'w' : ($params['mode'] ?? 'r'));
 	            if (is_resource($proc)) {
-	                $result = stream_get_contents($proc);
+	                $result = $strategy === 'async' ? null : stream_get_contents($proc);
 	                pclose($proc);
 	            }
-	            break;
+	            break; 
 	        }
 	        case 'exec': {
 	            $output = [];

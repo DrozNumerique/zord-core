@@ -19,7 +19,7 @@ abstract class ProcessExecutor {
             'lang'   => $lang,
             'params' => Zord::json_encode($params)
         ]);
-        Zord::execute('popen', PROCESS_COMMAND, [
+        Zord::execute('async', PROCESS_COMMAND, [
             'LOCALE'   => str_replace('-', '_', $lang),
             'ENCODING' => DEFAULT_ENCODING,
             'SCRIPT'   => ROOT.'process.php',
