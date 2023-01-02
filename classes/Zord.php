@@ -532,7 +532,7 @@ class Zord {
 	            break;
 	        }
 	        case 'popen': {
-	            $proc = popen($command, $params['mode'] ?? 'r');
+	            $proc = popen($command, $params['mode'] ?? 'w');
 	            if (is_resource($proc)) {
 	                $result = stream_get_contents($proc);
 	                pclose($proc);
