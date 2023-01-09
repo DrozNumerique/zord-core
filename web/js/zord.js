@@ -1,4 +1,4 @@
-var invokeZord = function(params) {
+ var invokeZord = function(params) {
 
 	var before = params.before == undefined ? null : params.before;
 	var after = params.after == undefined ? null : params.after;
@@ -91,10 +91,8 @@ var invokeZord = function(params) {
 					var error = JSON.parse(this.responseText);
 					if (failure !== null) {
 						failure(error);
-					} else if (error.message !== undefined) {
-						alert(error.message);
 					} else {
-						alert(error.code + ' ' + error.reason);
+						alertError(error);
 					}
 				}
 			}
@@ -103,6 +101,14 @@ var invokeZord = function(params) {
 
 	request.send(query);
 	
+}
+
+var alertError = function(error) {
+	if (error.message !== undefined) {
+		alert(error.message);
+	} else {
+		alert(error.code + ' ' + error.reason);
+	}
 }
 
 var checkProcess = function(pid, offset, callback) {
