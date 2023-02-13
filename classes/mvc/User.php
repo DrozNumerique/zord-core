@@ -107,7 +107,7 @@ class User {
         $session = null;
         $token = null;
         foreach (self::$ZORD_PROPERTIES as $property => $key) {
-            foreach ([$_SESSION, $_COOKIE, $_POST, $_GET] as $var) {
+            foreach (['post' => $_POST, 'get' => $_GET, 'session' => $_SESSION, 'cookie' => $_COOKIE] as $source => $var) {
                 if (isset($var[$key]) && is_string($var[$key])) {
                     $$property = $var[$key];
                     break;
