@@ -9,4 +9,4 @@
 <?php } else { ?>
 <a href="/connect">Connection</a><br>
 <?php } ?>
-<?php echo $locale->zord; ?>
+<?php echo Zord::getLocale('portal', $lang)->footer->enginedByZord; ?>

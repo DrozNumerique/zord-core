@@ -1184,4 +1184,22 @@ class Zord {
     public static function clientCacheQuery() {
         return defined("CLIENT_CACHE_VERSION") ? '?clientCacheVersion='.CLIENT_CACHE_VERSION : '';
     }
+    
+    public static function contextList($lang, $withURLOnly = true, $property = 'title') {
+        $list = [];
+        foreach (Zord::getConfig('context') as $context => $config) {
+            if (!$withURLOnly || (isset($config['url']) && !empty($config['url']))) {
+                $title = $context;
+                if (isset($config[$property][$lang])) {
+                    $title = $config[$property][$lang];
+                } else if (isset($config[$property][DEFAULT_LANG])) {
+                    $title = $config[$property][DEFAULT_LANG];
+                } else if (isset($config[$property]) && is_string($config[$property])) {
+                    $title = $config[$property];
+                }
+                $list[$context] = $title;
+            }
+        }
+        return $list;
+    }
 }
