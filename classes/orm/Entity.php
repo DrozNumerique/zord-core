@@ -4,6 +4,7 @@ abstract class Entity
 {
     protected $database;
     protected $mapping;
+    protected $parameters;
     protected $type;
     protected $table;
     protected $fields;
@@ -20,19 +21,20 @@ abstract class Entity
         $this->mapping  = 'orm';
     }
     
-    public function __construct() {
+    public function __construct($parameters = []) {
         $this->configure();
+        $this->parameters = $parameters;
         $this->type = get_class($this);
-        $database = Zord::value($this->mapping, [$this->type,'database']);
+        $database = $this->resolve('database');
         if (isset($database)) {
             $this->database = $database;
         }
-        $this->table = Zord::value($this->mapping, [$this->type,'table']);
-        $this->fields = Zord::value($this->mapping, [$this->type,'fields']);
-        $this->keys = Zord::value($this->mapping, [$this->type,'key']);
-        $this->joins = Zord::value($this->mapping, [$this->type,'join']);
-        $this->elements = Zord::value($this->mapping, [$this->type,'elements']);
-        $this->json = Zord::value($this->mapping, [$this->type,'json']);
+        $this->table = $this->resolve('table');
+        $this->fields = $this->resolve('fields');
+        $this->keys = $this->resolve('key');
+        $this->joins = $this->resolve('join');
+        $this->elements = $this->resolve('elements');
+        $this->json = $this->resolve('json');
         if (!is_array($this->keys)) {
             $this->keys = [$this->keys];
         }
@@ -43,13 +45,13 @@ abstract class Entity
             $keys = array();
             $objects = array();
             foreach(array_keys(Zord::getConfig($this->mapping)) as $key) {
-                $table = Zord::value($this->mapping, [$key,'table']);
+                $table = $this->resolve('table', $key);
                 if ($table) {
-                    $_key = Zord::value($this->mapping, [$key,'key']);
+                    $_key = $this->resolve('key', $key);
                     if ($_key) {
                         $keys[$table] = $_key;
                     }
-                    $_json = Zord::value($this->mapping, [$key,'json']);
+                    $_json = $this->resolve('json', $key);
                     if ($_json) {
                         $objects[$table] = $_json;
                     }
@@ -65,6 +67,12 @@ abstract class Entity
             ORM::configure('return_result_sets', true, $this->database);
             $this->engine = ORM::for_table($this->table, $this->database)->table_alias($this->type);
         }
+    }
+    
+    private function resolve($property, $type = null) {
+        $type = $type ?? $this->type;
+        $result = Zord::value($this->mapping, [$type,$property]);
+        return isset($result) ? Zord::substitute($result, $this->parameters) : null;
     }
     
     private function engine($insert = false) {
