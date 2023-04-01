@@ -96,6 +96,9 @@ class User {
             case 'MD5': {
                 return md5($salted);
             }
+            case 'BCRYPT': {
+                return password_hash($salted, PASSWORD_BCRYPT);
+            }
             default: {
                 return null;
             }
@@ -164,21 +167,22 @@ class User {
     }
     
     public static function authenticate($login, $password, $transient = true) {
-        $result = (new UserEntity())->retrieve([
-            'where' => [
-                'raw' => '(login = ? AND password = ?)',
-                'parameters' => [$login, self::crypt($password)]
-            ]
-        ]);
-        if ($result === false && ACCOUNT_EMAIL_AS_LOGIN) {
-            $result = (new UserEntity())->retrieve([
-                'where' => [
-                    'raw' => '(email = ? AND password = ?)',
-                    'parameters' => [$login, self::crypt($password)]
-                ]
-            ]);
-            if ($result) {
-                $login = $result->login;
+        $user = (new UserEntity())->retrieve($login);
+        if ($user === false && ACCOUNT_EMAIL_AS_LOGIN) {
+            $user = (new UserEntity())->retrieve(['where' => ['email' => $login]]);
+        }
+        $result = false;
+        if ($user) {
+            switch (PASSWORD_ALGO) {
+                case "MD5":
+                case "SHA256": {
+                    $result = ($user->password === self::crypt($password));
+                    break;
+                }
+                case "BCRYPT": {
+                    $result = password_verify($password, $user->password);
+                    break;
+                }
             }
         }
         if ($result) {
