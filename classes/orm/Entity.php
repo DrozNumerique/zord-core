@@ -69,13 +69,7 @@ abstract class Entity
         }
     }
     
-    private function resolve($property, $type = null) {
-        $type = $type ?? $this->type;
-        $result = Zord::value($this->mapping, [$type,$property]);
-        return isset($result) ? Zord::substitute($result, $this->parameters) : null;
-    }
-    
-    private function engine($insert = false) {
+    protected function engine($insert = false) {
         if (!$insert && !$this->select) {
             foreach ($this->fields as $field) {
                 $full = $this->type.'.'.$field;
@@ -91,8 +85,14 @@ abstract class Entity
         return $this->engine;
     }
 
-    private function query($criteria) {
+    protected function query($criteria) {
         $join = false;
+        foreach ($this->fields as $field) {
+            if (array_key_exists($field, $criteria)) {
+                $criteria['where'][$field] = $criteria[$field];
+                unset($criteria[$field]);
+            }
+        }
         if (isset($criteria['join']) && isset($this->joins)) {
             if (!is_array($criteria['join'])) {
                 $criteria['join'] = [$criteria['join']];
@@ -182,6 +182,12 @@ abstract class Entity
         }
     }
     
+    private function resolve($property, $type = null) {
+        $type = $type ?? $this->type;
+        $result = Zord::value($this->mapping, [$type,$property]);
+        return isset($result) ? Zord::substitute($result, $this->parameters) : null;
+    }
+    
     private function deep($type, &$entity) {
         if (isset($this->elements)) {
             foreach ($this->elements as $element => $fields) {
@@ -243,6 +249,21 @@ abstract class Entity
             }
             return $result;
         }
+    }
+    
+    public function retrieveAll($criteria) {
+        $criteria['many'] = true;
+        return $this->retrieve($criteria);
+    }
+    
+    public function retrieveOne($criteria) {
+        $criteria['many'] = false;
+        return $this->retrieve($criteria);
+    }
+    
+    public function retrieveFirst($criteria) {
+        $entities = $this->retrieveAll($criteria);
+        return $entities->getIterator()->current();
     }
     
     public function update($criteria, array $data) {
