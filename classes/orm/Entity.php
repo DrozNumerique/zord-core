@@ -257,7 +257,9 @@ abstract class Entity
     }
     
     public function retrieveOne($criteria) {
-        $criteria['many'] = false;
+        if (is_array($criteria)) {
+            $criteria['many'] = false;
+        }
         return $this->retrieve($criteria);
     }
     
