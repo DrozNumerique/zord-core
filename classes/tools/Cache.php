@@ -7,7 +7,7 @@ use \League\Flysystem\Filesystem;
 class Cache {
     
     private static function getPool($type) {
-        return new FilesystemCachePool(new Filesystem(new Local('/tmp')), 'cache'.DS.$type);
+        return new FilesystemCachePool(new Filesystem(new Local(CACHE_ROOT_DIR)), $type);
     }
     
     public static function setItem($type, $key, $value) {
