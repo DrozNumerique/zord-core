@@ -251,8 +251,10 @@ abstract class Entity
         }
     }
     
-    public function retrieveAll($criteria) {
-        $criteria['many'] = true;
+    public function retrieveAll($criteria = null) {
+        if (is_array($criteria)) {
+            $criteria['many'] = true;
+        }
         return $this->retrieve($criteria);
     }
     
