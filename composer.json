@@ -1,0 +1,5 @@
+{
+    "require": {
+        "cache/cache": "^1.0"
+    }
+}
