@@ -61,7 +61,7 @@
 		"page": {
 			"shortcut": "page",
 			"parameters": {
-				"page": "FILTER_SANITIZE_STRING"
+				"page": "PATH"
 			}
 		},
 		"content": {
