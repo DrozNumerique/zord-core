@@ -41,6 +41,10 @@ class Module {
         return $this->response;
     }
     
+    public function setParam($key, $value) {
+        return $this->params[$key] = $value;
+    }
+    
     protected function _hashKey($action) {}
     
     public function hashKey($action = null) {

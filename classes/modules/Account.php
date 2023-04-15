@@ -96,7 +96,7 @@ class Account extends Module {
         }
         foreach ($properties as $property) {
             if (empty($data[$property])) {
-                $checked = Zord::resolve($this->locale->messages->missing, ['property' => $property], $this->locale);
+                $checked = 'error='.Zord::resolve($this->locale->messages->missing, ['property' => $property], $this->locale);
                 break;
             }
             $checked = $this->valid($data, $property);
@@ -132,9 +132,9 @@ class Account extends Module {
                 $data['password.crypted'] = true;
                 $data['reset'] = null;
                 (new UserEntity())->update($this->user->login, $data);
-                $models['message'] = $this->locale->messages->$scope->updated;
+                $models['message'] = $this->message('success', $this->locale->messages->$scope->updated);
             } else {
-                $models['message'] = $this->locale->messages->$scope->unchanged;
+                $models['message'] = $this->message('warning', $this->locale->messages->$scope->unchanged);
             }
         }
         return $this->form($scope, $models);
@@ -142,6 +142,10 @@ class Account extends Module {
     
     protected function fullCheck($reset) {
         return $reset.' @ '.$_SERVER['REMOTE_ADDR'];
+    }
+    
+    protected function message($type, $content) {
+        return $type.'='.$content;
     }
     
     public function connect() {
@@ -162,7 +166,7 @@ class Account extends Module {
                 $this->controler->setUser($user);
                 return $this->redirect($success ?? $this->baseURL, true);
             } else {
-                $models['message'] = $this->locale->messages->auth_failed;
+                $models['message'] = $this->message('error', $this->locale->messages->auth_failed);
                 if (!isset($login)) {
                     unset($models['login']);
                 }
@@ -231,7 +235,7 @@ class Account extends Module {
             }
         } else {
             $result = $this->notifyReset((new UserEntity())->create($data));
-            $models['message'] = $result['error'] ?? $this->locale->messages->account_created;
+            $models['message'] = $result['error'] ?? $this->message('success', $this->locale->messages->account_created);
             if (isset($result['error']) && isset($failure)) {
                 return $this->redirect($failure.(empty(parse_url($failure, PHP_URL_QUERY)) ? '?' : '&').http_build_query($models));
             } else if (isset($failure)) {
@@ -253,9 +257,9 @@ class Account extends Module {
             ]);
             if ($user !== false) {
                 $result = $this->notifyReset($user);
-                $models['message'] = $result['error'] ?? $this->locale->messages->mail_sent;
+                $models['message'] = $result['error'] ?? $this->message('success', $this->locale->messages->mail_sent);
             } else {
-                $models['message'] = $this->locale->messages->unknown_user;
+                $models['message'] = $this->message('error', $this->locale->messages->unknown_user);
             }
         }
         return $this->form('reset', $models);
@@ -269,7 +273,7 @@ class Account extends Module {
     
     public function notifyProfile($user) {
         if ($user === false) {
-            return ['error' => $this->locale->messages->unknown_user];
+            return ['error' => $this->message('error', $this->locale->messages->unknown_user)];
         }
         $send = $this->sendMail([
             'category'   => 'account'.DS.$user->login,
@@ -291,7 +295,7 @@ class Account extends Module {
             'account' => htmlspecialchars($user->name.' <'.$user->email.'>')
         ];
         if ($send !== true) {
-            $result['error'] = $this->locale->messages->mail_error.'|'.$send;
+            $result['error'] = $this->message('error', $this->locale->messages->mail_error).'|'.$this->message('error', $send);
         }
         return $result;
     }
@@ -325,10 +329,10 @@ class Account extends Module {
                 'account'    => htmlspecialchars($user->name.' <'.$user->email.'>')
             ];
             if ($send !== true) {
-                $result['error'] = $this->locale->messages->mail_error.'|'.$send;
+                $result['error'] = $this->message('error', $this->locale->messages->mail_error).'|'.$this->message('error', $send);
             }
             return $result;
         }
-        return ['error' => $this->locale->messages->encryption_error];
+        return ['error' => $this->message('error', $this->locale->messages->encryption_error)];
     }
 }

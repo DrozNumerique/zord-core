@@ -1,2 +1,2 @@
 		<hr/>
-		<span class="noreply"><?php echo Zord::getLocale('account', $lang)->mail->noreply; ?></span>	
+		<span class="noreply"><?php echo Zord::getLocale('account', $lang)->mail->noreply; ?></span>

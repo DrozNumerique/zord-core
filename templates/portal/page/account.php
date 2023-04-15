@@ -14,9 +14,11 @@
 <?php   if (!empty($models['token'])) { ?>
 			<input type="hidden" name="token" value="<?php echo $models['token'] ?>"/>
 <?php   } ?>
-<?php   if (!empty($models['message'])) { ?>
-<?php     foreach (explode('|', $models['message']) as $message) { ?>	
-			<div class="message"><?php echo $message; ?></div>
+<?php   if (!empty($message)) { ?>
+<?php     foreach (explode('|', $message) as $_message) { ?>	
+<?php       foreach (explode('=', $_message) as $__message) { ?>	
+			<div class="message <?php echo $__message[0]; ?>"><?php echo $__message[1]; ?></div>
+<?php       } ?>
 <?php     } ?>
 <?php   } ?>
 <?php   $this->render($action, Zord::array_merge($models, ['switch' => $action])); ?>
