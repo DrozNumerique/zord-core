@@ -148,6 +148,11 @@ class Account extends Module {
         return $type.'='.$content;
     }
     
+    protected function _password($login) {
+        $this->bind($login);
+        return $this->user('password');
+    }
+    
     public function connect() {
         $login    = Zord::trim($this->params['login']    ?? null);
         $password = Zord::trim($this->params['password'] ?? null);
@@ -199,7 +204,7 @@ class Account extends Module {
                             $check = substr($check, 0, strlen($reset));
                         }
                         if ($reset === $check) {
-                            $this->bind($login);
+                            return $this->_password($login);
                         } else {
                             return $this->error(403);
                         }
@@ -213,7 +218,7 @@ class Account extends Module {
                 return $this->error(500);
             }
         }
-        return $this->user('password');
+        return $this->error(400);
     }
     
     public function profile() {
