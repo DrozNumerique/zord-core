@@ -1202,4 +1202,128 @@ class Zord {
         }
         return $list;
     }
+    
+    public static function IP($list) {
+        $IPList = [];
+        $unfolded = [];
+        $folded = [];
+        for ($index = 0 ; $index < count($list) ; $index++) {
+            $n = explode('.', $list[$index], 4);
+            $d = explode('-', $n[3], 2);
+            $c = explode('-', $n[2], 2);
+            $mask = 32;
+            if (count($d) == 2) {
+                if (in_array($d[0], ['0', '1']) && in_array($d[1], ['254', '255'])) {
+                    $n[3] = '0';
+                    $mask = 24;
+                } else {
+                    if ($d[0] == 0) {
+                        $n[3] = '1-'.$d[1];
+                    }
+                    if ($d[1] == 255) {
+                        $n[3] = $d[0].'-254';
+                    }
+                }
+                if (count($c) == 2 && $c[0] == '0' && $c[1] == '255') {
+                    $n[2] = '0';
+                    $mask = 16;
+                }
+            }
+            if (count($d) == 2 && $d[0] == $d[1]) {
+                $n[3] = $d[0];
+            }
+            if (count($c) == 2 && $c[0] == $c[1]) {
+                $n[2] = $c[0];
+            }
+            $IPList[] = implode('.',$n).'/'.$mask;
+        }
+        foreach ($IPList as $IP) {
+            $chunk = Zord::chunkIP($IP);
+            $n = explode('.', $chunk['ip'], 4);
+            $class = null;
+            $pattern = null;
+            switch ($chunk['mask']) {
+                case '32': {
+                    $class = 'D';
+                    $pattern = $n[0].'.'.$n[1].'.'.$n[2];
+                    if (strpos($n[2],'-')) {
+                        $pattern .= '.'.$n[3];
+                    }
+                    break;
+                }
+                case '24': {
+                    $class = 'C';
+                    $pattern = $n[0].'.'.$n[1];
+                    break;
+                }
+                case '16': {
+                    $class = 'B';
+                    $pattern = $n[0];
+                    break;
+                }
+            }
+            if ($class && $pattern) {
+                foreach (Zord::explodeIP($chunk['ip']) as $ip) {
+                    $unfolded[$class][$pattern][] = $ip;
+                }
+            }
+        }
+        if (count($unfolded) > 0) {
+            foreach ($unfolded as $class => $list) {
+                foreach ($list as $pattern => $entries) {
+                    sort($entries, SORT_NATURAL);
+                    $n = explode('.', $pattern);
+                    if (count($n) == 4) {
+                        $folded[] = $pattern.'/32';
+                    } else {
+                        $block = '';
+                        $prefix = $n[0].'.'.(($class == 'C' || $class == 'D') ? $n[1].'.' : '').($class == 'D' ? $n[2].'.' : '');
+                        $suffix = ($class == 'B' ? '.0.0' : ($class == 'C' ? '.0' : ''));
+                        $first = true;
+                        $start = false;
+                        $from = ($class == 'D' ? 1   : 0);
+                        $to   = ($class == 'D' ? 254 : 255);
+                        for ($i = $from; $i <= $to; $i++) {
+                            $current = $prefix.$i.$suffix;
+                            $next = ($i == $to ? null : $prefix.($i + 1).$suffix);
+                            if (self::keep($current, $class, $entries)) {
+                                if ($first) {
+                                    $block .= $i;
+                                    $first = false;
+                                    $start = self::keep($next, $class, $entries);
+                                } else {
+                                    if (!$start) {
+                                        $block .= '|'.$i;
+                                        $start = (isset($next) && self::keep($next, $class, $entries));
+                                    } else if (!isset($next) || !self::keep($next, $class, $entries)) {
+                                        $block .= '-'.$i;
+                                        $start = false;
+                                    }
+                                }
+                            }
+                        }
+                        $suffix .= ($class == 'B' ? '/16' : ($class == 'C' ? '/24' : '/32'));
+                        $block = $prefix.$block.$suffix;
+                        if (count($entries) > ($class == 'D' ? 127 : 128)) {
+                            $folded[] = $prefix.($class == 'B' ? '0.0.0/8' : ($class == 'C' ? '0.0/16' : '0/24'));
+                            if (!$first) {
+                                $folded[] = '~'.$block;
+                            }
+                        } else {
+                            $folded[] = $block;
+                        }
+                    }
+                }
+            }
+        }
+        return $folded;
+    }
+    
+    private static function keep($ip, $class, $entries) {
+        if (count($entries) <= ($class == 'D' ? 127 : 128)) {
+            return in_array($ip, $entries);
+        } else {
+            return !in_array($ip, $entries);
+        }
+    }
 }
