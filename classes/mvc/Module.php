@@ -33,6 +33,10 @@ class Module {
         $this->locale = Zord::getLocale($this->type, $this->lang);
     }
     
+    protected function message($type, $content) {
+        return $type.'='.$content;
+    }
+    
     public function getControler() {
         return $this->controler;
     }

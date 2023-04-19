@@ -144,10 +144,6 @@ class Account extends Module {
         return $reset.' @ '.$_SERVER['REMOTE_ADDR'];
     }
     
-    protected function message($type, $content) {
-        return $type.'='.$content;
-    }
-    
     protected function _password($login) {
         $this->bind($login);
         return $this->user('password');
