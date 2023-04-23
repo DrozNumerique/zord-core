@@ -4,7 +4,15 @@ if (isset($_SERVER['argv']) && count($_SERVER['argv']) > 1) {
     $class = Zord::getClassName($_SERVER['argv'][1]);
     if (class_exists($class)) {
         $process = new $class();
-        $parameters = count($_SERVER['argv']) > 2 ? Zord::arrayFromJSONFile($_SERVER['argv'][2]) : [];
+        $parameters = [];
+        if (count($_SERVER['argv']) > 2) {
+            $arg = $_SERVER['argv'][2];
+            if (file_exists($arg) && is_file($arg) && is_readable($arg)) {
+                $parameters = Zord::arrayFromJSONFile($arg);
+            } else {
+                $parameters = $process->parameters($arg);
+            }
+        }
         $process->setUser(isset($parameters['user']) ? $parameters['user'] : 'admin');
         $process->setLang(isset($parameters['lang']) ? $parameters['lang'] : DEFAULT_LANG);
         $begin = date('Y-m-d H:i:s');

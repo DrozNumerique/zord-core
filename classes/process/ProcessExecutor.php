@@ -92,6 +92,10 @@ abstract class ProcessExecutor {
         $this->parameters = $parameters;
     }
     
+    public function parameters($string) {
+        return [];
+    }
+    
     public function step($step) {
         if ($this->pid) {
             (new ProcessEntity())->update(['key' => $this->pid], ['step' => $step]);

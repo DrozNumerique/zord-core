@@ -86,13 +86,8 @@ abstract class Entity
     }
 
     protected function query($criteria) {
+        $this->sanitize($criteria);
         $join = false;
-        foreach ($this->fields as $field) {
-            if (array_key_exists($field, $criteria)) {
-                $criteria['where'][$field] = $criteria[$field];
-                unset($criteria[$field]);
-            }
-        }
         if (isset($criteria['join']) && isset($this->joins)) {
             if (!is_array($criteria['join'])) {
                 $criteria['join'] = [$criteria['join']];
@@ -182,6 +177,19 @@ abstract class Entity
         }
     }
     
+    protected function is_many($criteria) {
+        return !isset($criteria) || (isset($criteria['many']) && $criteria['many'] === true);
+    }
+    
+    private function sanitize(&$criteria) {
+        foreach ($this->fields as $field) {
+            if (array_key_exists($field, $criteria ?? [])) {
+                $criteria['where'][$field] = $criteria[$field];
+                unset($criteria[$field]);
+            }
+        }
+    }
+    
     private function resolve($property, $type = null) {
         $type = $type ?? $this->type;
         $result = Zord::value($this->mapping, [$type,$property]);
@@ -251,22 +259,22 @@ abstract class Entity
         }
     }
     
-    public function retrieveAll($criteria = null) {
+    public function retrieveAll($criteria = null, $deep = false) {
         if (is_array($criteria)) {
             $criteria['many'] = true;
         }
-        return $this->retrieve($criteria);
+        return $this->retrieve($criteria, $deep);
     }
     
-    public function retrieveOne($criteria) {
+    public function retrieveOne($criteria, $deep = false) {
         if (is_array($criteria)) {
             $criteria['many'] = false;
         }
-        return $this->retrieve($criteria);
+        return $this->retrieve($criteria, $deep);
     }
     
-    public function retrieveFirst($criteria) {
-        $entities = $this->retrieveAll($criteria);
+    public function retrieveFirst($criteria, $deep = false) {
+        $entities = $this->retrieveAll($criteria, $deep);
         return $entities->getIterator()->current();
     }
     
@@ -284,8 +292,9 @@ abstract class Entity
         }
         return $entity;
     }
-
+    
     public function delete($criteria = null, $deep = false) {
+        $this->sanitize($criteria);
         $many = $this->is_many($criteria);
         if ($criteria == null && !$deep) {
             return $this->engine()->delete_many();
@@ -336,6 +345,20 @@ abstract class Entity
         return $result;
     }
     
+    public function deleteAll($criteria = null, $deep = false) {
+        if (is_array($criteria)) {
+            $criteria['many'] = true;
+        }
+        return $this->delete($criteria, $deep);
+    }
+    
+    public function deleteOne($criteria, $deep = false) {
+        if (is_array($criteria)) {
+            $criteria['many'] = false;
+        }
+        return $this->delete($criteria, $deep);
+    }
+    
     public function get($entity, $property) {
         if (in_array($property, $this->json)) {
             return json_decode($entity->$property);
@@ -361,10 +384,6 @@ abstract class Entity
     
     private function save($entity, $data) {
         return $this->beforeSave($entity, $data)->save();
-    }
-    
-    private function is_many($criteria) {
-        return !isset($criteria) || (isset($criteria['many']) && $criteria['many'] === true);
     }
     
     private function is_key($criteria) {

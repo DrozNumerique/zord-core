@@ -11,6 +11,10 @@ class Cache {
         return new FilesystemCachePool(new Filesystem(new Local($this->root ?? '/tmp/zordCache')), $type);
     }
     
+    public static function instance($folder = null) {
+        return Zord::getInstance('Cache', $folder ?? Zord::liveFolder('cache'));
+    }
+    
     public function __construct($root) {
         $this->root = $root;
     }
