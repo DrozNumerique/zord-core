@@ -852,6 +852,16 @@ class Zord {
 	    return isset($string) ? trim($string) : null;
 	}
 	
+	public static function sanitize($serialized) {
+	    return preg_replace_callback(
+	        '!s:(\d+):"(.*?)";!',
+	        function($match) {
+	            return 's:'.strlen($match[2]).':"'.$match[2].'";';
+	        },
+	        $serialized
+	    );
+	}
+	
 	public static function sendMail($mail) {
 	    $category  = $mail['category']  ?? null;
 	    $textonly  = $mail['textonly']  ?? false;
