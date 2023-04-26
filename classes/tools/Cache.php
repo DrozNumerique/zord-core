@@ -35,7 +35,11 @@ class Cache {
     public function deleteItem($type, $key) {
         $this->getPool($type)->deleteItem($key);
     }
-
+    
+    public function clear($type) {
+        $this->getPool($type)->clear();
+    }
+    
 }
 
 ?>
