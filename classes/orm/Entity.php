@@ -293,6 +293,21 @@ abstract class Entity
         return $entity;
     }
     
+    
+    public function updateOne($criteria, array $data) {
+        if (is_array($criteria)) {
+            $criteria['many'] = false;
+        }
+        return $this->update($criteria, $data);
+    }
+    
+    public function updateAll($criteria, array $data) {
+        if (is_array($criteria)) {
+            $criteria['many'] = true;
+        }
+        return $this->update($criteria, $data);
+    }
+    
     public function delete($criteria = null, $deep = false) {
         $this->sanitize($criteria);
         $many = $this->is_many($criteria);
