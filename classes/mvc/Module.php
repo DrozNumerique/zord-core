@@ -174,6 +174,7 @@ class Module {
 	public function view($template = null, $models = [], $type = 'text/html;charset=UTF-8', $history = null, $mark = true, $locale = null) {
 	    $template = $this->params['template'] ?? $template;
 	    $models   = !empty($this->params['models']) ? Zord::objectToArray(json_decode($this->params['models'])) : $models;
+	    $locale   = $this->params['locale'] ?? $locale;
 	    return [
 	        '__template__' => $template,
 	        '__models__'   => $models,
