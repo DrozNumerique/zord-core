@@ -270,12 +270,15 @@ abstract class Entity
         if (is_array($criteria)) {
             $criteria['many'] = false;
         }
+        if (is_array($criteria) && ($criteria['first'] ?? false)) {
+            return $this->retrieveFirst($criteria, $deep);
+        }
         return $this->retrieve($criteria, $deep);
     }
     
-    public function retrieveFirst($criteria, $deep = false) {
-        $entities = $this->retrieveAll($criteria, $deep);
-        return $entities->getIterator()->current();
+    public function retrieveFirst($criteria = null, $deep = false) {
+        $iterator = $this->retrieveAll($criteria, $deep)->getIterator();
+        return $iterator->valid() ? $iterator->current() : false;
     }
     
     public function update($criteria, array $data) {
