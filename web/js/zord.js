@@ -48,7 +48,7 @@
 	request.onreadystatechange = function() {
 		if (this.readyState === XMLHttpRequest.DONE) {
 			type = this.getResponseHeader("Content-Type");
-			if (this.status === 200) {
+			if (this.status >= 200 && this.status < 300) {
 				if (type.startsWith('application/json')) {
 					if (success !== null) {
 						success(JSON.parse(this.responseText));
@@ -86,7 +86,9 @@
 				if (after !== null) {
 					after();
 				}
-			} else if (this.status >= 400) {
+			} else if (this.status >= 300 && this.status < 400) {
+				window.location.assign(this.getResponseHeader("Location"));
+			} else if (this.status >= 400 && this.status < 500) {
 				if (type.startsWith('application/json')) {
 					var error = JSON.parse(this.responseText);
 					if (failure !== null) {
@@ -94,6 +96,16 @@
 					} else {
 						alertError(error);
 					}
+				}
+			} else if (this.status >= 500) {
+				error = {
+					code   : this.status,
+					reason : 'Server error'
+				};
+				if (failure !== null) {
+					failure(error);
+				} else {
+					alertError(error);
 				}
 			}
 		}
