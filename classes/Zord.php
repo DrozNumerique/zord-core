@@ -501,6 +501,10 @@ class Zord {
 	            }
 	        }
 	    }
+	    if (!is_array($raw)) {
+	        $raw = preg_replace('/\$\[(.*)\]/', '', $raw);
+	        $raw = preg_replace('/\$\{(.*)\}/', '', $raw);
+	    }
 	    return $raw;
 	}
 	
