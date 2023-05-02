@@ -492,6 +492,9 @@ class Zord {
     	            $raw = str_replace('${'.$base.$key.'}', $value, $raw);
     	        }
     	    }
+    	    if (!is_array($raw) && $base === '') {
+    	        $raw = preg_replace('/\$\{(.*)\}/', '', $raw);
+    	    }
 	    } else if (is_object($values)) {
 	        foreach(get_object_vars($values) as $key => $value) {
 	            if (is_object($value)) {
@@ -500,10 +503,9 @@ class Zord {
 	                $raw = str_replace('$['.$base.$key.']', $value, $raw);
 	            }
 	        }
-	    }
-	    if (!is_array($raw)) {
-	        $raw = preg_replace('/\$\[(.*)\]/', '', $raw);
-	        $raw = preg_replace('/\$\{(.*)\}/', '', $raw);
+	        if (!is_array($raw) && $base === '') {
+	            $raw = preg_replace('/\$\[(.*)\]/', '', $raw);
+	        }
 	    }
 	    return $raw;
 	}
