@@ -96,6 +96,9 @@
 					} else {
 						alertError(error);
 					}
+				} else if (type.startsWith('text/html')) {
+					document.write(this.responseText);
+					document.close();
 				}
 			} else if (this.status >= 500) {
 				error = {
