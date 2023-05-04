@@ -1,6 +1,17 @@
 <?php
 define('DS', DIRECTORY_SEPARATOR);
-define('ROOT', ($_SERVER['PWD'] ?? substr($_SERVER['DOCUMENT_ROOT'], 0, strpos($_SERVER['DOCUMENT_ROOT'], '/web'))).DS);
+$root = null;
+$here = 'NULL';
+if (isset($_SERVER['PWD'])) {
+    $root = dirname($_SERVER['PHP_SELF']);
+    if ($root === '.') {
+        $root = $_SERVER['PWD'];
+    }
+} else if (isset($_SERVER['DOCUMENT_ROOT'])) {
+    $root = $_SERVER['DOCUMENT_ROOT'];
+    $root = substr($root, 0, strpos($root, '/web'));
+}
+define('ROOT', $root.DS);
 $folders = [];
 if (file_exists(ROOT.'components') && is_dir(ROOT.'components')) {
     $folders[] = ROOT;

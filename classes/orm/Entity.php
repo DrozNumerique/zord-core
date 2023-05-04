@@ -182,10 +182,12 @@ abstract class Entity
     }
     
     private function sanitize(&$criteria) {
-        foreach ($this->fields as $field) {
-            if (array_key_exists($field, $criteria ?? [])) {
-                $criteria['where'][$field] = $criteria[$field];
-                unset($criteria[$field]);
+        if (is_array($criteria)) {
+            foreach ($this->fields as $field) {
+                if (array_key_exists($field, $criteria ?? [])) {
+                    $criteria['where'][$field] = $criteria[$field];
+                    unset($criteria[$field]);
+                }
             }
         }
     }

@@ -52,17 +52,16 @@ class Process extends Module {
         if (isset($line)) {
             $line = json_decode($line, true);
             if (!empty($line) && isset($line['process'])) {
-                $entities = (new ProcessHasReportEntity())->retrieve([
+                $last = (new ProcessHasReportEntity())->retrieveFirst([
                     'many'  => true,
                     'where' => ['process' => $line['process']],
                     'order' => ['desc' => 'index']
                 ]);
-                foreach ($entities as $last) {
-                    break;
+                if ($last) {
+                    $line['index'] = $last->index + 1;
+                    (new ProcessHasReportEntity())->create($line);
+                    $report = true;
                 }
-                $line['index'] = $last->index + 1;
-                (new ProcessHasReportEntity())->create($line);
-                $report = true;
             }
         }
         return ['report' => $report];
