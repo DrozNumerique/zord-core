@@ -126,6 +126,8 @@ var alertError = function(error) {
 	}
 }
 
+var lines = [];
+
 var checkProcess = function(pid, offset, callback) {
 	invokeZord(
 		{
@@ -165,6 +167,7 @@ var killProcess = function(pid, callback) {
 			action:'kill',
 			pid:pid,
 			success:function(result) {
+				lines = result.lines;
 				if (callback !== undefined) {
 					callback(result);
 				}
@@ -237,17 +240,10 @@ var followProcess = function(follow) {
 			}
 		}
 		if (report !== undefined && report !== null) {
-			var lines = [['info',''],['error',LOCALE.process.stopped],['info','']];
 			[].forEach.call(lines, function(line) {
-				reportProcess(follow.process, line[0], 0, line[1], true, false);
-			});
-			checkProcess(follow.process, follow.offset, function(result) {
-				[].forEach.call(result.report, function(line) {
-					reportLine(report, line.style, line.indent, line.message, line.newline, line.over);
-				});
+				reportLine(report, line.style, line.indent, line.message, line.newline, line.over);
 			});
 		}
-		clearProcess(follow.process, follow.clear);
 		if (follow.killed !== undefined && follow.killed !== null) {
 			var killed = follow.killed;
 			killed();

@@ -46,8 +46,8 @@ class Process extends Module {
         return ['clear' => $clear];
     }
     
-    public function report() {
-        $line = $this->params['line'] ?? null;
+    public function report($line = null) {
+        $line = $line ?? ($this->params['line'] ?? null);
         $report = false;
         if (isset($line)) {
             $line = json_decode($line, true);
@@ -76,8 +76,37 @@ class Process extends Module {
                 if ($process && !empty($process)) {
                     $process = explode("\n", $process);
                     posix_kill((integer) $process[0], KILL_SIGNAL);
+                    $lines = [
+                        [
+                            'process' => $pid,
+                            'style'   => 'info',
+                            'indent'  => 0,
+                            'message' => '',
+                            'newline' => true,
+                            'over'    => false
+                        ],
+                        [
+                            'process' => $pid,
+                            'style'   => 'error',
+                            'indent'  => 0,
+                            'message' => Zord::getLocale('portal', $this->lang)->process->stopped,
+                            'newline' => true,
+                            'over'    => false
+                        ],
+                        [
+                            'process' => $pid,
+                            'style'   => 'info',
+                            'indent'  => 0,
+                            'message' => '',
+                            'newline' => true,
+                            'over'    => false
+                        ]
+                    ];
+                    foreach ($lines as $line) {
+                        $this->report(json_encode($line));
+                    };
                     ProcessExecutor::stop($pid, 'killed');
-                    return ['kill' => $pid];
+                    return ['kill' => $pid, 'lines' => $lines];
                 }
             }
         }
