@@ -132,7 +132,8 @@ var getUnit = function(element,property) {
 var activateChosen = function() {
 	if (typeof CONFIG.chosen !== 'undefined') {
 		for (var type in CONFIG.chosen) {
-			$('.chosen-select-' + type).chosen(CONFIG.chosen[type]).change(function(event, params) {
+			var selector = '.chosen-select-' + type + ":not(.activated)";
+			$(selector).chosen(CONFIG.chosen[type]).change(function(event, params) {
 				if (event.target.hasAttribute('data-change')) {
 					method = event.target.getAttribute('data-change');
 					if (window[method] instanceof Function) {
@@ -142,7 +143,7 @@ var activateChosen = function() {
 		    });
 			//Workaround for chosen clipped by overflow:hidden container
 			//Adapted from https://jsfiddle.net/phil_ayres/gvn8bkaL/
-			$('.chosen-select-' + type).on('chosen:showing_dropdown', function (event, params) {    
+			$(selector).on('chosen:showing_dropdown', function (event, params) {    
 				// Access the element
 				var $container = params.chosen.container;
 				var element = $container[0];
@@ -171,13 +172,14 @@ var activateChosen = function() {
 				$container.css(newCSS);
 				$('body').append($container);
 			});
-			$('.chosen-select-' + type).on('chosen:hiding_dropdown', function (event, params) {
+			$(selector).on('chosen:hiding_dropdown', function (event, params) {
 			    // Move the chosen box back into its form, and remove the placeholder
 				var $container = params.chosen.container;
 				$container.css($container.originalCSS);
 				$container.placeholder.before($container);
 				$container.placeholder.remove();
 			});
+			$(selector).addClass('activated');
 		}
 	}
 };
