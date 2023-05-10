@@ -51,7 +51,7 @@ class Menu {
         $data = [];
         foreach ($menu->layout() as $name) {
             $entry = $menu->entry($name);
-            if ($entry['active'] === true) {
+            if (isset($entry) && ($entry['active'] ?? false) === true) {
                 list($type, $url, $class, $label, $render) = $menu->point($entry, $name, $models);
                 $subMenu  = [];
                 if ($type == 'menu' && isset($entry['menu']) && is_array($entry['menu']) && Zord::is_associative($entry['menu'])) {
