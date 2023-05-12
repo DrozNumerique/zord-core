@@ -1049,6 +1049,19 @@ class Zord {
         return $var;
     }
     
+    public static function array_map_recursive($callback, $array) {
+        if (is_array($callback)) {
+            foreach ($callback as $function){
+                $array = array_map_recursive($function, $array);
+            }
+            return $array;
+        }
+        $function = function ($item) use (&$function, &$callback) {
+            return is_array($item) ? array_map($function, $item) : call_user_func($callback, $item);
+        };
+        return array_map($function, $array);
+    }
+    
     public static function union($first, $second) {
         $first  = self::array($first);
         $second = self::array($second);
