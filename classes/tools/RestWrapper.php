@@ -24,6 +24,10 @@ class RestWrapper {
                 }
             }
             $this->client    = new $class($config['baseURL'], $options);
+            if ($config['silent'] ?? false) {
+                $this->client->throw_exceptions = false;
+                $this->client->throwJsonExceptions = false;
+            }
             $this->functions = $config['functions'] ?? [];
             $this->config    = $config;
         }
