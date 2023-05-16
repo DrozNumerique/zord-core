@@ -36,19 +36,22 @@ class RestWrapper {
     protected function invoke($name, $data = null, $headers = []) {
         $this->function = $this->functions[$name] ?? false;
         if ($this->function && $this->function['path']) {
-            $method = $this->function['method'] ?? 'GET';
-            $path = $this->function['path'];
+            $method = $this->function['method'] ?? ($data['METHOD'] ?? 'GET');
+            $in     = $this->function['in']     ?? ($data['IN']     ?? '');
+            $out    = $this->function['out']    ?? ($data['OUT']    ?? '');
+            $path   = $this->function['path']   ?? ($data['PATH']   ?? '');
             if (is_array($data)) {
                 $path = Zord::substitute($path, $data);
                 $unset = $this->function['unset'] ?? [];
                 if (!is_array($unset)) {
                     $unset = [$unset];
                 }
+                $unset = array_merge($unset, ['METHOD','IN','OUT','PATH']);
                 foreach ($unset as $key) {
                     unset($data[$key]);
                 }
             }
-            if (($this->function['in'] ?? '') === 'JSON') {
+            if ($in === 'JSON') {
                 $data = json_encode($data);
                 $headers[] = 'Content-Type: application/json';
             }
@@ -75,8 +78,8 @@ class RestWrapper {
                     break;
                 }
             }
-            if (!empty($this->function['out'] ?? '')) {
-                $class = 'Pest'.$this->function['out'];
+            if (!empty($out)) {
+                $class = 'Pest'.$out;
                 $result = (new $class(null))->processBody($result);
             }
             return $result;
