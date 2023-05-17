@@ -1,5 +1,7 @@
 {
-    "require": {
-        "cache/cache": "^1.0"
-    }
+	"require" : {
+		"cache/cache" : "^1.0",
+		"scssphp/scssphp": "^1.11.0",
+		"wikimedia/less.php": "^4.1"
+	}
 }

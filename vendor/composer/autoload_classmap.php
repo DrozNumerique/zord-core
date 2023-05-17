@@ -7,4 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
+    'lessc' => $vendorDir . '/wikimedia/less.php/lessc.inc.php',
 );

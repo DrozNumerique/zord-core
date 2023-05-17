@@ -7,6 +7,10 @@ namespace Composer\Autoload;
 class ComposerStaticInit634fc837cb008ebff4c5b547c200b55e
 {
     public static $prefixLengthsPsr4 = array (
+        'S' => 
+        array (
+            'ScssPhp\\ScssPhp\\' => 16,
+        ),
         'P' => 
         array (
             'Psr\\SimpleCache\\' => 16,
@@ -29,6 +33,10 @@ class ComposerStaticInit634fc837cb008ebff4c5b547c200b55e
     );
 
     public static $prefixDirsPsr4 = array (
+        'ScssPhp\\ScssPhp\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/scssphp/scssphp/src',
+        ),
         'Psr\\SimpleCache\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/simple-cache/src',
@@ -59,8 +67,19 @@ class ComposerStaticInit634fc837cb008ebff4c5b547c200b55e
         ),
     );
 
+    public static $prefixesPsr0 = array (
+        'L' => 
+        array (
+            'Less' => 
+            array (
+                0 => __DIR__ . '/..' . '/wikimedia/less.php/lib',
+            ),
+        ),
+    );
+
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'lessc' => __DIR__ . '/..' . '/wikimedia/less.php/lessc.inc.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
@@ -68,6 +87,7 @@ class ComposerStaticInit634fc837cb008ebff4c5b547c200b55e
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit634fc837cb008ebff4c5b547c200b55e::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit634fc837cb008ebff4c5b547c200b55e::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit634fc837cb008ebff4c5b547c200b55e::$prefixesPsr0;
             $loader->classMap = ComposerStaticInit634fc837cb008ebff4c5b547c200b55e::$classMap;
 
         }, null, ClassLoader::class);

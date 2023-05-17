@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '28c9e96b25ea41aa1ae9c5bedff9a1b8b1aead4b',
+    'reference' => 'aa7991d0212932d8ba1ae622679610be68e0d666',
     'name' => '__root__',
   ),
   'versions' => 
@@ -18,7 +18,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '28c9e96b25ea41aa1ae9c5bedff9a1b8b1aead4b',
+      'reference' => 'aa7991d0212932d8ba1ae622679610be68e0d666',
     ),
     'cache/cache' => 
     array (
@@ -82,6 +82,24 @@
       array (
       ),
       'reference' => '408d5eafb83c57f6365a3ca330ff23aa4a5fa39b',
+    ),
+    'scssphp/scssphp' => 
+    array (
+      'pretty_version' => 'v1.11.0',
+      'version' => '1.11.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '33749d12c2569bb24071f94e9af828662dabb068',
+    ),
+    'wikimedia/less.php' => 
+    array (
+      'pretty_version' => 'v4.1.0',
+      'version' => '4.1.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '80694e356d0ea4237e7643d90e60a772b0fe4214',
     ),
   ),
 );
