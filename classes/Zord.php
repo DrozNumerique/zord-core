@@ -109,11 +109,15 @@ class Zord {
 	}
 	
 	public static function getConfig($name = null) {
+	    $context = $_SESSION[Controler::$ZORD_CONTEXT] ?? false;
 	    if (isset($name)) {
 	        if (!self::hasConfig($name)) {
 	            self::$config[$name] = [];
 	            foreach (COMPONENT_FOLDERS as $folder) {
 	                self::$config[$name] = self::array_merge(self::$config[$name], self::arrayFromJSONFile($folder.'config'.DS.$name.'.json'), false, $name);
+	                if ($context) {
+	                    self::$config[$name] = self::array_merge(self::$config[$name], self::arrayFromJSONFile($folder.'config'.DS.$name.DS.$context.'.json'), false, $name);
+	                }
 	            }
 	        }
 	        return self::$config[$name];
@@ -141,11 +145,15 @@ class Zord {
 	}
 	
 	public static function getLocale($target, $lang = DEFAULT_LANG, $array = false) {
+	    $context = $_SESSION[Controler::$ZORD_CONTEXT] ?? false;
 	    if (!isset(self::$locales[$target][$lang])) {
 	        $locale = array();
 	        foreach (COMPONENT_FOLDERS as $folder) {
 	            foreach (['', DEFAULT_LANG.DS, $lang.DS] as $variant) {
 	                $locale = self::array_merge($locale, self::arrayFromJSONFile($folder.'locales'.DS.$variant.$target.'.json'), true);
+	                if ($context) {
+	                    $locale = self::array_merge($locale, self::arrayFromJSONFile($folder.'locales'.DS.$variant.$target.DS.$context.'.json'), true);
+	                }
 	            }
 	        }
 	        self::$locales[$target][$lang] = json_decode(json_encode($locale));
