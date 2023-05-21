@@ -70,10 +70,11 @@ class Controler {
         $host   = $_SERVER['HTTP_HOST'];
         $path   = $_SERVER['REQUEST_URI'];
         $this->lang   = Zord::defineLang();
-        $this->locale = Zord::getLocale('portal', $this->lang);
         UserHasSessionEntity::deleteExpired();
         $this->setUser(User::find());
-        $this->handle($this->getTarget($scheme.'://'.$host.$path));
+        $target = $this->getTarget($scheme.'://'.$host.$path);
+        $this->locale = Zord::getLocale('portal', $this->lang);
+        $this->handle($target);
     }
     
     public function handle($target, $replay = false) {
