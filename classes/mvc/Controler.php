@@ -65,15 +65,23 @@ class Controler {
         return $this->replay;
     }
     
+    public function setLang() {
+        $this->lang = Zord::defineLang();
+    }
+    
+    public function setLocale() {
+        $this->locale = Zord::getLocale('portal', $this->lang);
+    }
+    
     public function dispatch() {
         $scheme = $_SERVER['REQUEST_SCHEME'];
         $host   = $_SERVER['HTTP_HOST'];
         $path   = $_SERVER['REQUEST_URI'];
-        $this->lang   = Zord::defineLang();
+        $this->setLang();
         UserHasSessionEntity::deleteExpired();
         $this->setUser(User::find());
         $target = $this->getTarget($scheme.'://'.$host.$path);
-        $this->locale = Zord::getLocale('portal', $this->lang);
+        $this->setLocale();
         $this->handle($target);
     }
     
