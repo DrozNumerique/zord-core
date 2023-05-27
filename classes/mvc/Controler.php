@@ -77,10 +77,10 @@ class Controler {
         $scheme = $_SERVER['REQUEST_SCHEME'];
         $host   = $_SERVER['HTTP_HOST'];
         $path   = $_SERVER['REQUEST_URI'];
-        $this->setLang();
         UserHasSessionEntity::deleteExpired();
         $this->setUser(User::find());
         $target = $this->getTarget($scheme.'://'.$host.$path);
+        $this->setLang();
         $this->setLocale();
         $this->handle($target);
     }
