@@ -10,6 +10,9 @@ class Controler {
     protected $scheme   = null;
     protected $indexURL = 0;
     protected $baseURL  = null;
+    protected $pathURL  = null;
+    protected $query    = null;
+    protected $fragment = null;
     protected $base     = null;
     protected $lang     = null;
     protected $locale   = null;
@@ -47,6 +50,18 @@ class Controler {
     
     public function getBaseURL() {
         return $this->baseURL;
+    }
+    
+    public function getPathURL() {
+        return $this->pathURL;
+    }
+    
+    public function getQuery() {
+        return $this->query;
+    }
+    
+    public function getFragment() {
+        return $this->fragment;
     }
     
     public function getBase() {
@@ -91,6 +106,9 @@ class Controler {
             $this->scheme   = $target['scheme'];
             $this->context  = $target['context'];
             $this->indexURL = $target['indexURL'];
+            $this->pathURL  = $target['pathURL'];
+            $this->query    = $target['query'];
+            $this->fragment = $target['fragment'];
             $this->baseURL  = $target['baseURL'];
             $this->base     = $target['base'];
             $this->params   = $target['params'] ?? [];
@@ -202,13 +220,15 @@ class Controler {
         if (substr($url, -1) == '/') {
             $url = substr($url, 0, -1);
         }
-        $host   = parse_url($url, PHP_URL_HOST);
-        $path   = parse_url($url, PHP_URL_PATH);
-        $scheme = parse_url($url, PHP_URL_SCHEME);
+        $host     = parse_url($url, PHP_URL_HOST);
+        $path     = parse_url($url, PHP_URL_PATH);
+        $scheme   = parse_url($url, PHP_URL_SCHEME);
+        $query    = parse_url($url, PHP_URL_QUERY);
+        $fragment = parse_url($url, PHP_URL_FRAGMENT);
         $target = $this->findTarget($host, $path);
         if ($target['prefix'] !== '/' && substr($url, strlen($scheme.'://'.$host), strlen($target['prefix'])) !== $target['prefix']) {
             $path = $target['prefix'].$path;
-            $url = $scheme.'://'.$host.$path;
+            $url = $scheme.'://'.$host.$path.(isset($query) ? '?'.$query : '').(isset($fragment) ? '#'.$fragment : '');
         }
         if ($target) {
             if ($this->isSecure($target) && $scheme !== 'https') {
@@ -216,7 +236,9 @@ class Controler {
                 header('Location: '.$url, true, 301);
                 die();
             }
-            $target['url'] = $url;
+            $target['pathURL'] = $scheme.'://'.$host.$path;
+            $target['query'] = $query;
+            $target['fragment'] = $fragment;
             $target['baseURL'] = $scheme.'://'.$host.($target['prefix'] == '/' ? '' : $target['prefix']);
             $target['base'] = $scheme.'://'.$host;
             $target['method'] = $_SERVER["REQUEST_METHOD"];
@@ -295,6 +317,9 @@ class Controler {
                 'context'  => $this->context,
                 'indexURL' => $this->indexURL,
                 'baseURL'  => $this->baseURL,
+                'pathURL'  => $this->pathURL,
+                'query'    => $this->query,
+                'fragment' => $this->fragment,
                 'base'     => $this->base,
                 'config'   => $this->config,
                 'skin'     => $this->skin
@@ -320,6 +345,9 @@ class Controler {
             'scheme'    => $this->scheme,
             'base'      => $this->base,
             'baseURL'   => $this->baseURL,
+            'pathURL'   => $this->pathURL,
+            'query  '   => $this->query,
+            'fragment'  => $this->fragment,
             'user'      => $this->user,
             'config'    => $this->config,
             'skin'      => $this->skin

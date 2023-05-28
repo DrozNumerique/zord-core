@@ -6,6 +6,9 @@ class Module {
     protected $context = null;
     protected $indexURL = 0;
     protected $baseURL = null;
+    protected $pathURL = null;
+    protected $query = null;
+    protected $fragment = null;
     protected $controler = null;
     protected $user = null;
     protected $lang = null;
@@ -26,6 +29,9 @@ class Module {
             $this->context  = $controler->getContext();
             $this->indexURL = $controler->getIndexURL();
             $this->baseURL  = $controler->getBaseURL();
+            $this->pathURL  = $controler->getPathURL();
+            $this->query    = $controler->getQuery();
+            $this->fragment = $controler->getFragment();
             $this->params   = $controler->getParams();
             $this->user     = $controler->getUser();
             $this->lang     = $controler->getLang();
