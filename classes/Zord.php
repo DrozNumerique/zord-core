@@ -108,10 +108,10 @@ class Zord {
 	    return isset(self::$config[$name]) && is_array(self::$config[$name]);
 	}
 	
-	public static function getConfig($name = null) {
+	public static function getConfig($name = null, $reload = false) {
 	    $context = $_SESSION[Controler::$ZORD_CONTEXT] ?? false;
 	    if (isset($name)) {
-	        if (!self::hasConfig($name)) {
+	        if ($reload || !self::hasConfig($name)) {
 	            self::$config[$name] = [];
 	            foreach (COMPONENT_FOLDERS as $folder) {
 	                self::$config[$name] = self::array_merge(self::$config[$name], self::arrayFromJSONFile($folder.'config'.DS.$name.'.json'), false, $name);

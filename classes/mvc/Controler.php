@@ -88,6 +88,10 @@ class Controler {
         $this->locale = Zord::getLocale('portal', $this->lang);
     }
     
+    public function setConfig() {
+        $this->config = Zord::getConfig('portal', true);
+    }
+    
     public function dispatch() {
         $scheme = $_SERVER['REQUEST_SCHEME'];
         $host   = $_SERVER['HTTP_HOST'];
@@ -97,6 +101,7 @@ class Controler {
         $target = $this->getTarget($scheme.'://'.$host.$path);
         $this->setLang();
         $this->setLocale();
+        $this->setConfig();
         $this->handle($target);
     }
     
