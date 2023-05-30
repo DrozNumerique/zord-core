@@ -1,7 +1,7 @@
 {
 	"lang": {
-		"en-US": "Anglais (US)",
-		"fr-FR": "Français (FR)"
+		"fr-FR": "Français (FR)",
+		"en-US": "Anglais (US)"
 	},
 	"download": {
 		"failed": "Impossible de télécharger le fichier"
