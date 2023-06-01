@@ -109,6 +109,12 @@ class Admin extends Module {
             (new UserHasIPV6Entity())->delete($criteria);
             $roles = Zord::objectToArray(json_decode($this->params['roles']));
             foreach ($roles as $role) {
+                foreach (['start','end'] as $limit) {
+                    $check = DateTime::createFromFormat('Y-m-d', $role[$limit]);
+                    if (!$check || $check->format('Y-m-d') !== $role[$limit]) {
+                        $role[$limit] = null;
+                    }
+                }
                 (new UserHasRoleEntity())->create($role);
             }
             $ipv4 = Zord::objectToArray(json_decode($this->params['ipv4']));
