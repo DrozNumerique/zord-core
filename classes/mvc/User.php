@@ -42,8 +42,8 @@ class User {
                     foreach ($roles as $entry) {
                         $context = $entry->get('context');
                         $role = $entry->get('role');
-                        $start = empty($entry->get('start')) ? null : new DateTime($entry->get('start'));
-                        $end = empty($entry->get('end')) ? null : new DateTime($entry->get('end'));
+                        $start = empty($entry->get('start')) ? new DateTime('0000-01-01') : new DateTime($entry->get('start'));
+                        $end = empty($entry->get('end')) ? new DateTime('3000-01-01') : new DateTime($entry->get('end'));
                         $this->roles[$context][$role]['start'] = $start;
                         $this->roles[$context][$role]['end'] = $end;
                     }
@@ -255,10 +255,10 @@ class User {
             }
         }
         if ($period) {
-            $start = $period['start'] ?? null;
-            $end = $period['end'] ?? null;
-            $now = new DateTime();
-            return (empty($start) || $start <= $now) && (empty($end) ?? $now <= $end);
+            $start = $period['start'];
+            $end   = $period['end'];
+            $now   = new DateTime();
+            return $start <= $now && $now <= $end;
         }
         return false;
     }
