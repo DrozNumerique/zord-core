@@ -169,17 +169,18 @@ class Controler {
                             $this->output($result, $type);
                         }
                     } else {
-                        $unauthorized = $this->unauthorized();
-                        if (is_string($unauthorized)) {
-                            if (substr($unauthorized, 0, 1) !== '/') {
-                                $unauthorized = '/'.$unauthorized;
+                        $unauthorized = $this->unauthorized($type);
+                        if (isset($unauthorized)) {
+                            if (is_string($unauthorized)) {
+                                if (!empty($unauthorized) && substr($unauthorized, 0, 1) !== '/') {
+                                    $unauthorized = '/'.$unauthorized;
+                                }
+                                $this->redirect($this->baseURL.$unauthorized);
+                            } else if (is_array($unauthorized)) {
+                                $this->handle(array_merge($target, $unauthorized));
                             }
-                            $this->redirect($this->baseURL.$unauthorized);
-                        } else if (is_array($unauthorized)) {
-                            $this->handle(array_merge($target, $unauthorized));
-                        } else {
-                            $this->error(['__code__' => 403], $type);
                         }
+                        $this->error(['__code__' => 403], $type);
                     }
                 } else {
                     $this->handle($this->getDefaultTarget());
@@ -335,12 +336,12 @@ class Controler {
         return $target;
     }
     
-    public function unauthorized() {
-        return [
+    public function unauthorized($type) {
+        return $type === 'VIEW' ? [
             'module'  => 'Account',
             'action'  => 'connect',
             'params' => ['success' => $this->pathURL.(!empty($this->query) ? '?'.$this->query : '').(!empty($this->fragment) ? '#'.$this->fragment : '')]
-        ];
+        ] : null;
     }
     
     public function implicits() {
