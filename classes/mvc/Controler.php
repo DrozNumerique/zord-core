@@ -179,8 +179,9 @@ class Controler {
                             } else if (is_array($unauthorized)) {
                                 $this->handle(array_merge($target, $unauthorized));
                             }
+                        } else {
+                            $this->error(['__code__' => 403], $type);
                         }
-                        $this->error(['__code__' => 403], $type);
                     }
                 } else {
                     $this->handle($this->getDefaultTarget());
@@ -531,7 +532,7 @@ class Controler {
 	                '__models__'   => [
 	                    'page'    => 'error',
                         'status'  => $status,
-	                    'message' => $result['__message__']
+	                    'message' => $result['__message__'] ?? null
                     ]
 	            ], 'VIEW', $result['__code__']);
 	            break;
