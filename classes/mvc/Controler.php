@@ -171,9 +171,12 @@ class Controler {
                             $this->output($result, $type);
                         }
                     } else {
-                        $alt = Zord::value('target', [$target['module'],$target['action'],'auth','alt']);
-                        if ($alt == null) {
-                            $alt = Zord::value('target', [$target['module'],'auth','alt']);
+                        $alt = $this->unauthorized();
+                        if (empty($alt)) {
+                            $alt = Zord::value('target', [$target['module'],$target['action'],'auth','alt']);
+                            if ($alt == null) {
+                                $alt = Zord::value('target', [$target['module'],'auth','alt']);
+                            }
                         }
                         if (is_string($alt)) {
                             $this->redirect($this->baseURL.'/'.$alt);
@@ -341,6 +344,14 @@ class Controler {
             }
         }
         return $target;
+    }
+    
+    public function unauthorized() {
+        return [
+            'module'  => 'Account',
+            'action'  => 'connect',
+            'params' => ['success' => $this->pathURL.(!empty($this->query) ? '?'.$this->query : '').(!empty($this->fragment) ? '#'.$this->fragment : '')]
+        ];
     }
     
     public function implicits() {

@@ -151,8 +151,7 @@
 	"Admin": {
 		"response": "VIEW",
 		"auth": {
-			"role": "admin",
-			"alt": "connect"
+			"role": "admin"
 		},
 		"index": {
 			"shortcut": "admin",
