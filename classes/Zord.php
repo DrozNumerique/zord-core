@@ -109,16 +109,10 @@ class Zord {
 	}
 	
 	public static function getConfig($name = null, $reload = false) {
-	    $context = $_SESSION[Controler::$ZORD_CONTEXT] ?? false;
+	    $context = $_SESSION[Controler::$ZORD_CONTEXT];
 	    if (isset($name)) {
 	        if ($reload || !self::hasConfig($name)) {
-	            self::$config[$name] = [];
-	            foreach (COMPONENT_FOLDERS as $folder) {
-	                self::$config[$name] = self::array_merge(self::$config[$name], self::arrayFromJSONFile($folder.'config'.DS.$name.'.json'), false, $name);
-	                if ($context) {
-	                    self::$config[$name] = self::array_merge(self::$config[$name], self::arrayFromJSONFile($folder.'config'.DS.$name.DS.$context.'.json'), false, $name);
-	                }
-	            }
+	            self::$config[$name] = self::loadConfig($name, $context);
 	        }
 	        return self::$config[$name];
 	    } else {
@@ -126,7 +120,18 @@ class Zord {
 	    }
 	}
 	
-	public static function value($name, $key, $def = null) {
+	public static function loadConfig($name, $context) {
+	    $config = [];
+	    foreach (COMPONENT_FOLDERS as $folder) {
+	        $config = self::array_merge($config, self::arrayFromJSONFile($folder.'config'.DS.$name.'.json'), false, $name);
+	        if ($context) {
+	            $config = self::array_merge($config, self::arrayFromJSONFile($folder.'config'.DS.$name.DS.$context.'.json'), false, $name);
+	        }
+	    }
+	    return $config;
+	}
+	
+	public static function value($name, $key, $def = null, $context = null) {
 	    $value = null;
 	    if (is_scalar($key)) {
 	        $value = self::value($name, [$key]);
@@ -147,19 +152,23 @@ class Zord {
 	public static function getLocale($target, $lang = DEFAULT_LANG, $array = false) {
 	    $context = $_SESSION[Controler::$ZORD_CONTEXT] ?? false;
 	    if (!isset(self::$locales[$target][$lang])) {
-	        $locale = array();
-	        foreach (COMPONENT_FOLDERS as $folder) {
-	            foreach (['', DEFAULT_LANG.DS, $lang.DS] as $variant) {
-	                $locale = self::array_merge($locale, self::arrayFromJSONFile($folder.'locales'.DS.$variant.$target.'.json'), true);
-	                if ($context) {
-	                    $locale = self::array_merge($locale, self::arrayFromJSONFile($folder.'locales'.DS.$variant.$target.DS.$context.'.json'), true);
-	                }
-	            }
-	        }
-	        self::$locales[$target][$lang] = json_decode(json_encode($locale));
+	        self::$locales[$target][$lang] = json_decode(json_encode(self::loadLocale($target, $lang, $context)));
 	    }
 	    $locale = self::$locales[$target][$lang];
 	    return $array ? self::objectToArray($locale) : $locale;
+	}
+	
+	public static function loadLocale($target, $lang, $context) {
+	    $locale = array();
+	    foreach (COMPONENT_FOLDERS as $folder) {
+	        foreach (['', DEFAULT_LANG.DS, $lang.DS] as $variant) {
+	            $locale = self::array_merge($locale, self::arrayFromJSONFile($folder.'locales'.DS.$variant.$target.'.json'), true);
+	            if ($context) {
+	                $locale = self::array_merge($locale, self::arrayFromJSONFile($folder.'locales'.DS.$variant.$target.DS.$context.'.json'), true);
+	            }
+	        }
+	    }
+	    return $locale;
 	}
 	
 	public static function getSkin($context = 'default') {
