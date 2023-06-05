@@ -109,7 +109,7 @@ class Zord {
 	}
 	
 	public static function getConfig($name = null, $reload = false) {
-	    $context = $_SESSION[Controler::$ZORD_CONTEXT];
+	    $context = $_SESSION[Controler::$ZORD_CONTEXT] ?? false;
 	    if (isset($name)) {
 	        if ($reload || !self::hasConfig($name)) {
 	            self::$config[$name] = self::loadConfig($name, $context);
