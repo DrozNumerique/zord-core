@@ -30,7 +30,7 @@ class InstalledVersions
     'aliases' => 
     array (
     ),
-    'reference' => 'aa7991d0212932d8ba1ae622679610be68e0d666',
+    'reference' => 'ce21ffbc7203b6b75977d63680056ccbc2d4a830',
     'name' => '__root__',
   ),
   'versions' => 
@@ -42,7 +42,7 @@ class InstalledVersions
       'aliases' => 
       array (
       ),
-      'reference' => 'aa7991d0212932d8ba1ae622679610be68e0d666',
+      'reference' => 'ce21ffbc7203b6b75977d63680056ccbc2d4a830',
     ),
     'cache/cache' => 
     array (
