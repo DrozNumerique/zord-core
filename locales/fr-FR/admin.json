@@ -25,7 +25,10 @@
 				"activation": "Lien d'activation"
 			},
 			"keyword": "Identifiant, nom, courriel...",
-			"order": "Classer par..."
+			"order": "Classer par...",
+			"delete": {
+				"confirm": "Êtes-vous sûr de supprimer ce compte ?"
+			}
 		},
 		"content": {
 			"title": "Édition de contenus",

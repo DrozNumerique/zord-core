@@ -12,7 +12,7 @@ function checkAccount(operation, data) {
 		return false;
 	}
 	if (operation == 'delete') {
-		return confirm(LOCALE.admin.users.delete.confirm);
+		return confirm(LOCALE.admin.tab.users.delete.confirm);
 	}
 	return true;
 }

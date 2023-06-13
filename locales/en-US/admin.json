@@ -25,7 +25,10 @@
 				"activation": "Activation link "
 			},
 			"keyword": "Login, name, email...",
-			"order": "Order by..."
+			"order": "Order by...",
+			"delete": {
+				"confirm": "Are you sure to delete this account"
+			}
 		},
 		"content": {
 			"title": "Contents edition",
