@@ -118,6 +118,23 @@ div.loading {
 	background: no-repeat center url("/img/wait.gif");
 }
 
+/*------------------------------------message-------------------------------------*/
+div.message {
+	color: black;
+}
+
+div.message.success {
+	color: green;
+}
+
+div.message.warning {
+	color: orange;	
+}
+
+div.message.failure {
+	color: red;	
+}
+
 /* ---------------------------------- account ----------------------------------- */
 ul.account {
 	list-style: none;
@@ -169,7 +186,6 @@ form.account div.switch.after {
 }
 
 form.account div.message {
-	color: black;
 	padding: 20px 0;
 	font-size: 1.2em;
 	font-weight: bold;

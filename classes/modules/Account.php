@@ -13,6 +13,8 @@ class Account extends Module {
                 $switch['create']['after'] = ['connect'];
                 $switch['connect']['after'] = ['create'];
             }
+        } else if ($action == 'password') {
+            $models['token'] = $this->params['token'] ?? null;
         }
         $models['switch'] = $switch;
         return $this->page('account', $models);
