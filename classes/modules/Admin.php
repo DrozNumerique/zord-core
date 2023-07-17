@@ -160,10 +160,10 @@ class Admin extends Module {
                     $user_ipv6[] = ($entry['include'] ? '' : '~').$entry['ip'].((!empty($entry['mask']) || $entry['mask'] == 0) ? '/'.$entry['mask'] : '');
                 }
             }
-            (new UserEntity())->update($login, [
+            (new UserEntity())->update($login, $this->enhanceProfile($login, [
                 'ipv4' => implode(',', $user_ipv4),
                 'ipv6' => implode(',', $user_ipv6)
-            ]);
+            ]));
         }
         return $this->index('users', array_merge($result, $this->dataProfile($login)));
     }
@@ -278,6 +278,10 @@ class Admin extends Module {
     public function users() {
         $models = $this->cursor($this->dataUsers());
         return $this->view('/portal/widget/list', Zord::listModels('users', $models), 'text/html;charset=UTF-8', false, false, 'admin');
+    }
+    
+    protected function enhanceProfile($login, $data) {
+        return $data;
     }
     
     protected function isAvailable($name, $scope) {
