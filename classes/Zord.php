@@ -409,8 +409,7 @@ class Zord {
     	            unset($first[$key]);
     	        } else {
     	            if (is_array($value) && self::is_associative($value)) {
-        	            if (isset($value['__RESET__'])) {
-        	                $reset = true;
+    	                if (isset($value['__RESET__'])) {
         	                $value = $value['__RESET__'];
         	            } else if (isset($value['__CONST__']) && defined($value['__CONST__'])) {
         	                $value = constant($value['__CONST__']);
@@ -426,11 +425,11 @@ class Zord {
         	        if (!self::is_associative($second)) {
         	            $first[] = $value;
         	        } else {
-    	                if (!$reset && isset($first[$key]) && self::matches($first[$key], $value)) {
+        	            if (!$reset && isset($first[$key]) && self::matches($first[$key], $value)) {
     	                    foreach ($value as $entry) {
     	                        $first[$key][] = $entry;
     	                    }
-    	                } else {
+        	            } else {
     	                    $first[$key] = $value;
     	                }
     	            }
