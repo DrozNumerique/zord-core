@@ -410,6 +410,7 @@ class Zord {
     	        } else {
     	            if (is_array($value) && self::is_associative($value)) {
     	                if (isset($value['__RESET__'])) {
+    	                    $reset = true;
         	                $value = $value['__RESET__'];
         	            } else if (isset($value['__CONST__']) && defined($value['__CONST__'])) {
         	                $value = constant($value['__CONST__']);
@@ -419,7 +420,7 @@ class Zord {
         	                if (!isset($first[$key])) {
         	                    $first[$key] = [];
         	                }
-        	                $value = self::array_merge($first[$key], $value, $reset, isset($base) ? $base.'.'.$key : null);
+        	                $value = self::array_merge($first[$key], $value, false, isset($base) ? $base.'.'.$key : null);
         	            }
         	        }
         	        if (!self::is_associative($second)) {
