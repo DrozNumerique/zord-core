@@ -160,9 +160,10 @@ class Admin extends Module {
                     $user_ipv6[] = ($entry['include'] ? '' : '~').$entry['ip'].((!empty($entry['mask']) || $entry['mask'] == 0) ? '/'.$entry['mask'] : '');
                 }
             }
-            $profile = User::get($login)->lastProfile();
+            $user = User::get($login);
+            $profile = $user->lastProfile();
             $profile = isset($profile) ? Zord::objectToArray($profile->profile) : [];
-            $profile = $this->enhanceProfile(array_merge($profile, [
+            $profile = $this->enhanceProfile($user, array_merge($profile, [
                 'ipv4' => implode(',', $user_ipv4),
                 'ipv6' => implode(',', $user_ipv6)
             ]));
