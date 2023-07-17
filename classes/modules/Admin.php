@@ -160,10 +160,13 @@ class Admin extends Module {
                     $user_ipv6[] = ($entry['include'] ? '' : '~').$entry['ip'].((!empty($entry['mask']) || $entry['mask'] == 0) ? '/'.$entry['mask'] : '');
                 }
             }
-            (new UserEntity())->update($login, $this->enhanceProfile($login, [
+            $profile = User::get($login)->lastProfile();
+            $profile = isset($profile) ? Zord::objectToArray($profile->profile) : [];
+            $profile = $this->enhanceProfile(array_merge($profile, [
                 'ipv4' => implode(',', $user_ipv4),
                 'ipv6' => implode(',', $user_ipv6)
             ]));
+            (new UserEntity())->update($login, $profile);
         }
         return $this->index('users', array_merge($result, $this->dataProfile($login)));
     }
@@ -280,7 +283,7 @@ class Admin extends Module {
         return $this->view('/portal/widget/list', Zord::listModels('users', $models), 'text/html;charset=UTF-8', false, false, 'admin');
     }
     
-    protected function enhanceProfile($login, $data) {
+    protected function enhanceProfile($data) {
         return $data;
     }
     
