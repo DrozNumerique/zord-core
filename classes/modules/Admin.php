@@ -284,7 +284,7 @@ class Admin extends Module {
         return $this->view('/portal/widget/list', Zord::listModels('users', $models), 'text/html;charset=UTF-8', false, false, 'admin');
     }
     
-    protected function enhanceProfile($data) {
+    protected function enhanceProfile($user, $data) {
         return $data;
     }
     
