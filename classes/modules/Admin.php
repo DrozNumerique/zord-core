@@ -167,6 +167,7 @@ class Admin extends Module {
                 'ipv4' => implode(',', $user_ipv4),
                 'ipv6' => implode(',', $user_ipv6)
             ]));
+            unset($profile['password']);
             (new UserEntity())->update($login, $profile);
         }
         return $this->index('users', array_merge($result, $this->dataProfile($login)));
