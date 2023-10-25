@@ -52,7 +52,8 @@ class Tunnel {
             if ($ssherr) {
                 # we cannot use stream_select() with SSH2 streams
                 # so use non-blocking stream_get_contents() and usleep()
-                if (stream_set_blocking($sshout, false) && stream_set_blocking($ssherr, false)) {                        $result=true;
+                if (stream_set_blocking($sshout, false) && stream_set_blocking($ssherr, false)) {
+                    $result = true;
                     # loop until end of output on both stdout and stderr
                     $wait = 0;
                     while (!feof($sshout) or !feof($ssherr)) {
