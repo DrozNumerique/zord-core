@@ -1270,6 +1270,9 @@ class Zord {
         $unfolded = [];
         $folded = [];
         for ($index = 0 ; $index < count($list) ; $index++) {
+            if (empty($list[$index]) || strpos($list[$index], ':') > 0) {
+                continue;
+            }
             $n = explode('.', $list[$index], 4);
             $d = explode('-', $n[3], 2);
             $c = explode('-', $n[2], 2);
