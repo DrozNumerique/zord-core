@@ -12,10 +12,10 @@ class Menu {
     protected $config;
     protected $locale;
     
-    public function __construct($controler, $name = null) {
+    public function __construct($controler, $name = null, $config = null) {
         $this->controler = $controler;
         $this->name = $name;
-        $this->config = isset($name) ? Zord::value('menu', $name) : Zord::getConfig('menu');
+        $this->config = isset($name) ? Zord::value('menu', $name) : (isset($config) ? $config : Zord::getConfig('menu'));
         $this->user = $controler->getUser();
         $this->context = $controler->getContext();
         $this->params = $controler->getParams();
@@ -32,7 +32,8 @@ class Menu {
     protected function entry($name) {
         $entry = $this->config[$name];
         $entry['connected'] = $entry['connected'] ?? false;
-        $entry['active'] = true;
+        $entry['active']    = $entry['active']    ?? true;
+        $entry['track']     = $entry['track']     ?? true;
         if (isset($entry['role']) && !$this->user->hasRole($entry['role'], $this->context)) {
             $entry['active'] = false;
         }
@@ -46,8 +47,8 @@ class Menu {
         return ($this->params['menu'] ?? null) == ($name.(isset($subName) ? '/'.$subName : ''));
     }
     
-    public static function build($controler, $models, $config = null) {
-        $menu = Zord::getInstance('Menu', $controler, $config);
+    public static function build($controler, $models, $name = null, $config = null) {
+        $menu = Zord::getInstance('Menu', $controler, $name, $config);
         $data = [];
         foreach ($menu->layout() as $name) {
             $entry = $menu->entry($name);
@@ -91,7 +92,7 @@ class Menu {
         $type    = isset($entry['type'])  ? $entry['type']  : 'default';
         $path    = isset($entry['path'])  ? $entry['path']  : ($type == 'shortcut' ? (isset($entry['module']) && isset($entry['action']) ? '/'.$entry['module'].'/'.$entry['action'] : '/'.$name) : ($type == 'page' ? '/page/'.$name : ($type == 'content' ? '/content/'.$name : ($type == 'nolink' ? '#' : ''))));
         $url     = isset($entry['url'])   ? $entry['url']   : ($type == 'menu' ? null : ($path !== '#' ? $this->baseURL : '').$path);
-        $url     = $url.'?'.http_build_query(array_merge(['menu' => $name], $entry['params'] ?? []));
+        $url     = $url.($entry['track']  ? '?'.http_build_query(array_merge(['menu' => $name], $entry['params'] ?? [])) : '');
         $class   = isset($entry['class']) ? (is_array($entry['class']) ? $entry['class'] : [$entry['class']]) : [];
         $label   = isset($entry['label'][$this->lang]) ? $entry['label'][$this->lang] : (isset($entry['label']) ? $entry['label'] : ($this->locale->$name ?? $name));
         $display = isset($entry['display']) ? (new View($entry['display'], $models, $this->controler))->render() : null;
