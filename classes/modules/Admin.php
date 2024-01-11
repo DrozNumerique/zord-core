@@ -273,7 +273,7 @@ class Admin extends Module {
     }
     
     public function contentLabel($name) {
-        return $this->locale->tab->content->label->$name;
+        return $this->locale->tab->content->label->$name ?? $name;
     }
     
     public function contentHolder($name) {

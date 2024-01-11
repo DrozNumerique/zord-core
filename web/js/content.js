@@ -7,16 +7,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		var text    = content.querySelector(".text");
 		var save    = content.querySelector(".save");
 		var cancel  = content.querySelector(".cancel");
+		var _display = display.style.display;
 		if (display && editor && text) {
 			display.addEventListener('click', function(event) {
-				editor.style.height = display.offsetHeight + 'px';
-				display.style.display = 'none';
-				editor.style.display = 'block';
+				if (event.ctrlKey) {
+					editor.style.height = display.offsetHeight + 'px';
+					display.style.display = 'none';
+					editor.style.display = 'block';
+				}
 			});
 		}
 		if (cancel && display && editor) {
 			cancel.addEventListener('click', function(event) {
-				display.style.display = 'block';
+				display.style.display = _display;
 				editor.style.display = 'none';
 			});
 		}
@@ -35,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 						alert(error.message);
 					},
 					after: function() {
-						display.style.display = 'block';
+						display.style.display = _display;
 						editor.style.display = 'none';
 					}
 				});

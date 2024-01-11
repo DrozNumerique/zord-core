@@ -1,5 +1,5 @@
 .content.editable[data-name] {
-	cursor: pointer;
+	cursor: text;
 }
 
 .content.editable[data-name] .editor {
@@ -16,4 +16,9 @@
 	position: relative;
 	bottom: 32px;
 	left: 4px;
+}
+
+.content.editor button {
+	font-family: sans-serif;
+	font-size: 10px;
 }
