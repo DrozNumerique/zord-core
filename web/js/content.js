@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		var _display = display.style.display;
 		if (display && editor && text) {
 			display.addEventListener('click', function(event) {
-				if (event.ctrlKey) {
+				if (event.ctrlKey || event.metaKey) {
 					editor.style.height = display.offsetHeight + 'px';
 					display.style.display = 'none';
 					editor.style.display = 'block';
