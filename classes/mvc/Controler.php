@@ -72,6 +72,14 @@ class Controler {
         return $this->lang;
     }
     
+    public function getModule() {
+        return $this->module;
+    }
+    
+    public function getAction() {
+        return $this->action;
+    }
+    
     public function getParams() {
         return $this->params;
     }
