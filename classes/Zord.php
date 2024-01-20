@@ -177,7 +177,8 @@ class Zord {
 	public static function loadLocale($target, $lang, $context) {
 	    $locale = array();
 	    foreach (COMPONENT_FOLDERS as $folder) {
-	        foreach (['', DEFAULT_LANG.DS, $lang.DS] as $variant) {
+	        $variants = DEFAULT_LANG !== $lang ? ['', DEFAULT_LANG.DS, $lang.DS] : ['', $lang.DS];
+	        foreach ($variants as $variant) {
 	            $locale = self::array_merge($locale, self::arrayFromJSONFile($folder.'locales'.DS.$variant.$target.'.json'), true);
 	            if ($context) {
 	                $locale = self::array_merge($locale, self::arrayFromJSONFile($folder.'locales'.DS.$variant.$target.DS.$context.'.json'), true);
