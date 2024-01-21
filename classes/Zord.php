@@ -1171,6 +1171,9 @@ class Zord {
                 }
             }
         }
+        if (!isset($content) && $lang !== DEFAULT_LANG) {
+            return self::content($name, DEFAULT_LANG);
+        }
         return $content;
     }
     
