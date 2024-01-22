@@ -212,10 +212,11 @@ class Admin extends Module {
                     break;
                 }
             }
-            if (in_array($operation, ['create','uodate','delete'])) {
+            if (in_array($operation, ['create','update','delete'])) {
                 $context = $this->resetContext($context);
                 if (is_array($context)) {
                     Zord::saveConfig('context', $context);
+                    $this->postContext($operation, $name);
                 } else {
                     $this->response = 'DATA';
                     return $this->error(500, $context);
@@ -239,6 +240,7 @@ class Admin extends Module {
             $context = $this->resetContext($context);
             if (is_array($context)) {
                 Zord::saveConfig('context', $context);
+                $this->postContext('update', $name);
             } else {
                 $this->response = 'DATA';
                 return $this->error(500, $context);
@@ -439,6 +441,10 @@ class Admin extends Module {
             $result[$name]['__RESET__'] = $entry; 
         }
         return $result;
+    }
+    
+    protected function postContext($operation, $name) {
+        return true;
     }
 }
 
