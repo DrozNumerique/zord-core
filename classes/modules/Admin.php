@@ -213,11 +213,7 @@ class Admin extends Module {
                 }
             }
             if (in_array($operation, ['create','update','delete'])) {
-                $context = $this->resetContext($context);
-                if (is_array($context)) {
-                    Zord::saveConfig('context', $context);
-                    $this->postContext($operation, $name);
-                } else {
+                if (!$this->doContext($operation, $name, $context)) {
                     $this->response = 'DATA';
                     return $this->error(500, $context);
                 }
@@ -237,11 +233,7 @@ class Admin extends Module {
             } else {
                 unset($context[$name]['url']);
             }
-            $context = $this->resetContext($context);
-            if (is_array($context)) {
-                Zord::saveConfig('context', $context);
-                $this->postContext('update', $name);
-            } else {
+            if (!$this->doContext('update', $name, $context)) {
                 $this->response = 'DATA';
                 return $this->error(500, $context);
             }
@@ -443,8 +435,22 @@ class Admin extends Module {
         return $result;
     }
     
-    protected function postContext($operation, $name) {
+    protected function doContext($operation, $name, $context) {
+        $context = $this->preContext($operation, $name, $context);
+        $context = $this->resetContext($context);
+        if (!is_array($context)) {
+            return false;
+        }
+        Zord::saveConfig('context', $context);
+        $this->postContext($operation, $name, $context);
         return true;
+    }
+    
+    protected function preContext($operation, $name, $context) {
+        return $context;
+    }
+    
+    protected function postContext($operation, $name, $context) {
     }
 }
 
