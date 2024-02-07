@@ -92,7 +92,7 @@ class Menu {
         $type    = isset($entry['type'])  ? $entry['type']  : 'default';
         $path    = isset($entry['path'])  ? $entry['path']  : ($type == 'shortcut' ? (isset($entry['module']) && isset($entry['action']) ? '/'.$entry['module'].'/'.$entry['action'] : '/'.$name) : ($type == 'page' ? '/page/'.$name : ($type == 'content' ? '/content/'.$name : ($type == 'nolink' ? '#' : ''))));
         $url     = isset($entry['url'])   ? $entry['url']   : ($type == 'menu' ? null : ($path !== '#' ? $this->baseURL : '').$path);
-        $url     = $url.($entry['track']  ? '?'.http_build_query(array_merge(['menu' => $name], $entry['params'] ?? [])) : '');
+        $url     = $url.(($entry['track'] ?? false)  ? '?'.http_build_query(array_merge(['menu' => $name], $entry['params'] ?? [])) : '');
         $class   = isset($entry['class']) ? (is_array($entry['class']) ? $entry['class'] : [$entry['class']]) : [];
         $label   = isset($entry['label'][$this->lang]) ? $entry['label'][$this->lang] : (isset($entry['label']) ? $entry['label'] : ($this->locale->$name ?? $name));
         $display = isset($entry['display']) ? (new View($entry['display'], $models, $this->controler))->render() : null;
