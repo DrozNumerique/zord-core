@@ -99,7 +99,7 @@
 				}
 			}
 		},
-		"urls": {
+		"urlsList": {
 			"class": "admin",
 			"create": "hidden",
 			"headers": {

@@ -80,7 +80,7 @@ class Admin extends Module {
                         break;
                     }
                     case 'profile': {
-                        $result = $this->dataProfile($login);
+                        $result = $this->accountExtrasData($login);
                         break;
                     }
                     case 'notify': {
@@ -170,7 +170,7 @@ class Admin extends Module {
             unset($profile['password']);
             (new UserEntity())->update($login, $profile);
         }
-        return $this->index('users', array_merge($result, $this->dataProfile($login)));
+        return $this->index('users', array_merge($result, $this->accountExtrasData($login)));
     }
     
     public function context() {
@@ -208,7 +208,7 @@ class Admin extends Module {
                     break;
                 }
                 case 'urls': {
-                    $result = $this->dataURLs($name);
+                    $result = $this->contextExtrasData($name);
                     break;
                 }
             }
@@ -238,7 +238,7 @@ class Admin extends Module {
                 return $this->error(500, $context);
             }
         }
-        return $this->index('context', $this->dataURLs($name));
+        return $this->index('context', $this->contextExtrasData($name));
     }
     
     public function content() {
@@ -368,7 +368,7 @@ class Admin extends Module {
         return $models;
     }
     
-    protected function dataProfile($login) {
+    protected function accountExtrasData($login) {
         $result = [];
         $user = User::get($login);
         $result['login'] = $login;
@@ -397,7 +397,7 @@ class Admin extends Module {
         return $result;
     }
     
-    protected function dataURLs($name) {
+    protected function contextExtrasData($name) {
         $data = [];
         foreach (Zord::value('context', [$name,'url']) ?? [] as $url) {
             $data[] = [

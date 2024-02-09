@@ -14,10 +14,10 @@ function checkContext(operation, data) {
 	return true;
 }
 
-function getContextData() {
+function getContextURLs() {
 	var urls = [];
-	var context = document.getElementById('context').value;
-	var urlsElement = document.getElementById('urls');
+	var urlsInput = document.getElementById('urls');
+	var urlsElement = document.getElementById('urlsList');
 	if (urlsElement) {
 		[].forEach.call(urlsElement.querySelectorAll('.data'), function(entry) {
 			urls.push({
@@ -26,12 +26,8 @@ function getContextData() {
 				path:entry.children[2].firstElementChild.value
 			}); 
 		});
+		urlsInput.value = JSON.stringify(urls)
 	}
-	var data = {
-		context:context,
-		urls:JSON.stringify(urls)
-	};
-	return data;
 }
 
 document.addEventListener("DOMContentLoaded", function(event) {
@@ -55,17 +51,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		});
 	}
 	
-	var submitURLs = document.getElementById('submit-urls');
-	if (submitURLs) {
+	var submitData = document.getElementById('submit-data');
+	if (submitData) {
 		dressActions(document);
-		submitURLs.addEventListener("click", function(event) {
-			var data = getContextData();
-			invokeZord({
-				module:'Admin',
-				action:'urls',
-				ctx:data.context,
-				urls:data.urls
-			});
+		submitData.addEventListener("click", function(event) {
+			getContextURLs();
 		});
 	}
 

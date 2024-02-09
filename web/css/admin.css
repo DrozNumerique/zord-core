@@ -236,7 +236,7 @@
 .list.admin li div.profile:hover,
 .list.admin li div.notify:hover,
 .list.admin li div.counter:hover,
-.list.admin li div.urls:hover {
+.list.admin li div.urlsList:hover {
 	color:black;
 }
 
@@ -276,18 +276,18 @@
 	width: 210px;
 }
 
-.list.admin.urls,
+.list.admin.urlsList,
 .list.admin.roles,
 .list.admin.ip {
 	--num-actions: 1;
 }
 
-.list.admin.urls li div.column.secure {
+.list.admin.urlsList li div.column.secure {
 	width: 2em;
 }
 
-.list.admin.urls li div.column.host,
-.list.admin.urls li div.column.path {
+.list.admin.urlsList li div.column.host,
+.list.admin.urlsList li div.column.path {
 	width: 300px;
 }
 
