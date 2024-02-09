@@ -255,7 +255,7 @@
 }
 
 .list.admin.context {
-	--num-actions: 3;
+	--num-actions: 5;
 }
 
 .list.admin.context li div.column.name {

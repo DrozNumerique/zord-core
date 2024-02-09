@@ -207,12 +207,40 @@ class Admin extends Module {
                     }
                     break;
                 }
+                case 'up': 
+                case 'down': {
+                    $names = array_keys($context);
+                    if (in_array($name, $names)) {
+                        foreach ($names as $_index => $_name) {
+                            $context[$_name]['position'] = $context[$_name]['position'] ?? $_index;
+                        }
+                        $index = $context[$name]['position'];
+                        foreach ($names as $_index => $_name) {
+                            if ($context[$_name]['position'] === $index - 1) {
+                                $before = $_name;
+                            }
+                            if ($context[$_name]['position'] === $index + 1) {
+                                $after = $_name;
+                            }
+                        }
+                        if ($operation === 'up' && $index > 0) {
+                            $context[$before]['position'] = $index;
+                            $context[$name]['position'] = $index - 1;
+                        }
+                        if ($operation === 'down' && $index < count($names) - 1) {
+                            $context[$after]['position'] = $index;
+                            $context[$name]['position'] = $index + 1;
+                        }
+                        Zord::log($context);
+                    }
+                    break;
+                }
                 case 'urls': {
                     $result = $this->contextExtrasData($name);
                     break;
                 }
             }
-            if (in_array($operation, ['create','update','delete'])) {
+            if (in_array($operation, ['create','update','delete','up','down'])) {
                 if (!$this->doContext($operation, $name, $context)) {
                     $this->response = 'DATA';
                     return $this->error(500, $context);
@@ -352,7 +380,11 @@ class Admin extends Module {
         } else if ($current == 'users' && !isset($models['login"'])) {
             $models = Zord::array_merge($models, $this->dataUsers());
         } else if ($current == 'context' && !isset($models['ctx'])) {
-            foreach(Zord::getConfig('context') as $name => $config) {
+            $context = Zord::getConfig('context');
+            uasort($context, function($first, $second) {
+                return ($first['position'] ?? 0) <=> ($second['position'] ?? 0);
+            });
+            foreach($context as $name => $config) {
                 if ($this->user->hasRole('admin', $name)) {
                     $models['data'][] = [
                         'name'  => $name,

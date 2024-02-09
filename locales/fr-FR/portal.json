@@ -63,6 +63,8 @@
 			"update": "Modifier",
 			"add": "Ajouter",
 			"remove": "Enlever",
+			"up"     : "Haut",
+			"down"   : "Bas",
 			"profile": "Profil...",
 			"notify": "Renvoyer",
 			"urls"  : "URLs..."

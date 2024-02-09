@@ -76,7 +76,9 @@
 			"actions": {
 				"delete": "times", 
 				"update": "check",
-				"urls": "arrow-circle-right"
+				"urls"  : "arrow-circle-right",
+				"up"    : "chevron-up",
+				"down"  : "chevron-down"
 			}
 		},
 		"users": {
