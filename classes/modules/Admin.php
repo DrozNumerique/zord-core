@@ -437,12 +437,9 @@ class Admin extends Module {
     
     protected function doContext($operation, $name, $context) {
         $context = $this->preContext($operation, $name, $context);
-        $context = $this->resetContext($context);
-        if (!is_array($context)) {
-            return false;
-        }
-        Zord::saveConfig('context', $context);
+        Zord::saveConfig('context', $this->resetContext($context));
         $this->postContext($operation, $name, $context);
+        $this->applyContext($context);
         return true;
     }
     
@@ -451,6 +448,11 @@ class Admin extends Module {
     }
     
     protected function postContext($operation, $name, $context) {
+        return;
+    }
+    
+    protected function applyContext($context) {
+        return;
     }
 }
 

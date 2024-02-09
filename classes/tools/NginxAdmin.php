@@ -2,7 +2,7 @@
 
 trait NginxAdmin  {
     
-    protected function resetContext($context) {
+    protected function applyContext($context) {
         if (defined('NGINX_VHOST_INCLUDE')) {
             $include = $this->buildInclude($context);
             if (is_string($include)) {
@@ -21,7 +21,6 @@ trait NginxAdmin  {
                 return "Can't write ".NGINX_VHOST_INCLUDE;
             }
         }
-        return parent::resetContext($context);
     }
     
     protected function buildInclude($context) {
