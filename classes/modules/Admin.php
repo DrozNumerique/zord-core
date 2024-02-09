@@ -231,7 +231,6 @@ class Admin extends Module {
                             $context[$after]['position'] = $index;
                             $context[$name]['position'] = $index + 1;
                         }
-                        Zord::log($context);
                     }
                     break;
                 }

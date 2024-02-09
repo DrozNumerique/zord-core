@@ -1253,7 +1253,7 @@ class Zord {
     
     public static function contextList($lang, $withURLOnly = true, $property = 'title') {
         $list = [];
-        foreach (Zord::getConfig('context') as $context => $config) {
+        foreach (self::getConfig('context') as $context => $config) {
             if (!$withURLOnly || (isset($config['url']) && !empty($config['url']))) {
                 $title = $context;
                 if (isset($config[$property][$lang])) {
@@ -1266,6 +1266,9 @@ class Zord {
                 $list[$context] = $title;
             }
         }
+        uksort($list, function($first, $second) {
+            return (self::value('context', [$first,'position']) ?? 0) <=> (self::value('context', [$second,'position']) ?? 0);
+        });
         return $list;
     }
     
