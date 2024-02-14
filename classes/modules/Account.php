@@ -17,7 +17,7 @@ class Account extends Module {
             $models['token'] = $this->params['token'] ?? null;
         }
         $models['switch'] = $switch;
-        return ($this->params['popup'] ?? false) ? $this->view('/portal/page/account', $models) : $this->page('account', $models);
+        return ($this->params['xhr'] ?? false) ? $this->view('/portal/page/account', $models) : $this->page('account', $models);
     }
     
     protected function value($property) {
@@ -271,7 +271,12 @@ class Account extends Module {
     public function disconnect() {
         $this->user->disconnect();
         $this->disconnecting = true;
-        return ($this->params['popup'] ?? false) ? $this->controler->getDefaultTarget() : $this->redirect($this->params['redirect'] ?? $this->baseURL, true);
+        $result = $this->params['redirect'] ?? $this->baseURL;
+        if (($this->params['xhr'] ?? false)) {
+            $this->response = 'DATA';
+            return $result;
+        }
+        return $this->redirect($result, true);
     }
     
     public function notifyProfile($user) {
