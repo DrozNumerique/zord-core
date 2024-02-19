@@ -315,7 +315,7 @@ class Account extends Module {
         $crypted = Zord::encrypt($data, Zord::realpath(OPENSSL_PUBLIC_KEY));
         if ($crypted !== false) {
             $url = $this->baseURL.'/password?token='.base64_encode($crypted);
-            $send = $this->sendMail([
+            $send = PASSWORD_RESET_SEND_MAIL ? $this->sendMail([
                 'category'   => 'account'.DS.$user->login,
                 'principal'  => ['email' => $user->email, 'name' => $user->name],
                 'recipients' => [
@@ -331,7 +331,7 @@ class Account extends Module {
                     'login' => $user->login
                 ],
                 'styles'     => Zord::value('mail', ['styles','account']) ?? null
-            ]);
+            ]) : false;
             $result = [
                 'activation' => $url,
                 'account'    => htmlspecialchars($user->name.' <'.$user->email.'>')
