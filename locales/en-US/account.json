@@ -41,6 +41,7 @@
 		"profile_unchanged": "Profile unchanged",
 		"account_created": "Account created|An e-mail is sent with a link to activate your password",
 		"wrong_confirm": "Wrong password confirmation",
+		"wrong_name": "Name not allowed",
 		"already_login": "Login is already used",
 		"already_email": "E-mail address is already used",
 		"notvalid_email": "E-mail address is not valid",

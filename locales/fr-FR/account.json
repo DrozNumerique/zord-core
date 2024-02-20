@@ -39,6 +39,7 @@
 		},
 		"account_created": "Compte créé|Vous allez recevoir un mail avec un lien pour activer votre mot de passe",
 		"wrong_confirm": "Mauvaise confirmation du mot de passe",
+		"wrong_name": "Nom d'utilisateur non autorisé",
 		"already_login": "Identifiant déjà attribué",
 		"already_email": "Adresse e-mail déjà attribuée",
 		"notvalid_email": "Adresse e-mail invalide",

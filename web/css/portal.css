@@ -165,6 +165,10 @@ form.account  {
 	font-size: large;
 }
 
+.fancybox-content form.account {
+	margin: 0;
+}
+
 form.account div.title {
 	color: white;
 	text-align:left;

@@ -86,6 +86,19 @@ class Account extends Module {
                 }
                 break;
             }
+            case 'name': {
+                if (strlen($this->params['name']) < NAME_MIN_LENGTH || strlen($this->params['name']) > NAME_MAX_LENGTH) {
+                    $checked = $this->locale->messages->wrong_name;
+                }
+                if ($checked !== true) {
+                    $spammers = Zord::getConfig('spammers') ?? [];
+                    if (!in_array($_SERVER['REMOTE_ADDR'], $spammers)) {
+                        $spammers[] = $_SERVER['REMOTE_ADDR'];
+                        Zord::saveConfig('spammers', $spammers);
+                    }
+                }
+                break;
+            }
         }
         return $checked;
     }
@@ -226,7 +239,7 @@ class Account extends Module {
     public function create() {
         $success = Zord::trim($this->params['success'] ?? null);
         $failure = Zord::trim($this->params['failure'] ?? null);
-        if ($this->user->isConnected()) {
+        if ($this->user->isConnected() || in_array($_SERVER['REMOTE_ADDR'], Zord::getConfig('spammers') ?? [])) {
             return $this->redirect($this->baseURL.'/home');
         }
         list($models, ) = $this->userdata();

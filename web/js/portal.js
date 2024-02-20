@@ -227,8 +227,8 @@ var activateStates = function(element, callback) {
 	}
 };
 
-var displayAccount = function(action) {
-	[].forEach.call(document.querySelectorAll('li.account'), function(element) {
+var displayAccount = function(container, action) {
+	[].forEach.call(container.querySelectorAll('li.account'), function(element) {
 		element.classList.remove('active');
 		[].forEach.call(element.querySelectorAll('div.message'), function(message) {
 			message.parentNode.removeChild(message);
@@ -236,6 +236,14 @@ var displayAccount = function(action) {
 		if (element.classList.contains(action)) {
 			element.classList.add('active');
 		}
+	});
+};
+
+var dressAccount = function(container) {
+	[].forEach.call(container.querySelectorAll('li.account div.switch'), function(element) {
+		element.addEventListener("click", function(event) {
+			displayAccount(container, element.dataset.action);
+		});
 	});
 };
 
@@ -623,11 +631,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		});
 	});
 	
-	[].forEach.call(document.querySelectorAll('li.account div.switch'), function(element) {
-		element.addEventListener("click", function(event) {
-			displayAccount(element.dataset.action);
-		});
-	});
+	dressAccount(document);
 	
 	[].forEach.call(document.querySelectorAll('.slide'), function(slide) {
 		if (slide.dataset.index !== undefined) {
