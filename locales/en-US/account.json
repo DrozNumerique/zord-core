@@ -39,7 +39,7 @@
 		},
 		"profile_updated": "Profile updated",
 		"profile_unchanged": "Profile unchanged",
-		"account_created": "Account created|An e-mail is sent with a link to activate your password",
+		"account_created": "Account created§An e-mail is sent with a link to activate your password",
 		"wrong_confirm": "Wrong password confirmation",
 		"wrong_name": "Name not allowed",
 		"already_login": "Login is already used",

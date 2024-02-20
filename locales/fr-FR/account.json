@@ -37,7 +37,7 @@
 			"updated": "Mot de passe mis à jour. Vous êtes maintenant connecté(e)",
 			"unchanged": "Mot de passe inchangé"
 		},
-		"account_created": "Compte créé|Vous allez recevoir un mail avec un lien pour activer votre mot de passe",
+		"account_created": "Compte créé§Vous allez recevoir un mail avec un lien pour activer votre mot de passe",
 		"wrong_confirm": "Mauvaise confirmation du mot de passe",
 		"wrong_name": "Nom d'utilisateur non autorisé",
 		"already_login": "Identifiant déjà attribué",
