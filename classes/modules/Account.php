@@ -245,7 +245,7 @@ class Account extends Module {
         list($models, ) = $this->userdata();
         $data = $this->check($models, 'create');
         if (is_string($data)) {
-            $models['message'] = $data;
+            $models['message'] = $this->message('error', $data);
             if (isset($failure)) {
                 return $this->redirect($failure.(empty(parse_url($failure, PHP_URL_QUERY)) ? '?' : '&').http_build_query($models));
             }

@@ -1,5 +1,4 @@
-<?php     $_message = explode('=', $message); ?>
-<?php     $__message = explode('|', $_message[1]); ?>	
-<?php     foreach ($__message as $___message) { ?>
-			<div class="message <?php echo $_message[0]; ?>"><?php echo $___message; ?></div>
+<?php     foreach (explode('|', $message) as $_message) { ?>
+<?php       $__message = explode('=', $_message); ?>	
+			<div class="message <?php echo $__message[0]; ?>"><?php echo $__message[1]; ?></div>
 <?php     } ?>
