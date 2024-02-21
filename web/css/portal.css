@@ -131,6 +131,7 @@ div.message.warning {
 	color: orange;	
 }
 
+div.message.error,
 div.message.failure {
 	color: red;	
 }
