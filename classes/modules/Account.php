@@ -17,6 +17,7 @@ class Account extends Module {
             $models['token'] = $this->params['token'] ?? null;
         }
         $models['switch'] = $switch;
+        $models['response'] = ($this->params['xhr'] ?? false) ? 'DATA' : 'VIEW';
         return ($this->params['xhr'] ?? false) ? $this->view('/portal/page/account', $models) : $this->page('account', $models);
     }
     
@@ -89,6 +90,19 @@ class Account extends Module {
             case 'name': {
                 if (strlen($this->params['name']) < NAME_MIN_LENGTH || strlen($this->params['name']) > NAME_MAX_LENGTH) {
                     $checked = $this->locale->messages->wrong_name;
+                }
+                if (preg_match('/^[a-zA-Z]*$/', $this->params['name'])) {
+                    $upper = ctype_upper($this->params['name'][0]);
+                    $count = 0;
+                    foreach (mb_str_split(substr($this->params['name'], 1)) as $char) {
+                        if ($upper !== ctype_upper($char)) {
+                            $count++;
+                            $upper = ctype_upper($char);
+                        }
+                    }
+                    if ($count > NAME_MAX_TOGGLE) {
+                        $checked = $this->locale->messages->wrong_name;
+                    }
                 }
                 if ($checked !== true) {
                     $spammers = Zord::getConfig('spammers') ?? [];
@@ -170,6 +184,7 @@ class Account extends Module {
         $success  = Zord::trim($this->params['success']  ?? null);
         $failure  = Zord::trim($this->params['failure']  ?? null);
         $message  = Zord::trim($this->params['message']  ?? null);
+        $response = $this->params['response'] ?? 'VIEW';
         $models = [
             'success' => $success,
             'failure' => $failure,
@@ -180,8 +195,12 @@ class Account extends Module {
             $user = User::authenticate($login, $password);
             if ($user) {
                 $this->controler->setUser($user);
+                $this->response = 'VIEW';
                 return $this->redirect($success ?? $this->baseURL, true);
             } else {
+                if ($response === 'DATA') {
+                    return $this->error(401, $this->locale->messages->auth_failed);
+                }
                 $models['message'] = $this->message('error', $this->locale->messages->auth_failed);
                 if (!isset($login)) {
                     unset($models['login']);
@@ -239,22 +258,29 @@ class Account extends Module {
     public function create() {
         $success = Zord::trim($this->params['success'] ?? null);
         $failure = Zord::trim($this->params['failure'] ?? null);
+        $response = $this->params['response'] ?? 'VIEW';
         if ($this->user->isConnected() || in_array($_SERVER['REMOTE_ADDR'], Zord::getConfig('spammers') ?? [])) {
             return $this->redirect($this->baseURL.'/home');
         }
         list($models, ) = $this->userdata();
         $data = $this->check($models, 'create');
         if (is_string($data)) {
+            if ($response === 'DATA') {
+                return $this->error(400, $data);
+            }
             $models['message'] = $this->message('error', $data);
             if (isset($failure)) {
                 return $this->redirect($failure.(empty(parse_url($failure, PHP_URL_QUERY)) ? '?' : '&').http_build_query($models));
             }
         } else {
             $result = $this->notifyReset((new UserEntity())->create($data));
+            if (isset($result['error']) && $response === 'DATA') {
+                return $this->error(500, explode('=', $result['error'])[1]);
+            }
             $models['message'] = $result['error'] ?? $this->message('success', $this->locale->messages->account_created);
             if (isset($result['error']) && isset($failure)) {
                 return $this->redirect($failure.(empty(parse_url($failure, PHP_URL_QUERY)) ? '?' : '&').http_build_query($models));
-            } else if (isset($failure)) {
+            } else if (!isset($result['error']) && isset($success)) {
                 return $this->redirect($success.(empty(parse_url($success, PHP_URL_QUERY)) ? '?' : '&').http_build_query($models));
             }
         }
@@ -266,6 +292,7 @@ class Account extends Module {
             return $this->redirect($this->baseURL.'/home');
         }
         $email = $this->params['email'] ?? null;
+        $response = $this->params['response'] ?? 'VIEW';
         $models = [];
         if (isset($email)) {
             $user = (new UserEntity())->retrieve([
@@ -273,8 +300,14 @@ class Account extends Module {
             ]);
             if ($user !== false) {
                 $result = $this->notifyReset($user);
+                if (isset($result['error']) && $response === 'DATA') {
+                    return $this->error(500, explode('=', $result['error'])[1]);
+                }
                 $models['message'] = $result['error'] ?? $this->message('success', $this->locale->messages->mail_sent);
             } else {
+                if ($response === 'DATA') {
+                    return $this->error(400, $this->locale->messages->unknown_user);
+                }
                 $models['message'] = $this->message('error', $this->locale->messages->unknown_user);
             }
         }

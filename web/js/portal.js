@@ -240,6 +240,13 @@ var displayAccount = function(container, action) {
 };
 
 var dressAccount = function(container) {
+	[].forEach.call(container.querySelectorAll('form.account.data'), function(form) {
+		form.addEventListener("submit", function(event) {
+			event.preventDefault();
+			invokeZord({form: form});
+			return false;
+		});
+	});
 	[].forEach.call(container.querySelectorAll('li.account div.switch'), function(element) {
 		element.addEventListener("click", function(event) {
 			displayAccount(container, element.dataset.action);

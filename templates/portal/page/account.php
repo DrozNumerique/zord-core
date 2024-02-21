@@ -1,10 +1,10 @@
 <ul class="account">
 <?php foreach (array_keys($models['switch']) as $index => $action) { ?>
 	<li class="account <?php echo $action; ?><?php echo $index == 0 ? ' active' : '' ?>">
-		<form class="account" method="post" action="<?php echo $baseURL; ?>">
+		<form class="account <?php echo strtolower($response ?? 'VIEW'); ?>" method="post" action="<?php echo $baseURL; ?>">
 			<input type="hidden" name="module" value="Account"/>
 			<input type="hidden" name="action" value="<?php echo $action; ?>"/>
-			<div class="title"><?php echo $locale->titles->$action; ?></div>
+			<input type="hidden" name="response" value="<?php echo $response ?? 'VIEW'; ?>"/>
 <?php   if (!empty($models['success'])) { ?>
 			<input type="hidden" name="success" value="<?php echo $models['success'] ?>"/>
 <?php   } ?>
@@ -14,6 +14,7 @@
 <?php   if (!empty($models['token'])) { ?>
 			<input type="hidden" name="token" value="<?php echo $models['token'] ?>"/>
 <?php   } ?>
+			<div class="title"><?php echo $locale->titles->$action; ?></div>
 <?php   if (!empty($message)) { ?>
 <?php     $this->render('/portal/widget/message'); ?>
 <?php   } ?>
