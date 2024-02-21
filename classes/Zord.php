@@ -1420,4 +1420,17 @@ class Zord {
         }
         return $upper ? $roman : strtolower($roman);
     }
+    
+    public static function messages($message) {
+        $messages = [];
+        if (!empty($message)) {
+            foreach (explode('|', $message) as $_message) {
+                $__message = explode('=', $_message);
+                foreach (explode('§', $__message[1]) as $___message) {
+                    $messages[$__message[0]][] = $___message;
+                }
+            }
+        }
+        return $messages;
+    }
 }

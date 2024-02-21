@@ -59,9 +59,21 @@
 						document.close();
 					} else {
 						if (inner !== null) {
-							document.getElementById(inner).innerHTML = this.responseText;
+							var container = document.querySelector(inner);
+							if (container === undefined || container === null) {
+								container = document.getElementById(inner);
+							}
+							if (container !== undefined && container !== null) {
+								container.innerHTML = this.responseText;
+							}
 						} else if (outer !== null) {
-							document.getElementById(outer).outerHTML = this.responseText;
+							var container = document.querySelector(outer);
+							if (container === undefined || container === null) {
+								container = document.getElementById(outer);
+							}
+							if (container !== undefined && container !== null) {
+								container.innerHTML = this.responseText;
+							}
 						} else if (open !== null) {
 							var reference = window.open('', open, '');
 							reference.document.write(this.responseText);

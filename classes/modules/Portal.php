@@ -120,6 +120,10 @@ class Portal extends Module {
         return $options;
     }
     
+    public function messages() {
+        return $this->view('/portal/widget/message', ['message' => $this->params['message'] ?? '']);
+    }
+    
     protected function _options($scope, $key) {
         $values = [];
         if (in_array($scope, ['portal','context','user'])) {

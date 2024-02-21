@@ -116,6 +116,11 @@
 			"parameters": {
 				"type": "FILTER_SANITIZE_STRING"
 			}
+		},
+		"messages": {
+			"parameters": {
+				"message": "FILTER_SANITIZE_STRING"
+			}
 		}
 	},
 	"Process": {

@@ -243,7 +243,22 @@ var dressAccount = function(container) {
 	[].forEach.call(container.querySelectorAll('form.account.data'), function(form) {
 		form.addEventListener("submit", function(event) {
 			event.preventDefault();
-			invokeZord({form: form});
+			invokeZord({
+				form: form,
+				success: function(message) {
+					if (message.startsWith('redirect=')) {
+						var redirect = message.substr('redirect='.length);
+						window.location = redirect;
+					} else {
+						invokeZord({
+							module: 'Portal',
+							action: 'messages',
+							message: message,
+							inner:  'form.account.' + form.dataset.action + ' .messages'
+						});
+					}
+				}
+			});
 			return false;
 		});
 	});

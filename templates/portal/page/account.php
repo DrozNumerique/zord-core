@@ -1,7 +1,7 @@
 <ul class="account">
 <?php foreach (array_keys($models['switch']) as $index => $action) { ?>
 	<li class="account <?php echo $action; ?><?php echo $index == 0 ? ' active' : '' ?>">
-		<form class="account <?php echo strtolower($response ?? 'VIEW'); ?>" method="post" action="<?php echo $baseURL; ?>">
+		<form data-action="<?php echo $action; ?>" class="account <?php echo $action; ?> <?php echo strtolower($response ?? 'VIEW'); ?>" method="post" action="<?php echo $baseURL; ?>">
 			<input type="hidden" name="module" value="Account"/>
 			<input type="hidden" name="action" value="<?php echo $action; ?>"/>
 			<input type="hidden" name="response" value="<?php echo $response ?? 'VIEW'; ?>"/>
@@ -15,9 +15,11 @@
 			<input type="hidden" name="token" value="<?php echo $models['token'] ?>"/>
 <?php   } ?>
 			<div class="title"><?php echo $locale->titles->$action; ?></div>
+			<div class="messages">
 <?php   if (!empty($message)) { ?>
 <?php     $this->render('/portal/widget/message'); ?>
 <?php   } ?>
+			</div>
 <?php   $this->render($action, Zord::array_merge($models, ['switch' => $action])); ?>
 <?php   foreach ($models['switch'][$action]['before'] ?? [] as $switch) { ?>
 			<div class="switch before" data-action="<?php echo $switch; ?>"><?php echo $locale->switch->$switch; ?></div>
