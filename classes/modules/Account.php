@@ -96,16 +96,20 @@ class Account extends Module {
                     $checked = $this->locale->messages->wrong_name;
                 }
                 if (preg_match('/^[a-zA-Z]*$/', $this->params['name'])) {
-                    $upper = ctype_upper($this->params['name'][0]);
-                    $count = 0;
-                    foreach (mb_str_split(substr($this->params['name'], 1)) as $char) {
-                        if ($upper !== ctype_upper($char)) {
-                            $count++;
-                            $upper = ctype_upper($char);
-                        }
-                    }
-                    if ($count > NAME_MAX_TOGGLE) {
+                    if (strtolower($this->params['name'] === $this->params['name'] || strtoupper($this->params['name']) === $this->params['name'])) {
                         $checked = $this->locale->messages->wrong_name;
+                    } else {
+                        $upper = ctype_upper($this->params['name'][0]);
+                        $count = 0;
+                        foreach (mb_str_split(substr($this->params['name'], 1)) as $char) {
+                            if ($upper !== ctype_upper($char)) {
+                                $count++;
+                                $upper = ctype_upper($char);
+                            }
+                        }
+                        if ($count > NAME_MAX_TOGGLE) {
+                            $checked = $this->locale->messages->wrong_name;
+                        }
                     }
                 }
                 if ($checked !== true) {
