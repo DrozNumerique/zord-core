@@ -70,8 +70,8 @@ class Portal extends Module {
     }
     
     public function last() {
-        $type = isset($this->params['type']) ? $this->params['type'] : 'VIEW';
-        $xhr = isset($this->params['xhr']) ? $this->params['xhr'] : false;
+        $type = $this->params['type'] ?? 'VIEW';
+        $xhr = $this->params['xhr'] ?? false;
         $target = $this->controler->getDefaultTarget();
         if (isset($_SESSION['__ZORD__']['__HISTORY__'][$type]) && count($_SESSION['__ZORD__']['__HISTORY__'][$type]) > 0) {
             $target = end($_SESSION['__ZORD__']['__HISTORY__'][$type]);
@@ -79,6 +79,7 @@ class Portal extends Module {
                 $target['context'] = $this->context;
                 $target['indexURL'] = $this->indexURL;
                 $target['baseURL'] = $this->baseURL;
+                $target['lastURL'] = $target['pathURL'];
                 $target['prefix'] = Zord::value('context', [$this->context,'url'])[$this->indexURL]['path'];
             }
         }

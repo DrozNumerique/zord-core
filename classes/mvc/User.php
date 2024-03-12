@@ -63,8 +63,8 @@ class User {
                     $previous = null;
                     $date = date_create($date);
                     while ($current = $iterator->current()) {
-                        if ($date > date_create($current->date) &&
-                            (!isset($previous) || $date < date_create($previous->date))) {
+                        if ($date >= date_create($current->date) &&
+                            (!isset($previous) || $date <= date_create($previous->date))) {
                             break;
                         }
                         $previous = $current;

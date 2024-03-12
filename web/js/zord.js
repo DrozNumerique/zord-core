@@ -50,11 +50,11 @@
 			type = this.getResponseHeader("Content-Type");
 			if (this.status >= 200 && this.status < 300) {
 				if (type.startsWith('application/json')) {
-					if (success !== null) {
+					if (success !== null && success instanceof Function) {
 						success(JSON.parse(this.responseText));
 					}
 				} else if (type.startsWith('text/html')) {
-					if (success == null && inner == null && outer == null && open == null) {
+					if ((success == null || !(success instanceof Function)) && inner == null && outer == null && open == null) {
 						document.write(this.responseText);
 						document.close();
 					} else {
@@ -79,13 +79,13 @@
 							reference.document.write(this.responseText);
 							reference.document.close();
 						}
-						if (success !== null) {
+						if (success !== null && success instanceof Function) {
 							success(this.responseText);
 						}
 					}
 				} else if (type.startsWith('download/error')) {
 					var error = JSON.parse(this.responseText);
-					if (failure !== null) {
+					if (failure !== null && failure instanceof Function) {
 						failure(error);
 					} else if (error.message !== undefined) {
 						alert(error.message);
@@ -103,7 +103,7 @@
 			} else if (this.status >= 400 && this.status < 500) {
 				if (type.startsWith('application/json')) {
 					var error = JSON.parse(this.responseText);
-					if (failure !== null) {
+					if (failure !== null && failure instanceof Function) {
 						failure(error);
 					} else {
 						alertError(error);
@@ -117,7 +117,7 @@
 					code   : this.status,
 					reason : 'Server error'
 				};
-				if (failure !== null) {
+				if (failure !== null && failure instanceof Function) {
 					failure(error);
 				} else {
 					alertError(error);

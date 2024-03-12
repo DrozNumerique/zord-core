@@ -36,18 +36,21 @@ class View {
         }
         $models = $models ?? $this->models;
         array_push($this->locales, $locale ?? $this->getLocale($template));
+        $_locale = $locale;
         $locale  = $locale ?? end($this->locales);
+        $locale  = is_string($locale) ? Zord::getLocale($locale, $this->lang) : $locale;
         $context = $this->context;
         $lang    = $this->lang;
-        $locale  = is_string($locale) ? Zord::getLocale($locale, $this->lang) : $locale;
         $page    = null;
         foreach ([$this->implicits, $models] as $_vars) {
             if (is_array($_vars) && Zord::is_associative($_vars)) {
                 foreach ($_vars as $_name => $_value) {
-                    if (!is_object($_value) && $_name == 'locale') {
-                        $_value = json_decode(Zord::json_encode($_value));
+                    if ($_name !== 'locale' || !isset($_locale)) {
+                        if ($_name === 'locale' && !is_object($_value)) {
+                            $_value = json_decode(Zord::json_encode($_value));
+                        }
+                        $$_name = $_value;
                     }
-                    $$_name = $_value;
                 }
             }
         }
@@ -115,7 +118,7 @@ class View {
             }
             foreach($plugins as $plugin) {
                 if ($plugin !== 'none') {
-                    $locale = null;
+                    $locale = $page;
                     if (strpos($plugin, ':') > 0) {
                         list($plugin, $locale) = explode(':', $plugin);
                     }

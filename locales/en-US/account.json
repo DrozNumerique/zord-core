@@ -50,7 +50,7 @@
 		"mail_error": "Failed to sent activation mail",
 		"encryption_error": "Failed to sent activation token",
 		"unknown_user": "Unknown user",
-		"missing": "Field '$[fields.${property}]' must be completed",
+		"missing": "All mandatory fields must be completed",
 		"password_length": "Password length must be at least ${min} characters"
 	},
 	"mail": {

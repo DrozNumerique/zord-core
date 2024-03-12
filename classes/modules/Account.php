@@ -133,7 +133,7 @@ class Account extends Module {
         }
         foreach ($properties as $property) {
             if (empty($data[$property])) {
-                $checked = 'error='.Zord::resolve($this->locale->messages->missing, ['property' => $property], $this->locale);
+                $checked = $this->locale->messages->missing;
                 break;
             }
             $checked = $this->valid($data, $property);
@@ -292,8 +292,8 @@ class Account extends Module {
     
     public function reset() {
         $response = $this->params['response'] ?? 'VIEW';
-        if ($this->user->isConnected()) {
-            $redirect = $this->baseURL.'/home';
+        $redirect = $this->params['redirect'] ?? $this->baseURL.'/home';
+        if (!empty($redirect) && $this->user->isConnected()) {
             return $response === 'DATA' ? 'redirect='.$redirect : $this->redirect($redirect);
         }
         $email = $this->params['email'] ?? null;

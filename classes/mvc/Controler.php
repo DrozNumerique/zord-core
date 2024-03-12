@@ -11,6 +11,7 @@ class Controler {
     protected $indexURL = 0;
     protected $baseURL  = null;
     protected $pathURL  = null;
+    protected $lastURL  = null;
     protected $query    = null;
     protected $fragment = null;
     protected $base     = null;
@@ -54,6 +55,10 @@ class Controler {
     
     public function getPathURL() {
         return $this->pathURL;
+    }
+    
+    public function getLastURL() {
+        return $this->lastURL;
     }
     
     public function getQuery() {
@@ -127,6 +132,7 @@ class Controler {
             $this->params   = $target['params'] ?? [];
             $this->config   = $target['config'];
             $this->skin     = $target['skin'];
+            $this->lastURL  = $target['lastURL'] ?? null;
             $this->replay   = $replay;
             if ($this->context && $this->baseURL) {
                 $class = Zord::getClassName($target['module']);
@@ -361,6 +367,7 @@ class Controler {
             'base'      => $this->base,
             'baseURL'   => $this->baseURL,
             'pathURL'   => $this->pathURL,
+            'lastURL'   => $this->lastURL,
             'query  '   => $this->query,
             'fragment'  => $this->fragment,
             'user'      => $this->user,

@@ -171,7 +171,10 @@ class Zord {
 	        self::$locales[$target][$lang] = json_decode(json_encode(self::loadLocale($target, $lang, $context)));
 	    }
 	    $locale = self::$locales[$target][$lang];
-	    return $array ? self::objectToArray($locale) : $locale;
+	    if (is_object($locale)) {
+	       $locale->__TARGET__ = $target;
+	    }
+	    return ($array && is_object($locale)) ? self::objectToArray($locale) : $locale;
 	}
 	
 	public static function loadLocale($target, $lang, $context) {

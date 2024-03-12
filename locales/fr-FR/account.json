@@ -48,7 +48,7 @@
 		"mail_error": "Erreur lors de l'envoi du message d'activation",
 		"encryption_error": "Erreur lors du chiffrement de l'activation",
 		"unknown_user": "Utilisateur inconnu",
-		"missing": "Le champ '$[fields.${property}]' doit être renseigné",
+		"missing": "Les champs obligatoires doivent être renseignés",
 		"password_length": "Le mot de passe doit faire au moins ${min} caractères"
 	},
 	"mail": {

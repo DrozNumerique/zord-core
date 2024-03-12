@@ -239,8 +239,11 @@ var displayAccount = function(container, action) {
 	});
 };
 
-var dressAccount = function(container) {
-	[].forEach.call(container.querySelectorAll('form.account.data'), function(form) {
+var dressAccount = function(container, selector) {
+	if (selector === undefined || selector === null) {
+		selector = 'form.account.data';
+	}
+	[].forEach.call(container.querySelectorAll(selector), function(form) {
 		form.addEventListener("submit", function(event) {
 			event.preventDefault();
 			invokeZord({
@@ -250,12 +253,7 @@ var dressAccount = function(container) {
 						var redirect = message.substr('redirect='.length);
 						window.location = redirect;
 					} else {
-						invokeZord({
-							module: 'Portal',
-							action: 'messages',
-							message: message,
-							inner:  'form.account.' + form.dataset.action + ' .messages'
-						});
+						alertAccount(message, selector + '.' + form.dataset.action)
 					}
 				}
 			});
@@ -268,6 +266,15 @@ var dressAccount = function(container) {
 		});
 	});
 };
+
+var alertAccount = function(message, selector) {
+	invokeZord({
+		module: 'Portal',
+		action: 'messages',
+		message: message,
+		inner:  selector + ' .messages'
+	});
+}
 
 var slideAt = function(element, index) {
 	var change = element.dataset.index !== index.toString();
@@ -742,6 +749,10 @@ dispatchSessionProperties();
 */
 
 window.addEventListener("load", function(event) {
+	
+	if (LASTURL !== undefined && LASTURL !== null) {
+		window.history.pushState({}, "", LASTURL);
+	}
 		
 	setTimeout(function() {
 		loadings = document.querySelectorAll('div.loading');
