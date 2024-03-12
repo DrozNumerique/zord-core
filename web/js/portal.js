@@ -1,5 +1,6 @@
 var CONFIG;
 var LOCALE;
+var LASTURL;
 
 window.$scrollTop = {
 	set : function(value) {
