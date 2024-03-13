@@ -1,6 +1,5 @@
 var CONFIG;
 var LOCALE;
-var LASTURL;
 
 window.$scrollTop = {
 	set : function(value) {
@@ -751,7 +750,7 @@ dispatchSessionProperties();
 
 window.addEventListener("load", function(event) {
 	
-	if (LASTURL !== undefined && LASTURL !== null) {
+	if (LASTURL !== undefined && LASTURL !== null && LASTURL.length > 0) {
 		window.history.pushState({}, "", LASTURL);
 	}
 		
