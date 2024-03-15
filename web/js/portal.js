@@ -481,7 +481,7 @@ function dressActions(element) {
 
 function attachZord(element, method, common, callback) {
 	element[method] = function(params) {
-		var extras = callback();
+		var extras = callback(params);
 		var merge = {};
 		Object.assign(merge, common);
 		Object.assign(merge, extras);
