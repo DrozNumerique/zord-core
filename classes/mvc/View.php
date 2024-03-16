@@ -11,6 +11,8 @@ class View {
     protected $mark      = true;
     protected $implicits = [];
     
+    public static $DEFAULT_TYPE = 'text/html;charset=UTF-8';
+    
     public function __construct($template, $models, $controler = null, $locale = null) {
         $this->template  = $template;
         $this->models    = $models;
