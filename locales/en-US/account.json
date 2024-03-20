@@ -56,7 +56,7 @@
 	"mail": {
 		"reset_password": {
 			"subject": "Create/Reset password",
-			"click_here": "Click <span class=\"here\">here</span> to create/reset password for account ",
+			"click_here": "Click <span class=\"here\">here</span> to create/reset password for account ${login}",
 			"copy_paste": "Copy/Paste following URL in your browser to reset your password"
 		},
 		"notify_profile": {

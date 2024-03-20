@@ -31,7 +31,7 @@ class Account extends Module {
         if (isset($this->params[$property])) {
             $submit = true;
             $value = trim($this->params[$property]);
-            if (in_array($property, ['password','confirm']) && $value !== $this->user->password) {
+            if (in_array($property, ['password','confirm']) && PASSWORD_ALGO !== "BCRYPT" && $value !== $this->user->password) {
                 $value = User::crypt($value);
             }
         }
@@ -160,13 +160,13 @@ class Account extends Module {
         if ($update) {
             $data = $this->check($models, $scope);
             if (is_string($data)) {
-                $models['message'] = $data;
+                $models['message'] = $this->message('error', $data);
                 if ($scope == 'password' && empty($this->user->password)) {
                     $models['password'] = null;
                     $models['confirm'] = null;
                 }
             } else if (!empty($data)) {
-                $data['password.crypted'] = true;
+                $data['password.crypted'] = PASSWORD_ALGO === 'BCRYPT' ? false : true;
                 $data['reset'] = null;
                 (new UserEntity())->update($this->user->login, $data);
                 $models['message'] = $this->message('success', $this->locale->messages->$scope->updated);
@@ -323,7 +323,7 @@ class Account extends Module {
         return $this->redirect($result, true);
     }
     
-    public function notifyProfile($user) {
+    public function notifyProfile($user, $models = []) {
         if ($user === false) {
             return ['error' => $this->message('error', $this->locale->messages->unknown_user)];
         }
@@ -338,9 +338,9 @@ class Account extends Module {
             'subject'    => $this->locale->mail->notify_profile->subject,
             'text'       => $this->locale->mail->notify_profile->text.$user->login."\n".$this->locale->mail->noreply,
             'content'    => '/mail/account/notify',
-            'models'     => [
+            'models'     => array_merge([
                 'login' => $user->login
-            ],
+            ], $models),
             'styles'     => Zord::value('mail', ['styles','account']) ?? null
         ]);
         $result = [
@@ -352,13 +352,14 @@ class Account extends Module {
         return $result;
     }
     
-    public function notifyReset($user) {
+    public function notifyReset($user, $models = []) {
         $now = date('Y-m-d H:i:s');
         (new UserEntity())->update($user->login, ['reset' => $this->fullCheck($now)]);
         $data = Zord::json_encode(['login' => $user->login, 'reset' => $now]);
         $crypted = Zord::encrypt($data, Zord::realpath(OPENSSL_PUBLIC_KEY));
         if ($crypted !== false) {
-            $url = $this->baseURL.'/password?token='.base64_encode($crypted);
+            $query = http_build_query($models);
+            $url = $this->baseURL.'/password?token='.base64_encode($crypted).(!empty($query) ? '&'.$query : '');
             $send = PASSWORD_RESET_SEND_MAIL ? $this->sendMail([
                 'category'   => 'account'.DS.$user->login,
                 'principal'  => ['email' => $user->email, 'name' => $user->name],
@@ -370,10 +371,10 @@ class Account extends Module {
                 'subject'    => $this->locale->mail->reset_password->subject.' ('.$user->login.')',
                 'text'       => $this->locale->mail->reset_password->copy_paste."\n".$url."\n".$this->locale->mail->noreply,
                 'content'    => '/mail/account/reset',
-                'models'     => [
+                'models'     => array_merge([
                     'url'   => $url,
                     'login' => $user->login
-                ],
+                ], $models),
                 'styles'     => Zord::value('mail', ['styles','account']) ?? null
             ]) : false;
             $result = [
