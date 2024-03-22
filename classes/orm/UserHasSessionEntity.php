@@ -15,14 +15,11 @@ class UserHasSessionEntity extends Entity {
     }
     
     public static function find($session) {
-        return (new UserHasSessionEntity())->update(
-            [
-                'key' => $session
-            ],
-            [
-                'last' => date('Y-m-d H:i:s')
-            ]
-        );
+        $entity = (new UserHasSessionEntity())->retrieveOne($session);
+        if ($entity !== false) {
+            (new UserHasSessionEntity())->update($session, ['last' => date('Y-m-d H:i:s')]);
+        }
+        return $entity;
     }
 }
 

@@ -647,7 +647,20 @@ class Controler {
 	        header($key.': '.$value);
 	    }
 	    if ($this->user->isConnected() || ($this->module->disconnecting ?? false)) {
-	       Zord::cookie(User::$ZORD_SESSION, $this->user->session ?? '');
+	        Zord::cookie(User::$ZORD_SESSION, $this->user->session ?? '');
+	    }
+	    if ($this->user->remember) {
+	        (new UserHasRememberEntity())->delete(['many' => true, 'user' => $this->user->login]);
+	        $selector  = bin2hex(random_bytes(16));
+	        $validator = bin2hex(random_bytes(32));
+	        $expiry    = time() + 60 * 60 * 24 * REMEMBER_EXPIRY_DELAY;
+	        (new UserHasRememberEntity())->create([
+	            'selector'  => $selector,
+	            'validator' => password_hash($validator, PASSWORD_DEFAULT),
+	            'user'      => $this->user->login,
+	            'expiry'    => date('Y-m-d H:i:s', $expiry)
+	        ]);
+	        Zord::cookie(User::$ZORD_REMEMBER, $selector.':'.$validator, $expiry);
 	    }
 	}
 	

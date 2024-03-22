@@ -8,6 +8,7 @@
     "LOG_DATE_FORMAT": "[d/m/Y H:i:s.u]",
     "SESSION_INACTIVE_DURATION": "00:20:00",
     "TOKEN_INACTIVE_DURATION": "00:00:02",
+    "REMEMBER_EXPIRY_DELAY": 30,
     "WEBMASTER_MAIL_ADDRESS": "webmaster@zord.tech",
     "WEBMASTER_MAIL_NAME": "Zord Webmaster",
     "PROCESS_COMMAND": "export LANG=${LOCALE}.${ENCODING};php -f ${SCRIPT} ${PID} &",

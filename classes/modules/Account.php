@@ -189,6 +189,7 @@ class Account extends Module {
     public function connect() {
         $login    = Zord::trim($this->params['login']    ?? null);
         $password = Zord::trim($this->params['password'] ?? null);
+        $remember = Zord::trim($this->params['remember'] ?? false);
         $success  = Zord::trim($this->params['success']  ?? null);
         $failure  = Zord::trim($this->params['failure']  ?? null);
         $message  = Zord::trim($this->params['message']  ?? null);
@@ -202,6 +203,7 @@ class Account extends Module {
         if (!empty($login) && !empty($password)) {
             $user = User::authenticate($login, $password);
             if ($user) {
+                $user->remember = $remember;
                 $this->controler->setUser($user);
                 $redirect = $success ?? $this->baseURL;
                 return $response === 'DATA' ? 'redirect='.$redirect : $this->redirect($redirect, true);

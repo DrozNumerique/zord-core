@@ -35,13 +35,7 @@ class Portal extends Module {
     }
     
     public function token() {
-        (new UserHasTokenEntity())->delete([
-            'many' => true,
-            'where' => [
-                'raw' => 'ADDTIME(start, ?) < NOW() AND `key` IS NOT NULL',
-                'parameters' => TOKEN_INACTIVE_DURATION
-            ]
-        ]);
+        UserHasTokenEntity::deleteExpired();
         if (isset($this->params['user']) && isset($this->params['key'])) {
             $user = (new UserEntity())->retrieve($this->params['user']);
             $keyfile = Zord::getComponentPath('config'.DS.'keys'.DS.$this->params['user'].DS.$this->params['key'].'.pub');

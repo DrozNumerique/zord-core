@@ -1063,13 +1063,14 @@ class Zord {
     
     public static function token($keyfile, $user, $key = null) {
         $token = uniqid($user, true);
-        $crypted = self::encrypt($token, $keyfile);
+        $date  = date('Y-m-d H:i:s');
+        $crypted = self::encrypt($token.$date, $keyfile);
         if ($crypted !== false) {
             (new UserHasTokenEntity())->create([
                 'user'  => $user,
                 'key'   => $key,
                 'token' => $token,
-                'start' => date('Y-m-d H:i:s')
+                'start' => $date
             ]);
             return base64_encode($crypted);
         }

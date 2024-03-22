@@ -2,11 +2,13 @@
 
 class User {
     
-    public static $ZORD_SESSION = '__ZORD_SESSION__';
-    public static $ZORD_TOKEN   = '__ZORD_TOKEN__';
+    public static $ZORD_SESSION  = '__ZORD_SESSION__';
+    public static $ZORD_TOKEN    = '__ZORD_TOKEN__';
+    public static $ZORD_REMEMBER = '__ZORD_REMEMBER__';
     public static $ZORD_PROPERTIES = [
-        'session' => '__ZORD_SESSION__',
-        'token'   => '__ZORD_TOKEN__'
+        'session'  => '__ZORD_SESSION__',
+        'token'    => '__ZORD_TOKEN__',
+        'remember' => '__ZORD_REMEMBER__'
     ];
     
     public $login = null;
@@ -16,6 +18,7 @@ class User {
     public $ipv6 = null;
     public $password = null;
     public $session = null;
+    public $remember = false;
     public $roles = [];
     
     public function __construct($login = null, $session = null, $date = null) {
@@ -28,6 +31,7 @@ class User {
                 $this->ipv4     = $entity->ipv4;
                 $this->ipv6     = $entity->ipv6;
                 $this->password = $entity->password;
+                $this->remember = false;
                 $this->session  = $session;
                 if (isset($session)) {
                     $_SESSION[self::$ZORD_SESSION] = $session;
@@ -106,9 +110,12 @@ class User {
     }
     
     public static function find($checkIP = true) {
+        UserHasRememberEntity::deleteExpired();
         $login = null;
         $session = null;
         $token = null;
+        $remember = null;
+        $entity = false;
         foreach (self::$ZORD_PROPERTIES as $property => $key) {
             foreach (['post' => $_POST, 'get' => $_GET, 'session' => $_SESSION, 'cookie' => $_COOKIE] as $source => $var) {
                 if (isset($var[$key]) && is_string($var[$key])) {
@@ -117,22 +124,18 @@ class User {
                 }
             }
         }
+        
         if (isset($token)) {
-            $decrypted = Zord::decrypt(base64_decode(str_replace(' ', '+', $token)), Zord::realpath(OPENSSL_PRIVATE_KEY));
-            if ($decrypted !== false) {
-                $token = (new UserHasTokenEntity())->retrieve($decrypted);
-                if ($token) {
-                    $login = $token->user;
-                    if ($token->key !== null) {
-                        (new UserHasTokenEntity())->delete($decrypted);
-                    }
-                    return self::bind($login);
-                }
-            }
-        } else if (isset($session)) {
-            $entity = UserHasSessionEntity::find($session);
-            $login = $entity ? $entity->user : null;
+            $entity = UserHasTokenEntity::find($token);
         }
+        if ($entity === false && isset($session)) {
+            $entity = UserHasSessionEntity::find($session);
+        }
+        if ($entity === false && isset($remember)) {
+            $session = null;
+            $entity = UserHasRememberEntity::find($remember);
+        }
+        $login = $entity->user ?? null;
         if (!isset($login)) {
             $session = null;
             if ($checkIP) {
@@ -143,7 +146,7 @@ class User {
                 }
             }
         }
-        return self::get($login, $session);
+        return $login && !isset($session) ? self::bind($login) : self::get($login, $session);
     }
     
     public static function get($login, $session = null, $date = null) {
@@ -226,6 +229,7 @@ class User {
     public function disconnect() {
         session_destroy();
         (new UserHasSessionEntity())->delete($this->session);
+        (new UserHasRememberEntity())->delete(['many' => true, 'user' => $this->login]);
         $this->roles = [];
         $this->session = null;
     }

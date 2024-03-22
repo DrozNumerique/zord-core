@@ -119,6 +119,16 @@
         ],
         "key": "token"
     },
+	"UserHasRememberEntity": {
+		"table": "user_has_remember",
+		"fields": [
+	        "selector",
+	        "validator",
+	        "user",
+	        "expiry"
+        ],
+        "key": "selector"
+    },
 	"ProcessEntity": {
 		"table": "process",
 		"fields": [
