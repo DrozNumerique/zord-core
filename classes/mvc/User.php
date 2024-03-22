@@ -136,8 +136,10 @@ class User {
             $entity = UserHasRememberEntity::find($remember);
         }
         $login = $entity->user ?? null;
+        $needSession = !isset($session);
         if (!isset($login)) {
             $session = null;
+            $needSession = false;
             if ($checkIP) {
                 $IP = $_SERVER['REMOTE_ADDR'];
                 $entity = UserHasIPEntity::find($IP);
@@ -146,7 +148,7 @@ class User {
                 }
             }
         }
-        return $login && !isset($session) ? self::bind($login) : self::get($login, $session);
+        return $login && $needSession ? self::bind($login) : self::get($login, $session);
     }
     
     public static function get($login, $session = null, $date = null) {
