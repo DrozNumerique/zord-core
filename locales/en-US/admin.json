@@ -2,6 +2,7 @@
 	"menu": {
 		"context": "Context",
 		"users": "Accounts",
+		"resources": "Resources",
 		"content": "Contents"
 	},
 	"tab": {
@@ -26,6 +27,11 @@
 			},
 			"keyword": "Login, name, email...",
 			"order": "Order by..."
+		},
+		"resources": {
+			"title": "Resources upload",
+			"path": "Path",
+			"submit": "Upload"
 		},
 		"content": {
 			"title": "Contents edition",

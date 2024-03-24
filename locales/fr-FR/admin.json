@@ -2,6 +2,7 @@
 	"menu": {
 		"context": "Contextes",
 		"users": "Utilisateurs",
+		"resources": "Ressources",
 		"content": "Contenus"
 	},
 	"tab": {
@@ -26,6 +27,11 @@
 			},
 			"keyword": "Identifiant, nom, courriel...",
 			"order": "Classer par..."
+		},
+		"resources": {
+			"title": "Téléversement de ressources",
+			"path": "Chemin",
+			"submit": "Téléverser"
 		},
 		"content": {
 			"title": "Édition de contenus",

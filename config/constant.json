@@ -33,5 +33,6 @@
     "PASSWORD_RESET_SEND_MAIL": true,
     "NAME_MIN_LENGTH": 3,
     "NAME_MAX_LENGTH": 64,
-    "NAME_MAX_TOGGLE": 1
+    "NAME_MAX_TOGGLE": 1,
+    "PUBLIC_RESOURCE_BASE": "public"
 }

@@ -268,6 +268,37 @@ class Admin extends Module {
         return $this->index('context', $this->contextExtrasData($name));
     }
     
+    public function resource() {
+        $folder   = $this->params['folder'] ?? '/';
+        $replace  = $this->params['replace'] ?? "false";
+        $source   = $_FILES['file']['tmp_name'] ?? null;
+        $filename = $_FILES['file']['name'] ?? basename($this->params['filename'] ?? '');
+        if (substr($folder, -1, 1) !== '/') {
+            $folder = $folder.'/';
+        }
+        if (empty($filename)) {
+            return ['KO', "Choissisez un fichier à téléverser", false];
+        }
+        $target   = STORE_FOLDER.PUBLIC_RESOURCE_BASE.$folder.DS.$filename;
+        if (file_exists($target) && $replace === "false") {
+            return ['KO', "Le fichier existe déjà.\rSouhaitez-vous le remplacer ?", true];
+        }
+        if (is_dir($target)) {
+            return ['KO', "Le nom du fichier correspond à un répertoire existant", false];
+        }
+        if (!file_exists(dirname($target))) {
+            mkdir(dirname($target), 0777, true);
+        }
+        if (!empty($source) && !move_uploaded_file($source, $target)) {
+            return ['KO', "Le fichier n'a pas pu être téléversé", false];
+        }
+        if (empty($source)) {
+            return ['OK', "Le fichier peut être téléversé", false];
+        } else {
+            return ['OK', "Le fichier a été téléversé", false];
+        }
+    }
+    
     public function content() {
         $name    = $this->params['name']    ?? null;
         $content = $this->params['content'] ?? null;

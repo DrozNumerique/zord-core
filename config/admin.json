@@ -15,6 +15,14 @@
 			}
 		]
 	},
+	"resources": {
+		"scripts": [
+			{
+				"src": "/js/admin/resources.js",
+				"type": "text/javascript"
+			}
+		]
+	},
 	"content": {
 		"scope": "context",
 		"scripts": [
