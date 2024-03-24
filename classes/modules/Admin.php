@@ -279,7 +279,7 @@ class Admin extends Module {
         if (empty($filename)) {
             return ['KO', "Choissisez un fichier à téléverser", false];
         }
-        $target   = STORE_FOLDER.PUBLIC_RESOURCE_BASE.$folder.DS.$filename;
+        $target   = STORE_FOLDER.PUBLIC_RESOURCE_BASE.$folder.$filename;
         if (file_exists($target) && $replace === "false") {
             return ['KO', "Le fichier existe déjà.\rSouhaitez-vous le remplacer ?", true];
         }
@@ -295,7 +295,8 @@ class Admin extends Module {
         if (empty($source)) {
             return ['OK', "Le fichier peut être téléversé", false];
         } else {
-            return ['OK', "Le fichier a été téléversé", false];
+            $type = Zord::value('content', pathinfo($filename, PATHINFO_EXTENSION)) ?? 'unknown';
+            return ['OK', "Le fichier a été téléversé", $type, '/'.PUBLIC_RESOURCE_BASE.$folder.$filename];
         }
     }
     

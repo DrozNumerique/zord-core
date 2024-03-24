@@ -6,17 +6,34 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		var folder  = document.getElementById('folder');
 		var file    = document.getElementById('file');
 		var replace = document.getElementById('replace');
+		var preview = document.getElementById('preview');
 
 		var uploadFile = function() {
 			replace.value = "true";
 			invokeZord({
 				form: upload,
 				success: function(result) {
+					var status  = result[0]
 					var message = result[1];
+					var type    = result[2];
+					var url     = result[3];
 					alert(message);
+					if (status === 'OK') {
+						if (type.startsWith('image')) {
+							preview.innerHTML = '<img src="' + url + '" />';
+						}
+						if (type === 'application/pdf' || type.startsWith('application/vnd.oasis.opendocument')) {
+							preview.innerHTML = '<iframe src="/ViewerJS/#..' + url + '" width="100%" height="1000"></iframe>';
+						}
+						preview.style.display = 'block';
+					}
 				}
 			});
 		}
+		
+		file.addEventListener('change', function(event) {
+			preview.style.display = 'none';
+		});
 		
 		upload.addEventListener('submit', function(event) {
 			replace.value = "false";

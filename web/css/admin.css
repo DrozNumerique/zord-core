@@ -399,3 +399,9 @@ div#wrapper > div#preview {
 .admin-panel .cursor li.index select {
 	max-width: 500px;
 }
+
+.admin-panel-content.resources #preview {
+	max-width: calc(100% - 50px);
+	margin: auto;
+	padding-top: 25px;
+}
