@@ -8,7 +8,6 @@
 		<input type="file" name="file" id="file" />
 		<input type="submit" value="<?php echo $locale->tab->resources->submit; ?>" />
 	</div>
-	<div id="preview" style="display: none;">
-		<iframe src="https://viewerjs.org/ViewerJS/" width="100%" height="100%"></iframe>
+	<div id="preview" style="display: none; flex-direction: column; align-items: center;">
 	</div>
 </form>
