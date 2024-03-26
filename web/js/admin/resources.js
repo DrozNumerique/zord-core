@@ -19,13 +19,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
 					var url     = result[3];
 					alert(message);
 					if (status === 'OK') {
-						var path = '<a href="' + url + '">' + url + '</a>'
+						var content = '<a href="' + url + '">' + url + '</a>'
 						if (type.startsWith('image')) {
-							preview.innerHTML = path + '<img src="' + url + '" />';
+							content = content + '<img src="' + url + '" />';
 						}
 						if (type === 'application/pdf' || type.startsWith('application/vnd.oasis.opendocument')) {
-							preview.innerHTML = path + '<iframe src="/ViewerJS/#..' + url + '" width="100%" height="1000"></iframe>';
+							content = content + '<iframe src="/ViewerJS/#..' + url + '" width="100%" height="1000"></iframe>';
 						}
+						preview.innerHTML = content;
 						preview.style.display = 'flex';
 					}
 				}
