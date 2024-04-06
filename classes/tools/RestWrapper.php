@@ -23,13 +23,13 @@ class RestWrapper {
                     $options[$key] = $value;
                 }
             }
+            $this->functions = $config['functions'] ?? [];
+            $this->config    = $config;
             $this->client    = new $class($config['baseURL'], $options);
             if ($config['silent'] ?? false) {
                 $this->client->throw_exceptions = false;
                 $this->client->throwJsonExceptions = false;
             }
-            $this->functions = $config['functions'] ?? [];
-            $this->config    = $config;
         }
     }
     
@@ -52,8 +52,19 @@ class RestWrapper {
                 }
             }
             if ($in === 'JSON') {
-                $data = json_encode($data);
-                $headers[] = 'Content-Type: application/json';
+                if ($this->config['type'] ?? '' !== 'JSON') {
+                    $data = json_encode($data);
+                }
+                $hasContentType = false;
+                foreach ($headers as $header) {
+                    if (strtolower(substr($header, 0, 12)) === 'content-type') {
+                        $hasContentType = true;
+                        break;
+                    }
+                }
+                if (!$hasContentType) {
+                    $headers[] = 'Content-Type: application/json';
+                }
             }
             $result = null;
             switch ($method) {
