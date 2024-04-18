@@ -6,7 +6,7 @@ if (isset($_SERVER['argv']) && count($_SERVER['argv']) > 1) {
         $process = new $class();
         $parameters = [];
         if (count($_SERVER['argv']) > 2) {
-            $arg = $_SERVER['argv'][2];
+            $arg = implode(' ', array_slice($_SERVER['argv'], 2));
             if (file_exists($arg) && is_file($arg) && is_readable($arg)) {
                 $parameters = Zord::arrayFromJSONFile($arg);
             } else {
