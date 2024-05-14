@@ -191,6 +191,10 @@ class Module {
 	    ];
 	}
 	
+	public function raw($content, $type = 'text/plain') {
+	    return $this->view('/raw', ['content' => $content], $type, false, false);
+	}
+	
 	public function page($page = null, $models = array()) {
 	    $page = $this->either($page, 'page');
 	    $template = '/portal/page/'.$page;
