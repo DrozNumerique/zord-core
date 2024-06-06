@@ -405,3 +405,7 @@ div#wrapper > div#preview {
 	margin: auto;
 	padding-top: 25px;
 }
+
+.admin-panel-content.resources #preview img {
+	max-width: 100%;
+}

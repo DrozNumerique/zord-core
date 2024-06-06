@@ -681,7 +681,7 @@ class Zord {
 	    return false;
 	}
 	
-	public static function template($name, $context = null, $lang = null) {
+	public static function template($name, $device = null, $context = null, $lang = null) {
 	    if (is_string($name)) {
     	    $variants = [];
     	    if (is_string($context) && is_string($lang)) {
@@ -697,9 +697,11 @@ class Zord {
     	    $name = str_replace('/', DS, $name);
     	    foreach(array_reverse(COMPONENT_FOLDERS) as $folder) {
     	        foreach($variants as $variant) {
-    	            $template = $folder.'templates'.$name.$variant.'.php';
-    	            if (file_exists($template)) {
-    	                return $template;
+    	            foreach ([DS.$device, ''] as $_device) {
+        	            $template = $folder.'templates'.$_device.$name.$variant.'.php';
+        	            if (file_exists($template)) {
+        	                return $template;
+        	            }
     	            }
     	        }
     	    }

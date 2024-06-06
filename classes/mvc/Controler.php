@@ -24,6 +24,7 @@ class Controler {
     protected $models   = [];
     protected $config   = [];
     protected $skin     = null;
+    protected $device   = 'any';
     
     public function getUser() {
         return $this->user;
@@ -43,6 +44,10 @@ class Controler {
     
     public function getContext() {
         return $this->context;
+    }
+    
+    public function getDevice() {
+        return $this->device;
     }
     
     public function getIndexURL() {
@@ -97,6 +102,11 @@ class Controler {
         $this->lang = Zord::defineLang();
     }
     
+    public function setDevice() {
+        $detect = new \Detection\MobileDetect;
+        $this->device = ($detect->isMobile() ? 'mobile' : 'computer');
+    }
+    
     public function setLocale() {
         $this->locale = Zord::getLocale('portal', $this->lang);
     }
@@ -114,6 +124,7 @@ class Controler {
         $target = $this->getTarget($scheme.'://'.$host.$path);
         $this->setLang();
         $this->setLocale();
+        $this->setDevice();
         $this->setConfig();
         $this->handle($target);
     }
@@ -780,7 +791,7 @@ class Controler {
 	}
 	
 	public function updateGenerated($generated, $template, $sources, $models) {
-	    $templateFile = Zord::template($template, $this->context, $this->lang);
+	    $templateFile = Zord::template($template, $this->device, $this->context, $this->lang);
 	    if (is_string($sources)) {
 	        $sources = [$sources];
 	    }

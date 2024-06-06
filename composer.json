@@ -2,6 +2,7 @@
 	"require" : {
 		"cache/cache" : "^1.0",
 		"scssphp/scssphp": "^1.11.0",
-		"wikimedia/less.php": "^4.1"
+		"wikimedia/less.php": "^4.1",
+		"mobiledetect/mobiledetectlib": "^3.74"
 	}
 }

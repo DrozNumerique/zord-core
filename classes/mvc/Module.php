@@ -4,6 +4,7 @@ class Module {
         
     protected $params = null;
     protected $context = null;
+    protected $device = null;
     protected $indexURL = 0;
     protected $baseURL = null;
     protected $pathURL = null;
@@ -27,6 +28,7 @@ class Module {
         $this->controler = $controler;
         if ($controler) {
             $this->context  = $controler->getContext();
+            $this->device   = $controler->getDevice();
             $this->indexURL = $controler->getIndexURL();
             $this->baseURL  = $controler->getBaseURL();
             $this->pathURL  = $controler->getPathURL();
@@ -199,7 +201,7 @@ class Module {
 	    $page = $this->either($page, 'page');
 	    $template = '/portal/page/'.$page;
 	    $this->response = 'VIEW';
-	    if (Zord::template($template, $this->context, $this->lang)) {
+	    if (Zord::template($template, $this->device, $this->context, $this->lang)) {
 	        $models['page'] = $page;
 	        $types = Zord::value('page', $page);
 	        if ($types) {

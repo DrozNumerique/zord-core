@@ -6,6 +6,7 @@ class View {
     protected $models    = [];
     protected $controler = null;
     protected $context   = null;
+    protected $device    = null;
     protected $lang      = DEFAULT_LANG;
     protected $locales   = [];
     protected $mark      = true;
@@ -20,6 +21,7 @@ class View {
         if ($this->controler) {
             $this->implicits = $this->controler->implicits();
             $this->context   = $this->controler->getContext();
+            $this->device    = $this->controler->getDevice();
             $this->lang      = $this->controler->getLang();
         }
         array_push($this->locales, $locale ?? $this->getLocale($template));
@@ -43,6 +45,7 @@ class View {
         $locale  = is_string($locale) ? Zord::getLocale($locale, $this->lang) : $locale;
         $context = $this->context;
         $lang    = $this->lang;
+        $device  = $this->device;
         $page    = null;
         foreach ([$this->implicits, $models] as $_vars) {
             if (is_array($_vars) && Zord::is_associative($_vars)) {
@@ -58,7 +61,7 @@ class View {
         }
         $this->viewPlugin($template, $models, 'before', $page);
         if (!$this->viewPlugin($template, $models, 'instead', $page)) {
-            $_file = Zord::template($template, $context, $lang);
+            $_file = Zord::template($template, $device, $context, $lang);
             $_begin = VIEW_MARK_BEGIN;
             $_end = VIEW_MARK_END;
             if (strpos($template, '/script/') > 0 || strpos($template, '/style/') > 0 || strpos($template, 'dataset') > 0) {
@@ -133,7 +136,7 @@ class View {
     }
     
     private function getLocale($template) {
-        $file = Zord::template($template, $this->context, $this->lang);
+        $file = Zord::template($template, $this->device, $this->context, $this->lang);
         $target = null;
         if ($file) {
             $target  = pathinfo($file, PATHINFO_FILENAME);

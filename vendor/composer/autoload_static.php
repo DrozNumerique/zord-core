@@ -25,6 +25,7 @@ class ComposerStaticInit634fc837cb008ebff4c5b547c200b55e
         'D' => 
         array (
             'Doctrine\\Common\\Cache\\' => 22,
+            'Detection\\' => 10,
         ),
         'C' => 
         array (
@@ -61,6 +62,10 @@ class ComposerStaticInit634fc837cb008ebff4c5b547c200b55e
         array (
             0 => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache',
         ),
+        'Detection\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mobiledetect/mobiledetectlib/src',
+        ),
         'Cache\\' => 
         array (
             0 => __DIR__ . '/..' . '/cache/cache/src',
@@ -79,6 +84,7 @@ class ComposerStaticInit634fc837cb008ebff4c5b547c200b55e
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'Detection\\MobileDetect' => __DIR__ . '/..' . '/mobiledetect/mobiledetectlib/src/MobileDetect.php',
         'lessc' => __DIR__ . '/..' . '/wikimedia/less.php/lessc.inc.php',
     );
 
