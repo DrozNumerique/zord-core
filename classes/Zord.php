@@ -919,7 +919,7 @@ class Zord {
 	    $text      = $mail['text']      ?? null;
 	    $models['mail'] = $mail;
 	    if (isset($models['context'])) {
-	        $context = Zord::value('context', $models['context']);
+	        $context = self::value('context', $models['context']);
 	        $config = $context['url'][0];
 	        $host = $config['host'];
 	        $scheme = ($config['secure'] ?? false) ? 'https' : 'http';
@@ -930,7 +930,7 @@ class Zord {
 	            'scheme'   => $scheme,
 	            'indexURL' => 0,
 	            'baseURL'  => $baseURL,
-	            'skin'     => Zord::getSkin($models['context'])
+	            'skin'     => self::getSkin($models['context'])
 	        ]);
 	    }
 	    $html = $textonly === true ? null : (new View($template, $models, $controler, $locale))->render();
@@ -1152,13 +1152,13 @@ class Zord {
     }
     
     public static function content($name, $lang, $content = null) {
-        $folder = Zord::liveFolder('contents'.DS.$name.DS.$lang, false);
+        $folder = self::liveFolder('contents'.DS.$name.DS.$lang, false);
         if (isset($content)) {
             $date = date('YmdHis');
             if (!file_exists($folder)) {
                 mkdir($folder, 0777, true);
             }
-            return file_put_contents($folder.$date.'.md', $content) !== false ? Zord::date($date, $lang) : null;
+            return file_put_contents($folder.$date.'.md', $content) !== false ? self::date($date, $lang) : null;
         }
         $contents = glob($folder.'*.md');
         if (!empty($contents)) {
@@ -1240,9 +1240,9 @@ class Zord {
         }
         $_models = ['id' => $config[0]];
         foreach ($config as $entry) {
-            $_models = Zord::array_merge($_models, Zord::value('portal', ['list',$entry]) ?? []);
+            $_models = self::array_merge($_models, self::value('portal', ['list',$entry]) ?? []);
         }
-        return Zord::array_merge($models, $_models);
+        return self::array_merge($models, $_models);
     }
     
     public static function classList($classes, $complete = true) {
@@ -1316,7 +1316,7 @@ class Zord {
             $IPList[] = implode('.',$n).'/'.$mask;
         }
         foreach ($IPList as $IP) {
-            $chunk = Zord::chunkIP($IP);
+            $chunk = self::chunkIP($IP);
             $n = explode('.', $chunk['ip'], 4);
             $class = null;
             $pattern = null;
@@ -1341,7 +1341,7 @@ class Zord {
                 }
             }
             if ($class && $pattern) {
-                foreach (Zord::explodeIP($chunk['ip']) as $ip) {
+                foreach (self::explodeIP($chunk['ip']) as $ip) {
                     $unfolded[$class][$pattern][] = $ip;
                 }
             }
