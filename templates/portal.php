@@ -6,7 +6,7 @@
 <?php $this->render('script'); ?>
 <?php $this->render('link'); ?>
 </head>
-<body class="<?php echo $context; ?>">
+<body class="<?php echo $context; ?> <?php echo $device; ?>">
 <div id="main">
 <?php $this->render('header'); ?>
 <?php $this->render('navigation'); ?>

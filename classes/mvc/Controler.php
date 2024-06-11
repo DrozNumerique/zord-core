@@ -104,7 +104,7 @@ class Controler {
     
     public function setDevice() {
         $detect = new \Detection\MobileDetect;
-        $this->device = ($detect->isMobile() ? 'mobile' : 'computer');
+        $this->device = ($detect->isMobile() ? ($detect->isTablet() ? 'tablet' : 'phone') : 'computer');
     }
     
     public function setLocale() {
@@ -383,7 +383,8 @@ class Controler {
             'fragment'  => $this->fragment,
             'user'      => $this->user,
             'config'    => $this->config,
-            'skin'      => $this->skin
+            'skin'      => $this->skin,
+            'device'    => $this->device
         ];
     }
     
