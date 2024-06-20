@@ -80,7 +80,7 @@ class Admin extends Module {
                         break;
                     }
                     case 'profile': {
-                        $result = $this->accountExtrasData($login);
+                        $result = $this->accountExtrasData(User::get($login));
                         break;
                     }
                     case 'notify': {
@@ -95,82 +95,23 @@ class Admin extends Module {
     
     public function profile() {
         $result = [];
-        if (isset($this->params['login']) &&
-            isset($this->params['roles']) &&
-            isset($this->params['ipv4'])  &&
-            isset($this->params['ipv6'])) {
-            $login = $this->params['login'];
-            $criteria = [
-                'where' => ['user' => $login],
-                'many' => true
-            ];
-            (new UserHasRoleEntity())->delete($criteria);
-            (new UserHasIPV4Entity())->delete($criteria);
-            (new UserHasIPV6Entity())->delete($criteria);
-            $roles = Zord::objectToArray(json_decode($this->params['roles']));
-            foreach ($roles as $role) {
-                foreach (['start','end'] as $limit) {
-                    $check = DateTime::createFromFormat('Y-m-d', $role[$limit]);
-                    if (!$check || $check->format('Y-m-d') !== $role[$limit]) {
-                        $role[$limit] = null;
-                    }
-                }
-                (new UserHasRoleEntity())->create($role);
-            }
-            $ipv4 = Zord::objectToArray(json_decode($this->params['ipv4']));
-            $user_ipv4 = array();
-            foreach ($ipv4 as $entry) {
-                $entryOK = true;
-                foreach (Zord::explodeIP($entry['ip']) as $ip) {
-                    $other = UserHasIPEntity::find($ip);
-                    if ($entry['include'] && $other) {
-                        $entryOK = false;
-                        $result['others'][] = [((new UserEntity())->retrieve($other->user)->name).' ('.$other->user.')', $ip];
-                        break;
-                    }
-                }
-                if ($entryOK) {
-                    foreach (Zord::explodeIP($entry['ip']) as $ip) {
-                        (new UserHasIPV4Entity())->create([
-                            'user'    => $login,
-                            'ip'      => $ip,
-                            'mask'    => (!empty($entry['mask']) || $entry['mask'] == 0) ? $entry['mask'] : 32,
-                            'include' => $entry['include'] ? 1 : $entry['include']
-                        ]);
-                    }
-                    $user_ipv4[] = ($entry['include'] ? '' : '~').$entry['ip'].((!empty($entry['mask']) || $entry['mask'] == 0) ? '/'.$entry['mask'] : '');
-                }
-            }
-            $ipv6 = Zord::objectToArray(json_decode($this->params['ipv6']));
-            $user_ipv6 = array();
-            foreach ($ipv6 as $entry) {
-                $entryOK = true;
-                $other = UserHasIPEntity::find($entry['ip']);
-                if ($entry['include'] && $other) {
-                    $entryOK = false;
-                    $result['others'][] = [((new UserEntity())->retrieve($other->user)->name).' ('.$other->user.')', $entry['ip']];
-                }
-                if ($entryOK) {
-                    (new UserHasIPV6Entity())->create([
-                        'user'    => $login,
-                        'ip'      => $entry['ip'],
-                        'mask'    => (!empty($entry['mask']) || $entry['mask'] == 0) ? $entry['mask'] : 32,
-                        'include' => $entry['include'] ? 1 : $entry['include']
-                    ]);
-                    $user_ipv6[] = ($entry['include'] ? '' : '~').$entry['ip'].((!empty($entry['mask']) || $entry['mask'] == 0) ? '/'.$entry['mask'] : '');
-                }
-            }
-            $user = User::get($login);
+        $login = $this->params['login'] ?? null;
+        if (!isset($login)) {
+            return $this->account();
+        }
+        if ((new UserEntity())->retrieveOne($login) === false) {
+            return $this->account();
+        }
+        $user = User::get($login);
+        if ($this->params['update'] ?? false) {
+            $result = $this->updateProfile($user);
             $profile = $user->lastProfile();
             $profile = isset($profile) ? Zord::objectToArray($profile->profile) : [];
-            $profile = $this->enhanceProfile($user, array_merge($profile, [
-                'ipv4' => implode(',', $user_ipv4),
-                'ipv6' => implode(',', $user_ipv6)
-            ]));
+            $profile = $this->enhanceProfile($user, array_merge($profile, $result));
             unset($profile['password']);
-            (new UserEntity())->update($login, $profile);
+            (new UserEntity())->update($user->login, $profile);
         }
-        return $this->index('users', array_merge($result, $this->accountExtrasData($login)));
+        return $this->index('users', array_merge($result, $this->accountExtrasData($user)));
     }
     
     public function context() {
@@ -338,6 +279,77 @@ class Admin extends Module {
         return $this->view('/portal/widget/list', Zord::listModels('users', $models), 'text/html;charset=UTF-8', false, false, 'admin');
     }
     
+    protected function updateProfile($user) {
+        $result = [];
+        $criteria = [
+            'where' => ['user' => $user->login],
+            'many' => true
+        ];
+        if (!empty($this->params['roles'])) {
+            $roles = Zord::objectToArray(json_decode($this->params['roles']));
+            (new UserHasRoleEntity())->delete($criteria);
+            foreach ($roles as $role) {
+                foreach (['start','end'] as $limit) {
+                    $check = DateTime::createFromFormat('Y-m-d', $role[$limit]);
+                    if (!$check || $check->format('Y-m-d') !== $role[$limit]) {
+                        $role[$limit] = null;
+                    }
+                }
+                (new UserHasRoleEntity())->create($role);
+            }
+        }
+        if (!empty($this->params['ipv4'])) {
+            $ipv4 = Zord::objectToArray(json_decode($this->params['ipv4']));
+            (new UserHasIPV4Entity())->delete($criteria);
+            foreach ($ipv4 as $entry) {
+                $entryOK = true;
+                foreach (Zord::explodeIP($entry['ip']) as $ip) {
+                    $other = UserHasIPEntity::find($ip);
+                    if ($entry['include'] && $other) {
+                        $entryOK = false;
+                        $result['others'][] = [((new UserEntity())->retrieve($other->user)->name).' ('.$other->user.')', $ip];
+                        break;
+                    }
+                }
+                if ($entryOK) {
+                    foreach (Zord::explodeIP($entry['ip']) as $ip) {
+                        (new UserHasIPV4Entity())->create([
+                            'user'    => $user->login,
+                            'ip'      => $ip,
+                            'mask'    => (!empty($entry['mask']) || $entry['mask'] == 0) ? $entry['mask'] : 32,
+                            'include' => $entry['include'] ? 1 : $entry['include']
+                        ]);
+                    }
+                    $result['ipv4'][] = ($entry['include'] ? '' : '~').$entry['ip'].((!empty($entry['mask']) || $entry['mask'] == 0) ? '/'.$entry['mask'] : '');
+                }
+            }
+        }
+        if (!empty($this->params['ipv4'])) {
+            $ipv6 = Zord::objectToArray(json_decode($this->params['ipv6']));
+            (new UserHasIPV6Entity())->delete($criteria);
+            foreach ($ipv6 as $entry) {
+                $entryOK = true;
+                $other = UserHasIPEntity::find($entry['ip']);
+                if ($entry['include'] && $other) {
+                    $entryOK = false;
+                    $result['others'][] = [((new UserEntity())->retrieve($other->user)->name).' ('.$other->user.')', $entry['ip']];
+                }
+                if ($entryOK) {
+                    (new UserHasIPV6Entity())->create([
+                        'user'    => $user->login,
+                        'ip'      => $entry['ip'],
+                        'mask'    => (!empty($entry['mask']) || $entry['mask'] == 0) ? $entry['mask'] : 32,
+                        'include' => $entry['include'] ? 1 : $entry['include']
+                    ]);
+                    $result['ipv6'][] = ($entry['include'] ? '' : '~').$entry['ip'].((!empty($entry['mask']) || $entry['mask'] == 0) ? '/'.$entry['mask'] : '');
+                }
+            }
+        }
+        $result['ipv4'] = implode(',', $result['ipv4'] ?? []);
+        $result['ipv6'] = implode(',', $result['ipv6'] ?? []);
+        return $result;
+    }
+    
     protected function enhanceProfile($user, $data) {
         return $data;
     }
@@ -431,15 +443,14 @@ class Admin extends Module {
         return $models;
     }
     
-    protected function accountExtrasData($login) {
+    protected function accountExtrasData($user) {
         $result = [];
-        $user = User::get($login);
-        $result['login'] = $login;
+        $result['login'] = $user->login;
         $result['name'] = $user->name;
         $result['ipv4'] = $this->explodeIP($user->ipv4);
         $result['ipv6'] = $this->explodeIP($user->ipv6);
         $result['roles'] = [];
-        foreach ((new UserHasRoleEntity())->retrieve(['where' => ['user' => $login], 'many' => true]) as $entry) {
+        foreach ((new UserHasRoleEntity())->retrieve(['where' => ['user' => $user->login], 'many' => true]) as $entry) {
             if ($entry->context == '*' || null !== Zord::value('context', $entry->context)) {
                 $result['roles'][] = [
                     'context' => $entry->context,

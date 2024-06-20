@@ -115,6 +115,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 			invokeZord({
 				module:'Admin',
 				action:'profile',
+				update: true,
 				login:profile.login,
 				roles:profile.roles,
 				ipv4:profile.ipv4,

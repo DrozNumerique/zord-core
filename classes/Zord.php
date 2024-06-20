@@ -909,7 +909,7 @@ class Zord {
 	
 	public static function sendMail($mail) {
 	    $category  = $mail['category']  ?? null;
-	    $textonly  = $mail['textonly']  ?? false;
+	    $textonly  = $mail['textonly']  ?? !isset($mail['content']);
 	    $template  = $mail['template']  ?? '/mail';
 	    $principal = $mail['principal'] ?? null;
 	    $models    = $mail['models']    ?? [];

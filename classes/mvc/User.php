@@ -60,7 +60,7 @@ class User {
                 $iterator = (new UserHasProfileEntity())->retrieve([
                     'many'  => true,
                     'where' => ['user' => $login],
-                    'order' => ['desc' => 'date']
+                    'order' => [['desc' => 'date'],['desc' => 'id']]
                 ])->getIterator();
                 $entity = false;
                 if ($iterator->count() > 0) {
@@ -214,8 +214,8 @@ class User {
     public function lastProfile($property = null) {
         $entity = (new UserHasProfileEntity())->retrieve([
             'where' => [
-                'raw'        => 'user = ? AND date IN (SELECT MAX(date) FROM '.Zord::value('orm', ['UserHasProfileEntity','table']).' WHERE user = ? GROUP BY user)',
-                'parameters' => [$this->login, $this->login]
+                'raw'        => 'user = ? AND date IN (SELECT MAX(date) FROM '.Zord::value('orm', ['UserHasProfileEntity','table']).' WHERE user = ? GROUP BY user) AND id IN (SELECT MAX(id) FROM '.Zord::value('orm', ['UserHasProfileEntity','table']).' WHERE user = ? GROUP BY user)',
+                'parameters' => [$this->login, $this->login, $this->login]
             ]
         ]);
         return $entity === false ? null : (!isset($property) ? $entity : ($property == '__ALL__' ? $entity->profile : Zord::objectToArray($entity->profile)[$property])); 

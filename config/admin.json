@@ -13,6 +13,12 @@
 				"src": "/js/admin/users.js",
 				"type": "text/javascript"
 			}
+		],
+		"extras": [
+			"others",
+			"roles",
+			"ipv4",
+			"ipv6"
 		]
 	},
 	"resources": {
