@@ -102,8 +102,8 @@ class Admin extends Module {
         if ((new UserEntity())->retrieveOne($login) === false) {
             return $this->account();
         }
-        $user = User::get($login);
         if ($this->params['update'] ?? false) {
+            $user = User::get($login);
             $result = $this->updateProfile($user);
             $profile = $user->lastProfile();
             $profile = isset($profile) ? Zord::objectToArray($profile->profile) : [];
@@ -111,7 +111,7 @@ class Admin extends Module {
             unset($profile['password']);
             (new UserEntity())->update($user->login, $profile);
         }
-        return $this->index('users', array_merge($result, $this->accountExtrasData($user)));
+        return $this->index('users', array_merge($result, $this->accountExtrasData(User::get($login))));
     }
     
     public function context() {
@@ -324,7 +324,7 @@ class Admin extends Module {
                 }
             }
         }
-        if (!empty($this->params['ipv4'])) {
+        if (!empty($this->params['ipv6'])) {
             $ipv6 = Zord::objectToArray(json_decode($this->params['ipv6']));
             (new UserHasIPV6Entity())->delete($criteria);
             foreach ($ipv6 as $entry) {

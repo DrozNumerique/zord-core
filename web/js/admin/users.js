@@ -17,42 +17,58 @@ function checkAccount(operation, data) {
 	return true;
 }
 
-function getProfile() {
-	var roles = [];
-	var ipv4 = [];
-	var ipv6 = [];
+var profileComposers = {
+	roles: function(element, login) {
+		var roles = [];
+		[].forEach.call(element.querySelectorAll('.data'), function(entry) {
+			roles.push({
+				user:login,
+				role:entry.children[0].firstElementChild.value,
+				context:entry.children[1].firstElementChild.value,
+				start:entry.children[2].firstElementChild.value,
+				end:entry.children[3].firstElementChild.value
+			}); 
+		});
+		return JSON.stringify(roles);
+	},
+	ipv4: function(element, login) {
+		var ipv4 = [];
+		[].forEach.call(element.querySelectorAll('.data'), function(entry) {
+			ipv4.push({
+				user:login,
+				ip:entry.children[0].children[0].value + '.' + entry.children[0].children[1].value + '.' + entry.children[0].children[2].value + '.' + entry.children[0].children[3].value,
+				mask:entry.children[1].firstElementChild.value,
+				include:entry.children[2].firstElementChild.value
+			}); 
+		});
+		return JSON.stringify(ipv4);
+	},
+	ipv6: function(element, login) {
+		var ipv6 = [];
+		[].forEach.call(element.querySelectorAll('.data'), function(entry) {
+			ipv6.push({
+				user:login,
+				ip:entry.children[0].children[0].value + ':' + entry.children[0].children[1].value + ':' + entry.children[0].children[2].value + ':' + entry.children[0].children[3].value + ':' + entry.children[0].children[4].value + ':' + entry.children[0].children[5].value + ':' + entry.children[0].children[6].value + ':' + entry.children[0].children[7].value,
+				mask:entry.children[1].firstElementChild.value,
+				include:entry.children[2].firstElementChild.value
+			}); 
+		});
+		return JSON.stringify(ipv6);
+	}
+}
+
+function updateProfile() {
 	var login = document.getElementById('login').value;
-	[].forEach.call(document.getElementById('roles').querySelectorAll('.data'), function(entry) {
-		roles.push({
-			user:login,
-			role:entry.children[0].firstElementChild.value,
-			context:entry.children[1].firstElementChild.value,
-			start:entry.children[2].firstElementChild.value,
-			end:entry.children[3].firstElementChild.value
-		}); 
-	});
-	[].forEach.call(document.getElementById('ipv4').querySelectorAll('.data'), function(entry) {
-		ipv4.push({
-			user:login,
-			ip:entry.children[0].children[0].value + '.' + entry.children[0].children[1].value + '.' + entry.children[0].children[2].value + '.' + entry.children[0].children[3].value,
-			mask:entry.children[1].firstElementChild.value,
-			include:entry.children[2].firstElementChild.value
-		}); 
-	});
-	[].forEach.call(document.getElementById('ipv6').querySelectorAll('.data'), function(entry) {
-		ipv6.push({
-			user:login,
-			ip:entry.children[0].children[0].value + ':' + entry.children[0].children[1].value + ':' + entry.children[0].children[2].value + ':' + entry.children[0].children[3].value + ':' + entry.children[0].children[4].value + ':' + entry.children[0].children[5].value + ':' + entry.children[0].children[6].value + ':' + entry.children[0].children[7].value,
-			mask:entry.children[1].firstElementChild.value,
-			include:entry.children[2].firstElementChild.value
-		}); 
-	});
 	var profile = {
-		login:login,
-		roles:JSON.stringify(roles),
-		ipv4:JSON.stringify(ipv4),
-		ipv6:JSON.stringify(ipv6)
+		module:'Admin',
+		action:'profile',
+		update: true,
+		login: login,
 	};
+	[].forEach.call(document.querySelectorAll('[data-update]'), function(element) {
+		var key = element.dataset.update;
+		profile[key] = profileComposers[key](element, login);
+	});
 	return profile;
 }
 
@@ -111,16 +127,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	if (submitProfile) {
 		dressActions(document);
 		submitProfile.addEventListener("click", function(event) {
-			var profile = getProfile();
-			invokeZord({
-				module:'Admin',
-				action:'profile',
-				update: true,
-				login:profile.login,
-				roles:profile.roles,
-				ipv4:profile.ipv4,
-				ipv6:profile.ipv6
-			});
+			invokeZord(updateProfile());
 		});
 	}
 	
