@@ -917,6 +917,7 @@ class Zord {
 	    $locale    = $mail['locale']    ?? null;
 	    $post      = $mail['post']      ?? null;
 	    $text      = $mail['text']      ?? null;
+	    $lang      = $mail['lang']      ?? DEFAULT_LANG;
 	    $models['mail'] = $mail;
 	    if (isset($models['context'])) {
 	        $context = self::value('context', $models['context']);
@@ -933,7 +934,7 @@ class Zord {
 	            'skin'     => self::getSkin($models['context'])
 	        ]);
 	    }
-	    $html = $textonly === true ? null : (new View($template, $models, $controler, $locale))->render();
+	    $html = $textonly === true ? null : (new View($template, $models, $controler, $locale, $lang))->render();
 	    if (is_callable($post)) {
 	        $html = isset($html) ? call_user_func($post, $html, $models, $controler, $locale) : call_user_func($post, $models, $controler, $locale);
 	    }

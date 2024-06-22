@@ -14,10 +14,11 @@ class View {
     
     public static $DEFAULT_TYPE = 'text/html;charset=UTF-8';
     
-    public function __construct($template, $models, $controler = null, $locale = null) {
+    public function __construct($template, $models, $controler = null, $locale = null, $lang = DEFAULT_LANG) {
         $this->template  = $template;
         $this->models    = $models;
         $this->controler = $controler;
+        $this->lang      = $lang;
         if ($this->controler) {
             $this->implicits = $this->controler->implicits();
             $this->context   = $this->controler->getContext();

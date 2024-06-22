@@ -338,8 +338,8 @@ class Module {
 	}
 	
 	public function sendMail($mail) {
-	    $mail['controler'] = $this->controler;
-	    $mail['locale'] = $this->locale;
+	    $mail['controler'] = $mail['controler'] ?? $this->controler;
+	    $mail['locale'] = $mail['locale'] ?? $this->locale;
 	    return Zord::sendMail($mail);
 	}
 	
