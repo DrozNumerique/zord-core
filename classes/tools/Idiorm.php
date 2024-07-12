@@ -462,10 +462,14 @@
 	            if (!is_int($key)) unset($parameters[$key]);
             }
 
+            $db = self::get_db($connection_name);
             if (count($parameters) > 0) {
                 // Escape the parameters
-                $parameters = array_map(array(self::get_db($connection_name), 'quote'), $parameters);
-
+                $parameters = array_map(function($parameter) use ($db) {
+                    $result = $db->quote($parameter);
+                    return $result === false ? "'".$parameter."'" : $result;
+                }, $parameters);
+                
                 // Avoid %format collision for vsprintf
                 $query = str_replace("%", "%%", $query);
 
@@ -481,16 +485,19 @@
             } else {
                 $bound_query = $query;
             }
-
+            
             self::$_last_query = $bound_query;
             self::$_query_log[$connection_name][] = $bound_query;
 
-
+            /*
             if(is_callable(self::$_config[$connection_name]['logger'])){
                 $logger = self::$_config[$connection_name]['logger'];
                 $logger($bound_query, $query_time);
             }
-
+            */
+            Zord::liveFolder('logs'.DS.'databases');
+            Zord::log($bound_query, 'databases'.DS.$connection_name);
+            
             return true;
         }
 
@@ -1845,12 +1852,12 @@
 
             self::_execute($query, $this->_values, $this->_connection_name);
             $statement = self::get_last_statement();
-
+            
             $rows = array();
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
                 $rows[] = $row;
             }
-
+            
             if ($caching_enabled) {
                 self::_cache_query_result($cache_key, $rows, $this->_table_name, $this->_connection_name);
             }
