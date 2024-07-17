@@ -147,6 +147,7 @@ var checkProcess = function(pid, offset, callback) {
 			action:'status',
 			pid:pid,
 			offset:offset,
+			async: false,
 			success:function(result) {
 				if (callback !== undefined) {
 					callback(result);
