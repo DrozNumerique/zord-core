@@ -401,7 +401,7 @@ var handleProcess = function(params, follow) {
 	if (pid == undefined || pid == null) {
 		params.success = function(result) {
 			follow = resetProcess(follow, result);
-			setTimeout(followProcess(follow), 200);
+			setTimeout(followProcess(follow), 1000);
 		};
 		invokeZord(params);
 	} else {
