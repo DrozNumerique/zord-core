@@ -125,14 +125,23 @@ class Account extends Module {
         return $checked;
     }
     
+    protected function complete($data, $scope) {
+        if ($scope === 'create' && ACCOUNT_EMAIL_AS_LOGIN) {
+            $data['login'] = $data['email'];
+        }
+        return $data;
+    }
+    
+    protected function required($property, $scope) {
+        return true;
+    }
+    
     protected function check($data, $scope) {
         $checked = true;
         $properties = Zord::value('account', ['properties',$scope]);
-        if ($scope == 'create' && ACCOUNT_EMAIL_AS_LOGIN) {
-            $data['login'] = $data['email'];
-        }
+        $data = $this->complete($data, $scope);
         foreach ($properties as $property) {
-            if (empty($data[$property])) {
+            if ($this->required($property, $scope) && empty($data[$property])) {
                 $checked = $this->locale->messages->missing;
                 break;
             }
