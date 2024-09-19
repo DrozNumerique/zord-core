@@ -151,7 +151,7 @@ class Portal extends Module {
                 $this->params['data_locale'] = true;
                 $this->params['data_scope']  = 'portal';
                 $this->params['data_type']   = 'locale';
-                $this->params['data_key']    = (!isset($this->params['domain']) && !isset($this->params['lang']) ? null : ($this->params['domain'] ?? '').(isset($this->params['domain']) && isset($this->params['lang']) ? '.' : '').($this->params['lang']) ?? '');
+                $this->params['data_key']    = (!isset($this->params['domain']) && !isset($this->params['lang']) ? null : ($this->params['domain'] ?? '').(isset($this->params['domain']) && isset($this->params['lang']) ? '.' : '').($this->params['lang'] ?? DEFAULT_LANG) ?? '');
                 break;
             }
             case 'options': {

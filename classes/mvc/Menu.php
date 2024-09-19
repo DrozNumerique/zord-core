@@ -58,6 +58,7 @@ class Menu {
                 if ($type == 'menu' && isset($entry['menu']) && is_array($entry['menu']) && Zord::is_associative($entry['menu'])) {
                     foreach ($entry['menu'] as $subName => $subEntry) {
                         list($subType, $subURL, $subClass, $subLabel, $subRender) = $menu->point($subEntry, $subName, $models);
+                        $subClass[] = 'sub';
                         if ($menu->highlight($name, $subName)) {
                             $subClass[] = 'highlight';
                         }
