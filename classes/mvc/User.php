@@ -25,6 +25,8 @@ class User {
         if ($login) {
             $this->login = $login;
             $entity = (new UserEntity())->retrieve($login);
+            Zord::log($session);
+            Zord::log($entity);
             if ($entity) {
                 $this->name     = $entity->name;
                 $this->email    = $entity->email;
@@ -192,7 +194,7 @@ class User {
         }
         if ($result) {
             if ($transient) {
-                return self::bind($login);
+                return self::bind($user->login);
             } else {
                 return true;
             }
