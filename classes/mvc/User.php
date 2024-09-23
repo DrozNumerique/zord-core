@@ -173,7 +173,7 @@ class User {
     
     public static function authenticate($login, $password, $transient = true) {
         $user = (new UserEntity())->retrieve($login);
-        if ($user === false && ACCOUNT_EMAIL_AS_LOGIN) {
+        if (($user === false) && ACCOUNT_EMAIL_AS_LOGIN) {
             $user = (new UserEntity())->retrieve(['where' => ['email' => $login]]);
         }
         $result = false;
