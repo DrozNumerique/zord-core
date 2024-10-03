@@ -580,6 +580,18 @@ function dressCursor(cursor) {
 	});
 }
 
+function loadPending(root) {
+	loadings = root.querySelectorAll('div.loading');
+	if (loadings) {
+		[].forEach.call(loadings, function(loading) {
+			load = loading.dataset.load;
+			if (load !== undefined && window[load] !== undefined && typeof window[load] == 'function') {
+				window[load](loading);
+			}
+		});
+	}
+}
+
 document.addEventListener("DOMContentLoaded", function(event) {
 
 	loadData({
@@ -755,15 +767,7 @@ window.addEventListener("load", function(event) {
 	}
 		
 	setTimeout(function() {
-		loadings = document.querySelectorAll('div.loading');
-		if (loadings) {
-			[].forEach.call(loadings, function(loading) {
-				load = loading.dataset.load;
-				if (load !== undefined && window[load] !== undefined && typeof window[load] == 'function') {
-					window[load](loading);
-				}
-			});
-		}
+		loadPending(document);
 	}, 300);
 	
 	const observer = new ResizeObserver(entries => {
