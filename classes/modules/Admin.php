@@ -244,10 +244,10 @@ class Admin extends Module {
     public function content() {
         $name    = $this->params['name']    ?? null;
         $content = $this->params['content'] ?? null;
-        $locale  = $this->params['locale']  ?? $this->lang;
+        $lang    = $this->params['locale']  ?? $this->lang;
         if (isset($content) && isset($name)) {
             $result = null;
-            $date = Zord::content($name, $locale, $content);
+            $date = Zord::content($name, $lang, $content);
             if (isset($date)) {
                 $result = [
                     'date'    => $date,
@@ -259,7 +259,7 @@ class Admin extends Module {
                 ];
             }
             if (isset($result)) {
-                $this->postSaveContent();
+                $this->postSaveContent($name, $content, $lang);
             }
             return $result ?? $this->error(500, $this->locale->tab->content->message->unsaved);
         }
@@ -283,7 +283,7 @@ class Admin extends Module {
         return $this->view('/portal/widget/list', Zord::listModels('users', $models), 'text/html;charset=UTF-8', false, false, 'admin');
     }
     
-    protected function postSaveContent() {
+    protected function postSaveContent($name, $content, $lang) {
         
     }
     
