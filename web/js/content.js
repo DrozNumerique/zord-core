@@ -1,6 +1,5 @@
-document.addEventListener("DOMContentLoaded", function(event) {
-	
-	[].forEach.call(document.querySelectorAll('.content.editable[data-name]'), function (content) {
+var dressContent = function(root) {
+	[].forEach.call(root.querySelectorAll('.content.editable[data-name]'), function (content) {
 		var converter = new showdown.Converter();
 		var display = content.querySelector(".display");
 		var editor  = content.querySelector(".editor");
@@ -29,6 +28,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 					module: save.dataset.module,
 					action: save.dataset.action,
 					name: content.dataset.name,
+					locale: content.dataset.lang,
 					content: text.value,
 					success: function(result) {
 						display.innerHTML = text.value !== '' ? converter.makeHtml(text.value) : result.holder;
@@ -45,5 +45,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
 			});
 		}
 	});	
+};
+
+document.addEventListener("DOMContentLoaded", function(event) {
+	
+	dressContent(document);
 	
 });

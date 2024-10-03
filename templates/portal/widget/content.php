@@ -1,5 +1,5 @@
 <?php if (!empty($content) || ($editable ?? false)) { ?>
-<div class="content widget<?php echo $editable ? ' editable' : ''; ?><?php echo !empty($class) ? ' '.implode(' ', $class) : ''; ?>" data-name="<?php echo $name; ?>">
+<div class="content widget<?php echo $editable ? ' editable' : ''; ?><?php echo !empty($class) ? ' '.implode(' ', $class) : ''; ?>" data-name="<?php echo $name; ?>" data-lang="<?php echo $_lang; ?>">
 	<div id="<?php echo $id ?>" class="content display<?php echo !empty($class) ? ' '.implode(' ', $class) : ''; ?>"><?php echo !empty($content) ? Zord::md2html($content) : ($holder ?? ''); ?></div>
 <?php   if ($editable) { ?>
     <div class="content editor">

@@ -244,9 +244,10 @@ class Admin extends Module {
     public function content() {
         $name    = $this->params['name']    ?? null;
         $content = $this->params['content'] ?? null;
+        $locale  = $this->params['locale']  ?? $this->lang;
         if (isset($content) && isset($name)) {
             $result = null;
-            $date = Zord::content($name, $this->lang, $content);
+            $date = Zord::content($name, $locale, $content);
             if (isset($date)) {
                 $result = [
                     'date'    => $date,
