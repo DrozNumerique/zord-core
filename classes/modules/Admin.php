@@ -258,6 +258,9 @@ class Admin extends Module {
                     'holder'  => $this->contentHolder($name)
                 ];
             }
+            if (isset($result)) {
+                $this->postSaveContent();
+            }
             return $result ?? $this->error(500, $this->locale->tab->content->message->unsaved);
         }
         return $this->error(400, $this->locale->tab->content->message->missing);
@@ -278,6 +281,10 @@ class Admin extends Module {
     public function users() {
         $models = $this->cursor($this->dataUsers());
         return $this->view('/portal/widget/list', Zord::listModels('users', $models), 'text/html;charset=UTF-8', false, false, 'admin');
+    }
+    
+    protected function postSaveContent() {
+        
     }
     
     protected function updateProfile($user) {
