@@ -10,6 +10,7 @@
 	width: calc(100% - 4px);
 	height: calc(100% - 4px);
 	resize: vertical;
+	padding-bottom: 37px;
 }
 
 .content.editable[data-name] .editor button {
