@@ -763,14 +763,8 @@ dispatchSessionProperties();
 window.addEventListener("load", function(event) {
 	
 	if (LASTURL !== undefined && LASTURL !== null && LASTURL.length > 0) {
-		window.history.pushState(null, "", LASTURL);
+		window.history.pushState({lastURL: LASTURL}, "", LASTURL);
 	}
-
-	/*
-	$(window).on("popstate", function(e) {
-		location.reload()
-	});
-	*/
 		
 	setTimeout(function() {
 		loadPending(document);
