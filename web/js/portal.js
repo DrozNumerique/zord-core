@@ -534,7 +534,7 @@ function attachListUpdate(list, callback) {
 	}, callback);
 }
 
-function activateListSort(list, lookup) {
+function activateListSort(list, lookup, cursor) {
 	[].forEach.call(list.querySelectorAll('.sortable'), function(sortable) {
 		sortable.classList.add('active');
 		sortable.addEventListener('click', function(event) {
@@ -542,6 +542,7 @@ function activateListSort(list, lookup) {
 			var direction = lookup.querySelector('input[name="direction"]');
 			order.value = sortable.dataset.field;
 			direction.value = direction.value == 'asc' ? 'desc' : 'asc';
+			document.getElementById(cursor.id).dataset.offset = 0;
 			list.update();
 		});
 	});

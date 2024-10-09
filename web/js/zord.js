@@ -72,7 +72,7 @@
 								container = document.getElementById(outer);
 							}
 							if (container !== undefined && container !== null) {
-								container.innerHTML = this.responseText;
+								container.outerHTML = this.responseText;
 							}
 						} else if (open !== null) {
 							var reference = window.open('', open, '');

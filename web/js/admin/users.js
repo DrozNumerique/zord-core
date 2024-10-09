@@ -99,12 +99,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		$("input[type='radio']").checkboxradio();
 		var lookup = document.getElementById('lookup_users');
 		var cursor = document.getElementById('cursor_users');
-		attachListUpdate(users, function(params) {
+		attachListUpdate(users, function() {
 			return {
 				module: 'Admin',
 				action: 'users',
 				operation:'list',
-				offset: params.offset,
+				offset: document.getElementById('cursor_users').dataset.offset,
 				keyword:lookup.querySelector('.keyword input').value.trim(),
 				order:lookup.querySelector('input[name="order"]').value,
 				direction:lookup.querySelector('input[name="direction"]').value,
@@ -112,14 +112,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
 					var users = document.getElementById('users');
 					var lookup = document.getElementById('lookup_users')
 					var cursor = document.getElementById('cursor_users');
-					cursor.dataset.offset = params.offset;
 					attachUsersActions(users);	
-					activateListSort(users, lookup);
+					activateListSort(users, lookup, cursor);
 				}
 			};
 		});
 		attachUsersActions(users);
-		activateListSort(users, lookup);
+		activateListSort(users, lookup, cursor);
 		dressCursor(cursor);
 	}
 	
