@@ -32,6 +32,11 @@ var dressContent = function(root) {
 					content: text.value,
 					success: function(result) {
 						display.innerHTML = text.value !== '' ? converter.makeHtml(text.value) : result.holder;
+						if (text.value !== '') {
+							display.classList.remove('empty');
+						} else {
+							display.classList.add('empty');
+						}
 						alert(result.message);
 					},
 					failure: function(error) {
