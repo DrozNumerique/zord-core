@@ -267,7 +267,7 @@ class Controler {
             $target['base'] = $scheme.'://'.$host;
             $target['method'] = $_SERVER["REQUEST_METHOD"];
             $target['params'] = $redirect ? $_GET : array_merge($_GET, $_POST);
-            if (isset($target['params']['params'])) {
+            if (is_string($target['params']['params'] ?? null)) {
                 foreach (Zord::objectToArray(json_decode($target['params']['params'])) as $key => $value) {
                     if (is_array($value)) {
                         $target['params'][$key] = Zord::json_encode($value, false);
