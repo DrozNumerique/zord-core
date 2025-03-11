@@ -246,7 +246,7 @@ class Module {
 	    );
 	}
 	
-	public function download($path = null, $role = null, $content = null) {
+	public function download($path = null, $role = null, $content = null, $filename = null) {
 	    if ($path != null) {
 	        $file = [
 	            'name' => $path,
@@ -259,7 +259,7 @@ class Module {
 	               $content = file_get_contents($file['name']);
 	            }
 	        }
-	        $filename = pathinfo($file['name'], PATHINFO_BASENAME);
+	        $filename = $filename ?? pathinfo($file['name'], PATHINFO_BASENAME);
 	        $status = $file['code'] == 200 ? 'OK' : 'KO';
 	        $async = (isset($this->params['async']) && $this->params['async']);
 	        $_SESSION['__ZORD__']['___DOWNLOAD___'] = [
