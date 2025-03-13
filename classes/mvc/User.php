@@ -14,6 +14,7 @@ class User {
     public $login = null;
     public $name = null;
     public $email = null;
+    public $comments = null;
     public $ipv4 = null;
     public $ipv6 = null;
     public $password = null;
@@ -28,6 +29,7 @@ class User {
             if ($entity) {
                 $this->name     = $entity->name;
                 $this->email    = $entity->email;
+                $this->comments = $entity->comments;
                 $this->ipv4     = $entity->ipv4;
                 $this->ipv6     = $entity->ipv6;
                 $this->password = $entity->password;

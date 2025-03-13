@@ -29,7 +29,8 @@
 			"email",
 			"ipv4",
 			"ipv6",
-			"password"
+			"password",
+			"comments"
 		]
 	},
 	"slides": {

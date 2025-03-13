@@ -16,6 +16,7 @@
 		],
 		"extras": [
 			"others",
+			"comments",
 			"roles",
 			"ipv4",
 			"ipv6"

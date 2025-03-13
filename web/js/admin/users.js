@@ -18,6 +18,9 @@ function checkAccount(operation, data) {
 }
 
 var profileComposers = {
+	comments: function(element, login) {
+		return element.value;
+	},
 	roles: function(element, login) {
 		var roles = [];
 		[].forEach.call(element.querySelectorAll('.data'), function(entry) {

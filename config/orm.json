@@ -1,163 +1,164 @@
 {
-	"UserEntity": {
-		"table": "users",
-		"fields": [
-			"login",
-	        "password",
-	        "email",
-	        "name",
-	        "ipv4",
-	        "ipv6",
-	        "reset"
+    "UserEntity": {
+        "table": "users",
+        "fields": [
+            "login",
+            "password",
+            "email",
+            "name",
+            "ipv4",
+            "ipv6",
+            "comments",
+            "reset"
         ],
         "key": "login",
         "join": {
-        	"UserHasProfileEntity": ["login", "user"],
-        	"UserHasIPV4Entity": ["login", "user"],
-        	"UserHasIPV6Entity": ["login", "user"],
-        	"UserHasRoleEntity": ["login", "user"],
-        	"UserHasSessionEntity": ["login", "user"],
-        	"UserHasTokenEntity": ["login", "user"]
+            "UserHasProfileEntity": ["login", "user"],
+            "UserHasIPV4Entity": ["login", "user"],
+            "UserHasIPV6Entity": ["login", "user"],
+            "UserHasRoleEntity": ["login", "user"],
+            "UserHasSessionEntity": ["login", "user"],
+            "UserHasTokenEntity": ["login", "user"]
         },
         "elements": {
-        	"UserHasProfileEntity": ["profiles", "user"],
-        	"UserHasIPV4Entity": ["ipv4", "user"],
-        	"UserHasIPV6Entity": ["ipv6", "user"],
-        	"UserHasRoleEntity": ["roles", "user"],
-        	"UserHasSessionEntity": ["sessions", "user"],
-        	"UserHasTokenEntity": ["tokens", "user"]
+            "UserHasProfileEntity": ["profiles", "user"],
+            "UserHasIPV4Entity": ["ipv4", "user"],
+            "UserHasIPV6Entity": ["ipv6", "user"],
+            "UserHasRoleEntity": ["roles", "user"],
+            "UserHasSessionEntity": ["sessions", "user"],
+            "UserHasTokenEntity": ["tokens", "user"]
         }
     },
     "UserHasProfileEntity": {
-    	"table": "user_has_profile",
-    	"fields": [
-    		"id",
-    		"user",
-    		"date",
-    		"profile"
-    	],
-    	"key": "id",
-		"json": "profile"
+        "table": "user_has_profile",
+        "fields": [
+            "id",
+            "user",
+            "date",
+            "profile"
+        ],
+        "key": "id",
+        "json": "profile"
     },
-	"UserHasIPV4Entity": {
-		"table": "user_has_ipv4",
-		"fields": [
-	        "user",
-	    	"ip",
-	    	"mask",
-	    	"include"
+    "UserHasIPV4Entity": {
+        "table": "user_has_ipv4",
+        "fields": [
+            "user",
+            "ip",
+            "mask",
+            "include"
         ],
         "key": [
-        	"user",
-        	"ip"
+            "user",
+            "ip"
         ],
         "expr": {
-           	"ip": {
-           		"get": "INET_NTOA",
-           		"set": "INET_ATON"
-           	}
+               "ip": {
+                   "get": "INET_NTOA",
+                   "set": "INET_ATON"
+               }
         }
     },
-	"UserHasIPV6Entity": {
-		"table": "user_has_ipv6",
-		"fields": [
-	        "user",
-	        "ip",
-	    	"mask",
-	    	"include",
-    		"part1",
-    		"part2",
-    		"part3",
-    		"part4",
-    		"mask1",
-    		"mask2",
-    		"mask3",
-    		"mask4"
+    "UserHasIPV6Entity": {
+        "table": "user_has_ipv6",
+        "fields": [
+            "user",
+            "ip",
+            "mask",
+            "include",
+            "part1",
+            "part2",
+            "part3",
+            "part4",
+            "mask1",
+            "mask2",
+            "mask3",
+            "mask4"
         ],
         "key": [
-        	"user",
-        	"ip"
+            "user",
+            "ip"
         ],
         "expr": {
-           	"ip": {
-           		"get": "INET6_NTOA",
-           		"set": "INET6_ATON"
-           	}
+               "ip": {
+                   "get": "INET6_NTOA",
+                   "set": "INET6_ATON"
+               }
         }
     },
-	"UserHasRoleEntity": {
-		"table": "user_has_role",
-		"fields": [
-	        "user",
-	        "role",
-	        "context",
-	        "start",
-	        "end"
+    "UserHasRoleEntity": {
+        "table": "user_has_role",
+        "fields": [
+            "user",
+            "role",
+            "context",
+            "start",
+            "end"
         ],
         "key": [
-        	"user",
-        	"role",
-        	"context"
+            "user",
+            "role",
+            "context"
         ]
     },
-	"UserHasSessionEntity": {
-		"table": "user_has_session",
-		"fields": [
-	        "user",
-	        "session",
-	        "last"
+    "UserHasSessionEntity": {
+        "table": "user_has_session",
+        "fields": [
+            "user",
+            "session",
+            "last"
         ],
         "key": "session"
     },
-	"UserHasTokenEntity": {
-		"table": "user_has_token",
-		"fields": [
-	        "user",
-	        "key",
-	        "token",
-	        "start"
+    "UserHasTokenEntity": {
+        "table": "user_has_token",
+        "fields": [
+            "user",
+            "key",
+            "token",
+            "start"
         ],
         "key": "token"
     },
-	"UserHasRememberEntity": {
-		"table": "user_has_remember",
-		"fields": [
-	        "selector",
-	        "validator",
-	        "user",
-	        "expiry"
+    "UserHasRememberEntity": {
+        "table": "user_has_remember",
+        "fields": [
+            "selector",
+            "validator",
+            "user",
+            "expiry"
         ],
         "key": "selector"
     },
-	"ProcessEntity": {
-		"table": "process",
-		"fields": [
-	        "pid",
-	        "class",
-	        "user",
-	        "lang",
-	        "params",
-	        "start",
-	        "last",
-	        "step",
-	        "progress"
+    "ProcessEntity": {
+        "table": "process",
+        "fields": [
+            "pid",
+            "class",
+            "user",
+            "lang",
+            "params",
+            "start",
+            "last",
+            "step",
+            "progress"
         ],
         "key": "pid"
     },
-	"ProcessHasReportEntity": {
-		"table": "process_has_report",
-		"fields": [
-	        "process",
-	        "index",
-	        "indent",
-	        "style",
-	        "message",
-	        "newline",
-	        "over"
+    "ProcessHasReportEntity": {
+        "table": "process_has_report",
+        "fields": [
+            "process",
+            "index",
+            "indent",
+            "style",
+            "message",
+            "newline",
+            "over"
         ],
         "key": [
-        	"process",
-        	"index"
+            "process",
+            "index"
         ]
     }
 }

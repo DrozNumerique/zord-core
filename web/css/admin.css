@@ -409,3 +409,8 @@ div#wrapper > div#preview {
 .admin-panel-content.resources #preview img {
 	max-width: 100%;
 }
+
+.admin-panel-content.users textarea[data-update="comments"] {
+	width: 710px;
+	height: 150px;
+}

@@ -13,6 +13,7 @@
 		},
 		"users": {
 			"title": "Gestion des utilisateurs",
+			"comments": "Commentaires",
 			"roles": "Rôles",
 			"ipv4": "Adresse(s) IPv4",
 			"ipv6": "Adresse(s) IPv6",
@@ -25,7 +26,7 @@
 				"to": "Destinataire",
 				"activation": "Lien d'activation"
 			},
-			"keyword": "Identifiant, nom, courriel...",
+			"keyword": "Identifiant, nom, courriel, commentaires...",
 			"order": "Classer par..."
 		},
 		"resources": {

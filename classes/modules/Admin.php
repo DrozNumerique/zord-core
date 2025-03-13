@@ -293,6 +293,9 @@ class Admin extends Module {
             'where' => ['user' => $user->login],
             'many' => true
         ];
+        if (isset($this->params['comments'])) {
+            $result['comments'] = $this->params['comments'];
+        }
         if (!empty($this->params['roles'])) {
             $roles = Zord::objectToArray(json_decode($this->params['roles']));
             (new UserHasRoleEntity())->delete($criteria);
@@ -380,8 +383,8 @@ class Admin extends Module {
         if (isset($keyword)) {
             $match = '%'.$keyword.'%';
             return [null, [
-                'raw'        => 'login LIKE ? OR email LIKE ? OR name LIKE ?',
-                'parameters' => [$match, $match, $match]
+                'raw'        => 'login LIKE ? OR email LIKE ? OR name LIKE ? OR comments LIKE ?',
+                'parameters' => [$match, $match, $match, $match]
             ]];
         }
         return [null, null];
@@ -455,6 +458,7 @@ class Admin extends Module {
         $result = [];
         $result['login'] = $user->login;
         $result['name'] = $user->name;
+        $result['comments'] = $user->comments;
         $result['ipv4'] = $this->explodeIP($user->ipv4);
         $result['ipv6'] = $this->explodeIP($user->ipv6);
         $result['roles'] = [];

@@ -13,6 +13,7 @@
 		},
 		"users": {
 			"title": "Accounts management",
+			"comments": "Comments",
 			"roles": "Roles",
 			"ipv4": "IPv4 Address(es)",
 			"ipv6": "IPv6 Address(es)",
@@ -25,7 +26,7 @@
 				"to": "To",
 				"activation": "Activation link "
 			},
-			"keyword": "Login, name, email...",
+			"keyword": "Login, name, email, comments...",
 			"order": "Order by..."
 		},
 		"resources": {
