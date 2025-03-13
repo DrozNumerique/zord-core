@@ -1,17 +1,7 @@
-function checkContext(operation, data) {
-	if (data == undefined || data == null) {
-		return false;
+var checkContext = {
+	'delete': function(params) {
+		return confirm(LOCALE.admin.context.delete.confirm) ? params : false;
 	}
-	if (data.name == undefined || data.name == null || data.name.length == 0) {
-		return false;
-	}
-	if (data.title == undefined || data.title == null || data.title.length == 0) {
-		return false;
-	}
-	if (operation == 'delete') {
-		return confirm(LOCALE.admin.context.delete.confirm);
-	}
-	return true;
 }
 
 function getContextURLs() {
@@ -35,18 +25,30 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	var context = document.getElementById('context');
 	if (context !== undefined && context !== null) {
 		attachActions(context, function(entry, operation) {
-			var data = {
+			var params = {
+				module:'Admin',
+				action:'context',
+				operation:operation,
 				name:entry.parentNode.children[0].firstElementChild.value,
-				title:entry.parentNode.children[1].firstElementChild.value
+				title:entry.parentNode.children[1].firstElementChild.value,
+				final: function() {
+					if (document.body) {
+						document.body.classList.remove('waiting');
+					}
+				}
 			};
-			if (checkContext(operation, data)) {
-				invokeZord({
-					module:'Admin',
-					action:'context',
-					operation:operation,
-					name:data.name,
-					title:data.title
-				});
+			if (params.name == undefined || params.name == null || params.name.length == 0) {
+				return;
+			}
+			if (params.title == undefined || params.title == null || params.title.length == 0) {
+				return;
+			}
+			if (operation in checkContext) {
+				params = checkContext[operation](params);
+			}
+			if (params) {
+				document.body.classList.add('waiting');
+				invokeZord(params);
 			}
 		});
 	}

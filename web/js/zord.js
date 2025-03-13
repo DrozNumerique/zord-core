@@ -9,6 +9,7 @@
 	var uploaded = params.uploaded == undefined ? null : params.uploaded;
 	var success = params.success == undefined ? null : params.success;
 	var failure  = params.failure == undefined ? null : params.failure;
+	var final  = params.final == undefined ? null : params.final;
 	var inner  = params.inner == undefined ? null : params.inner;
 	var outer  = params.outer == undefined ? null : params.outer;
 	var open = params.open == undefined ? null : params.open;
@@ -122,6 +123,9 @@
 				} else {
 					alertError(error);
 				}
+			}
+			if (final !== null) {
+				final();
 			}
 		}
 	};

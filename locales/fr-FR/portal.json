@@ -19,7 +19,7 @@
 	"admin": {
 		"context": {
 			"delete": {
-				"confirm": "Confirmer la suppression du context"
+				"confirm": "Confirmer la suppression du contexte"
 			}
 		},
 		"users": {

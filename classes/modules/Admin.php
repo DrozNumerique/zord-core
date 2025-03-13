@@ -116,9 +116,9 @@ class Admin extends Module {
     
     public function context() {
         $result = [];
-        if (isset($this->params['operation']) &&
-            isset($this->params['name']) &&
-            isset($this->params['title'])) {
+        if (!empty($this->params['operation']) &&
+            !empty($this->params['name']) &&
+            !empty($this->params['title'])) {
             $operation = $this->params['operation'];
             $name = $this->params['name'];
             $title = $this->params['title'];
@@ -127,8 +127,18 @@ class Admin extends Module {
                 case 'create': {
                     if (!isset($context[$name])) {
                         $context[$name]['title'][$this->lang] = $title;
+                        $position = 0;
+                        foreach ($context as $_context) {
+                            if (($_context['position'] ?? 0) > $position) {
+                                $position = $_context['position'];
+                            }
+                        }
+                        $context[$name]['position'] = $position;
                     } else {
-                        $result['message'][] = 'context existant';
+                        $result['error'] = [
+                            'code'    => 400,
+                            'message' => "contexte <".$name."> existant"
+                        ];
                     }
                     break;
                 }
@@ -136,7 +146,10 @@ class Admin extends Module {
                     if (isset($context[$name])) {
                         $context[$name]['title'][$this->lang] = $title;
                     } else {
-                        $result['message'][] = 'context inexistant';
+                        $result['error'] = [
+                            'code'    => 400,
+                            'message' => "contexte <".$name."> inexistant"
+                        ];
                     }
                     break;
                 }
@@ -144,7 +157,10 @@ class Admin extends Module {
                     if (isset($context[$name])) {
                         unset($context[$name]);
                     } else {
-                        $result['message'][] = 'context inexistant';
+                        $result['error'] = [
+                            'code'    => 400,
+                            'message' => "contexte <".$name."> inexistant"
+                        ];
                     }
                     break;
                 }
@@ -182,10 +198,21 @@ class Admin extends Module {
             }
             if (in_array($operation, ['create','update','delete','up','down'])) {
                 if (!$this->doContext($operation, $name, $context)) {
-                    $this->response = 'DATA';
-                    return $this->error(500, $context);
+                   $result['error'] = [
+                       'code'    => 500,
+                       'message' => "erreur lors de l'opération <".$operation."> sur le contexte ".$name
+                   ];
                 }
+            } else if ($operation !== 'urls') {
+                $result['error'] = [
+                    'code'    => 400,
+                    'message' => "<".$operation."> n'est pas une opération valide"
+                ];
             }
+        }
+        if (isset($result['error'])) {
+            $this->response = 'DATA';
+            return $this->error($result['error']['code'], $result['error']['message']);
         }
         return $this->index('context', $result);
     }
@@ -203,10 +230,10 @@ class Admin extends Module {
             }
             if (!$this->doContext('update', $name, $context)) {
                 $this->response = 'DATA';
-                return $this->error(500, $context);
+                return $this->error(500, "erreur lors de l'opération <update> sur le contexte ".$name);
             }
         }
-        return $this->index('context', $this->contextExtrasData($name));
+        return $this->index('context', isset($this->params['ctx']) ? $this->contextExtrasData($name) : $this->index('context', []));
     }
     
     public function resource() {
@@ -530,6 +557,9 @@ class Admin extends Module {
     }
     
     protected function preContext($operation, $name, $context) {
+        uasort($context, function($first,$second) {
+            return $first['position'] <=> $second['position'];
+        });
         return $context;
     }
     

@@ -1,3 +1,7 @@
+body.waiting * {
+	cursor: wait !important; 
+}
+
 [data-tooltip] {
 	position: relative;
 	cursor: pointer;

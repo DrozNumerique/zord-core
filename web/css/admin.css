@@ -233,10 +233,7 @@
 	color: #686968;
 }
 
-.list.admin li div.profile:hover,
-.list.admin li div.notify:hover,
-.list.admin li div.counter:hover,
-.list.admin li div.urlsList:hover {
+.list.admin li div.action:hover {
 	color:black;
 }
 
