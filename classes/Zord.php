@@ -984,7 +984,7 @@ class Zord {
 	        file_put_contents($base.'subject.txt', $mail['subject']);
 	        file_put_contents($base.'recipients.json', self::json_encode($mail['recipients']));
 	    }
-	    return $mailer->Send() === false ? $mailer->ErrorInfo : true;
+	    return MAIL_SEND ? ($mailer->Send() === false ? $mailer->ErrorInfo : true) : true;
 	}
 	
 	public static function mark($content, $begin = VIEW_MARK_BEGIN, $end = VIEW_MARK_END) {
