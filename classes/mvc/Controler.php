@@ -7,9 +7,9 @@ class Controler {
     protected $user     = null;
     protected $context  = null;
     protected $host     = null;
-    protected $method   = "GET";
+    protected $method   = null;
     protected $scheme   = null;
-    protected $indexURL = 0;
+    protected $indexURL = null;
     protected $baseURL  = null;
     protected $pathURL  = null;
     protected $lastURL  = null;

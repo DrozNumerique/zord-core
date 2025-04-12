@@ -5,7 +5,7 @@ class Module {
     protected $params = null;
     protected $context = null;
     protected $device = null;
-    protected $indexURL = 0;
+    protected $indexURL = null;
     protected $baseURL = null;
     protected $pathURL = null;
     protected $query = null;
