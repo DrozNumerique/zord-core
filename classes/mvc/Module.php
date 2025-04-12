@@ -16,6 +16,7 @@ class Module {
     protected $locale = null;
     protected $response = null;
     protected $type = null;
+    protected $method = null;
     
     public function __construct($controler) {
         foreach (Zord::getConfig('extend') as $class => $extend) {
@@ -37,6 +38,7 @@ class Module {
             $this->params   = $controler->getParams();
             $this->user     = $controler->getUser();
             $this->lang     = $controler->getLang();
+            $this->method   = $controler->getMethod();
         }
         $this->locale = Zord::getLocale($this->type, $this->lang);
     }

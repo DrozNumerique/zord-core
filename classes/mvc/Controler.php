@@ -7,6 +7,7 @@ class Controler {
     protected $user     = null;
     protected $context  = null;
     protected $host     = null;
+    protected $method   = "GET";
     protected $scheme   = null;
     protected $indexURL = 0;
     protected $baseURL  = null;
@@ -36,6 +37,10 @@ class Controler {
     
     public function getHost() {
         return $this->host;
+    }
+    
+    public function getMethod() {
+        return $this->method;
     }
     
     public function getScheme() {
@@ -132,6 +137,7 @@ class Controler {
     public function handle($target, $replay = false) {
         if ($target) {
             $this->host     = $target['host'];
+            $this->method   = $target['method'];
             $this->scheme   = $target['scheme'];
             $this->context  = $target['context'];
             $this->indexURL = $target['indexURL'];
