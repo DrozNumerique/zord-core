@@ -1,6 +1,9 @@
 body.waiting * {
 	cursor: wait !important; 
 }
+[data-admin]:not([data-admin='']) {
+	cursor: pointer;
+}
 
 [data-tooltip] {
 	position: relative;

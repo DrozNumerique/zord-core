@@ -608,6 +608,20 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	});
 	LOCALE = getPortalProperty('locale.' + LANG);
 
+	[].forEach.call(document.querySelectorAll("[data-admin]:not([data-admin=''])"), function(element) {
+		element.addEventListener('click', function(event) {
+			if (event.ctrlKey || event.metaKey || element.localName == 'button') {
+				invokeZord({
+					module: 'Admin',
+					action: 'index',
+					tab   : element.dataset.admin,
+					open  : '_blank'
+				});
+				return false;
+			}
+		});
+	});
+
 	window.addEventListener("selectLoaded", function(event) {
 		selects = document.querySelectorAll('select[data-loading]');
 		var loaded = true;
