@@ -15,7 +15,7 @@ class Tunnel {
         $processUser = posix_getpwuid(posix_geteuid());
         $this->host = $config['host'] ?? 'localhost';
         $this->port = $config['port'] ?? 22;
-        $this->methods = $config['methods'] ?? ['hostkey' => 'ssh-ed25519,ssh-rsa'];
+        $this->methods = $config['methods'] ?? null;
         $this->user = $config['user'] ?? $processUser['name'];
         $this->prefix = '//'.$this->user.'@'.$this->host.':'.$this->port;
         $this->process = $process;
