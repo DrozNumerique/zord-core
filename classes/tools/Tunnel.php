@@ -15,10 +15,11 @@ class Tunnel {
         $processUser = posix_getpwuid(posix_geteuid());
         $this->host = $config['host'] ?? 'localhost';
         $this->port = $config['port'] ?? 22;
+        $this->methods = $config['methods'] ?? ['hostkey' => 'ssh-ed25519,ssh-rsa'];
         $this->user = $config['user'] ?? $processUser['name'];
         $this->prefix = '//'.$this->user.'@'.$this->host.':'.$this->port;
         $this->process = $process;
-        $this->connection = ssh2_connect($this->host, $this->port);
+        $this->connection = ssh2_connect($this->host, $this->port, $this->methods);
         if (isset($config['password'])) {
             ssh2_auth_password($this->connection, $this->user, $config['password']);
         } else {
