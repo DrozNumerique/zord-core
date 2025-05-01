@@ -9,7 +9,7 @@ class TunnelTest extends ProcessExecutor {
     }
     
     public function execute($parameters = []) {
-        new Tunnel($this->name);
+        new Tunnel($this->name, $this, true);
     }
 }
 
