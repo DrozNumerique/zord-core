@@ -153,7 +153,7 @@ class Controler {
             $this->replay   = $replay;
             if ($this->context && $this->baseURL) {
                 $class = Zord::getClassName($target['module']);
-                if (class_exists($class)) {
+                if (class_exists($class) && is_subclass_of($class, 'Module')) {
                     $this->module = new $class($this);
                     $plugin = Zord::value('plugin', ['module',$target['module'],$target['action']]);
                     if (method_exists($this->module, $target['action']) || isset($plugin)) {
