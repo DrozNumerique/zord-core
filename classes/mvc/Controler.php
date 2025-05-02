@@ -127,6 +127,9 @@ class Controler {
         UserHasSessionEntity::deleteExpired();
         $this->setUser(User::find());
         $target = $this->getTarget($scheme.'://'.$host.$path);
+        if ($target && empty($target['method'])) {
+            $target['method'] = $_SERVER["REQUEST_METHOD"];
+        }
         $this->setLang();
         $this->setLocale();
         $this->setDevice();
