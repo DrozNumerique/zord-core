@@ -235,7 +235,7 @@ class Account extends Module {
     public function password() {
         $token = $this->params['token'] ?? null;
         if (isset($token)) {
-            $decrypted = Zord::decrypt(base64_decode(str_replace(' ', '+', $token)), Zord::realpath(OPENSSL_PRIVATE_KEY));
+            $decrypted = Zord::decrypt(base64_decode(str_replace(' ', '+', $token)), Zord::realpath(ENCRYPT_PRIVATE_KEY));
             if ($decrypted !== false) {
                 $data = Zord::objectToArray(json_decode($decrypted));
                 if (is_array($data) && isset($data['login'])) {
@@ -367,7 +367,7 @@ class Account extends Module {
         $now = date('Y-m-d H:i:s');
         (new UserEntity())->update($user->login, ['reset' => $this->fullCheck($now)]);
         $data = Zord::json_encode(['login' => $user->login, 'reset' => $now]);
-        $crypted = Zord::encrypt($data, Zord::realpath(OPENSSL_PUBLIC_KEY));
+        $crypted = Zord::encrypt($data, Zord::realpath(ENCRYPT_PUBLIC_KEY));
         if ($crypted !== false) {
             $query = http_build_query($models);
             $url = $this->baseURL.'/password?token='.base64_encode($crypted).(!empty($query) ? '&'.$query : '');

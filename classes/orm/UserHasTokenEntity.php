@@ -13,7 +13,7 @@ class UserHasTokenEntity extends Entity {
     }
     
     public static function find($token) {
-        $decrypted = Zord::decrypt(base64_decode(str_replace(' ', '+', $token)), Zord::realpath(OPENSSL_PRIVATE_KEY));
+        $decrypted = Zord::decrypt(base64_decode(str_replace(' ', '+', $token)), Zord::realpath(ENCRYPT_PRIVATE_KEY));
         if ($decrypted !== false) {
             $token = (new UserHasTokenEntity())->retrieve($decrypted);
             if ($token) {

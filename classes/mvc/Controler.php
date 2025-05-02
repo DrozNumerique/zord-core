@@ -234,7 +234,8 @@ class Controler {
                             'skin'     => Zord::getSkin($context),
                             'indexURL' => $index,
                             'config'   => $params,
-                            'prefix'   => $config['path']
+                            'prefix'   => $config['path'],
+                            'method'   => $_SERVER["REQUEST_METHOD"]
                         ];
                         $_SESSION[self::$ZORD_CONTEXT] = $context;
                         break;
@@ -256,11 +257,11 @@ class Controler {
         $query    = parse_url($url, PHP_URL_QUERY);
         $fragment = parse_url($url, PHP_URL_FRAGMENT);
         $target = $this->findTarget($host, $path);
-        if ($target['prefix'] !== '/' && substr($url, strlen($scheme.'://'.$host), strlen($target['prefix'])) !== $target['prefix']) {
-            $path = $target['prefix'].$path;
-            $url = $scheme.'://'.$host.$path.(isset($query) ? '?'.$query : '').(isset($fragment) ? '#'.$fragment : '');
-        }
         if ($target) {
+            if ($target['prefix'] !== '/' && substr($url, strlen($scheme.'://'.$host), strlen($target['prefix'])) !== $target['prefix']) {
+                $path = $target['prefix'].$path;
+                $url = $scheme.'://'.$host.$path.(isset($query) ? '?'.$query : '').(isset($fragment) ? '#'.$fragment : '');
+            }
             if ($this->isSecure($target) && $scheme !== 'https') {
                 $url = 'https'.substr($url, strlen($scheme));
                 header('Location: '.$url, true, 301);
@@ -271,7 +272,6 @@ class Controler {
             $target['fragment'] = $fragment;
             $target['baseURL'] = $scheme.'://'.$host.($target['prefix'] == '/' ? '' : $target['prefix']);
             $target['base'] = $scheme.'://'.$host;
-            $target['method'] = $_SERVER["REQUEST_METHOD"];
             $target['params'] = $redirect ? $_GET : array_merge($_GET, $_POST);
             if (is_string($target['params']['params'] ?? null)) {
                 foreach (Zord::objectToArray(json_decode($target['params']['params'])) as $key => $value) {
