@@ -21,7 +21,7 @@
 	"TUNNEL_PRIVATE_KEY": "~/.ssh/id_ed25519",
 	"TUNNEL_PUBLIC_KEY": "~/.ssh/id_ed25519.pub",
 	"ENCRYPT_PRIVATE_KEY": "~/.ssh/id_rsa",
-	"ENCRYPT_PUBLIC_KEY": "~/.ssh/id_rsa.pub",
+	"ENCRYPT_PUBLIC_KEY": "~/.ssh/id_rsa.pub.pem",
     "ACCOUNT_AUTO_CREATE": false,
     "ACCOUNT_EMAIL_AS_LOGIN": false,
     "VIEW_MARK_BEGIN": "<!--#",
