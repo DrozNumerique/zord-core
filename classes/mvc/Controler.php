@@ -344,6 +344,7 @@ class Controler {
             $target = array(
                 'host'     => $this->host,
                 'scheme'   => $this->scheme,
+                'method'   => $this->method,
                 'context'  => $this->context,
                 'indexURL' => $this->indexURL,
                 'baseURL'  => $this->baseURL,
