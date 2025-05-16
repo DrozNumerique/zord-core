@@ -228,6 +228,19 @@ abstract class Entity
         return null;
     }
     
+    protected function print($entity) {
+        $key = $this->key($this->type, $entity);
+        if (is_array($key)) {
+            $key = implode(',', array_map(function($_key, $_value) use ($key) {return $_key.'='.$_value;}, array_keys($key), array_values($key)));
+        }
+        return !empty($key) ? $this->type.'['.$key.']' : null;
+    }
+    
+    public function output($key) {
+        $entity = $this->retrieveOne($key);
+        return $entity === false ? false : $this->print($entity);
+    }
+    
     public function create(array $data) {
         $entity = $this->engine(true)->create();
         $this->set($entity, $data);
