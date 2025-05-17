@@ -228,17 +228,27 @@ abstract class Entity
         return null;
     }
     
-    protected function print($entity) {
-        $key = $this->key($this->type, $entity);
+    protected function output($entry) {
+        $key = $this->key($this->type, $entry);
         if (is_array($key)) {
             $key = implode(',', array_map(function($_key, $_value) use ($key) {return $_key.'='.$_value;}, array_keys($key), array_values($key)));
         }
         return !empty($key) ? $this->type.'['.$key.']' : null;
     }
     
-    public function output($key) {
-        $entity = $this->retrieveOne($key);
-        return $entity === false ? false : $this->print($entity);
+    public function export($criteria = null) {
+        $entries = $this->retrieve($criteria);
+        if ($entries === false) {
+            return false;
+        }
+        if (!is_iterable($entries)) {
+            return $this->output($entries);
+        }
+        $result = [];
+        foreach ($entries as $entry) {
+            $result[] = $this->output($entry);
+        }
+        return $result;
     }
     
     public function create(array $data) {
