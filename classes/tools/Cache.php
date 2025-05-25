@@ -20,6 +20,10 @@ class Cache {
         $this->root = $root;
     }
     
+    public function getRoot() {
+        return $this->root;
+    }
+    
     public function setItem($type, $key, $value) {
         $item = $this->getPool($type)->getItem($key)->set($value);
         $this->getPool($type)->save($item);
@@ -41,6 +45,14 @@ class Cache {
         $this->getPool($type)->clear();
     }
     
+    public function keys($type, $pattern = '*') {
+        return array_map(
+            function ($file) {
+                return basename($file);
+            },
+            glob($this->root.DS.$type.DS.$pattern)
+        );
+    }
 }
 
 ?>
