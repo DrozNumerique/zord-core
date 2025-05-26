@@ -45,12 +45,12 @@ class Cache {
         $this->getPool($type)->clear();
     }
     
-    public function keys($type, $pattern = '*') {
+    public function keys($pool, $pattern = '*') {
         return array_map(
             function ($file) {
                 return basename($file);
             },
-            glob($this->root.DS.$type.DS.$pattern)
+            glob($this->root.$pool.DS.$pattern)
         );
     }
 }
