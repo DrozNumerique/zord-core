@@ -25,7 +25,7 @@ class Tunnel {
         } else {
             ssh2_auth_pubkey_file($this->connection, $this->user, Zord::realPath($config['public'] ?? TUNNEL_PUBLIC_KEY), Zord::realPath($config['private'] ?? TUNNEL_PRIVATE_KEY), $config['passphrase'] ?? null);
         }
-        if ($check) {
+        if ($config['check'] ?? false && $check) {
             $command = $config['check']['command'] ?? TUNNEL_CHECK_COMMAND;
             $report  = $config['check']['report']  ?? TUNNEL_CHECK_REPORT;
             $this->exec($command, $report);
