@@ -33,8 +33,8 @@ class Tunnel {
         $this->sftp = ssh2_sftp($this->connection);
     }
     
-    function log($message)  {
-        Zord::log('['.$this->prefix.'] '.$message, 'tunnel');
+    function message($message)  {
+        return '['.$this->prefix.'] '.$message;
     }
     
     // based on https://www.php.net/manual/fr/function.ssh2-exec.php#125100
@@ -73,7 +73,7 @@ class Tunnel {
                                 if ($content !== '') {
                                     foreach (explode("\n", $content) as $line) {
                                         if (!empty(trim($line))) {
-                                            $this->log('exec('.$command.') => '.$target.': '.$line);
+                                            Zord::log($this->message('exec('.$command.') => '.$target.': '.$line), 'tunnel');
                                             if ($this->process && $report) {
                                                 switch ($target) {
                                                     case 'OUT': {
@@ -155,8 +155,8 @@ class Tunnel {
                         break;
                     }
                 }
-                $this->log('Error while copying '.$source.' to '.$target);
-                $this->log($exception->getMessage());
+                Zord::log($this->message('Error while copying '.$source.' to '.$target), 'tunnel');
+                Zord::log($this->message($exception->getMessage()), 'tunnel');
                 return false;
             }
         ]);
