@@ -1,7 +1,9 @@
 <?php
 
 class Zord {
-
+    
+    public static $ZORD_CONTEXT = '__ZORD_CONTEXT__';
+    
     private static $config   = [];
     private static $locales  = [];
     private static $skins    = [];
@@ -29,13 +31,8 @@ class Zord {
 	public static function start() {
 	    define('LOGS_FOLDER', self::liveFolder('logs'));
 	    define('BUILD_FOLDER', self::liveFolder('build'));
-	    foreach (array_reverse(COMPONENT_FOLDERS) as $folder) {
-	        $constants = self::arrayFromJSONFile($folder.'config'.DS.'constant.json');
-	        foreach($constants as $name => $value) {
-	            if (!defined($name)) {
-	                define($name, $value);
-	            }
-	        }
+	    foreach (self::getConfig('constant') as $name => $value) {
+	        define($name, $value);
 	    }
 	    if (defined('DEFAULT_TIMEZONE')) {
 	        date_default_timezone_set(DEFAULT_TIMEZONE);
@@ -125,10 +122,10 @@ class Zord {
 	}
 	
 	public static function getConfig($name = null, $reload = false) {
-	    $context = $_SESSION[Controler::$ZORD_CONTEXT] ?? false;
+	    $context = $_SESSION[self::$ZORD_CONTEXT] ?? false;
 	    if (isset($name)) {
 	        if ($reload || !self::hasConfig($name)) {
-	            self::$config[$name] = self::loadConfig($name, $context);
+	            self::$config[$name] = self::loadConfig($name, $context ?? false);
 	        }
 	        return self::$config[$name];
 	    } else {
@@ -166,7 +163,7 @@ class Zord {
 	}
 	
 	public static function getLocale($target, $lang = DEFAULT_LANG, $array = false) {
-	    $context = $_SESSION[Controler::$ZORD_CONTEXT] ?? false;
+	    $context = $_SESSION[self::$ZORD_CONTEXT] ?? false;
 	    if (!isset(self::$locales[$target][$lang])) {
 	        self::$locales[$target][$lang] = json_decode(json_encode(self::loadLocale($target, $lang, $context)));
 	    }

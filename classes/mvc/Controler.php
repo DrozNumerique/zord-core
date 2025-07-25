@@ -2,8 +2,6 @@
 
 class Controler {
     
-    public static $ZORD_CONTEXT = '__ZORD_CONTEXT__';
-    
     protected $user     = null;
     protected $context  = null;
     protected $host     = null;
@@ -240,7 +238,7 @@ class Controler {
                             'prefix'   => $config['path'],
                             'method'   => $_SERVER["REQUEST_METHOD"]
                         ];
-                        $_SESSION[self::$ZORD_CONTEXT] = $context;
+                        $_SESSION[Zord::$ZORD_CONTEXT] = $context;
                         break;
                     }
                 }
