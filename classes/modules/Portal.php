@@ -6,23 +6,11 @@ class Portal extends Module {
         return $this->page('home');
     }
     
-    protected function contentModels($name) {
-        $type = Zord::value('portal', ['contents',$name]) ?? 'md';
-        $content = Zord::content($name, $this->lang, $type);
-        if (isset($content)) {
-            $content = file_get_contents($content);
-            if ($type === 'md') {
-                $content = Zord::md2html($content);
-            }
-        }
-        return ['name' => $name, 'type' => $type, 'content' => $content];
-    }
-    
     public function content() {
         $name  = $this->params['name'] ?? null;
         $alone = $this->params['alone'] ?? false;
         if (isset($name)) {
-            $models = $this->contentModels($name);
+            $models = $this->controler->contentModels($name);
             if ($alone === 'true') {
                 foreach (['styles','scripts'] as $type) {
                     $model = Zord::value('skin', $type, 'content');

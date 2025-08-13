@@ -422,6 +422,18 @@ class Controler {
         return $models;
     }
     
+    public function contentModels($name) {
+        $type = Zord::value('portal', ['contents',$name]) ?? 'md';
+        $content = Zord::content($name, $this->lang, $type);
+        if (isset($content)) {
+            $content = file_get_contents($content);
+            if ($type === 'md') {
+                $content = Zord::md2html($content);
+            }
+        }
+        return ['name' => $name, 'type' => $type, 'content' => $content];
+    }
+    
     public function fullPath($path) {
         $urls = Zord::value('context', [$this->context,'url']);
         $host = $urls[$this->indexURL]['host'];
