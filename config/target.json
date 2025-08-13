@@ -67,7 +67,7 @@
 		"content": {
 			"shortcut": "content",
 			"parameters": {
-				"name": "FILTER_SANITIZE_STRING"
+				"name": "PATH"
 			}
 		},
 		"download": {
