@@ -272,9 +272,10 @@ class Admin extends Module {
         $name    = $this->params['name']    ?? null;
         $content = $this->params['content'] ?? null;
         $lang    = $this->params['locale']  ?? $this->lang;
+        $type    = $this->params['type']    ?? 'md';
         if (isset($content) && isset($name)) {
             $result = null;
-            $date = Zord::content($name, $lang, $content);
+            $date = Zord::content($name, $lang, $type, $content);
             if (isset($date)) {
                 $result = [
                     'date'    => $date,
@@ -449,8 +450,8 @@ class Admin extends Module {
     
     protected function prepareIndex($current, $models) {
         if ($current == 'content') {
-            $contents = Zord::value('portal', 'contents') ?? [];
-            foreach ($contents as $content) {
+            $contents = $this->contentList();
+            foreach (array_keys($contents) as $content) {
                 foreach (['styles','scripts'] as $type) {
                     $entries = Zord::value('page', ['content',$content,$type]) ?? [];
                     foreach ($entries as $model) {

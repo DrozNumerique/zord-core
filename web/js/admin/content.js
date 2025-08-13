@@ -31,7 +31,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
 				selected.innerHTML = item.innerHTML;
 			}
 		}
+		var editors = document.querySelectorAll('textarea.editor');
 		[].forEach.call(editors, function(editor) {
+			if (editor.dataset.type == 'html') {
+				editor = editor.parentNode;
+			}
 			editor.style.display = 'none';
 		});
 		[].forEach.call(dates, function(date) {
@@ -39,12 +43,25 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		});
 		var editor = getEditor(page);
 		if (editor) {
+			switch(editor.dataset.type) {
+				case 'md': {
+					preview.classList = [];
+					preview.classList.add('content');
+					preview.classList.add('static');
+					preview.classList.add(page);
+					preview.innerHTML = converter.makeHtml(editor.value);
+					preview.style.display = 'block';
+					break;
+				}
+				case 'html': {
+					preview.style.display = 'none';
+					break;
+				}
+			}
+			if (editor.dataset.type == 'html') {
+				editor = editor.parentNode;
+			}
 			editor.style.display = 'block';
-			preview.classList = [];
-			preview.classList.add('content');
-			preview.classList.add('static');
-			preview.classList.add(page);
-			preview.innerHTML = converter.makeHtml(editor.value);
 		}
 		var date = getDate(page);
 		if (date) {
@@ -54,9 +71,17 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	
 	if (preview) {
 		[].forEach.call(editors, function(editor) {
-			editor.addEventListener('input', function(event) {
-				display(editor.dataset.page);
-			});
+			if (editor.dataset.type == 'md') {
+				editor.addEventListener('input', function(event) {
+					display(editor.dataset.page);
+				});
+			}
+			if (editor.dataset.type == 'html') {
+				$('textarea.editor[data-page="' + editor.dataset.page + '"]').trumbowyg({
+					autogrow : true,
+					lang     : LANG.substr(0, 2)
+				});
+			}
 		});
 	}
 	
@@ -77,6 +102,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 					module: 'Admin',
 					action: 'content',
 					name: name.value,
+					type: editor.dataset.type,
 					content: editor.value,
 					success: function(result) {
 						var date = getDate(name.value);

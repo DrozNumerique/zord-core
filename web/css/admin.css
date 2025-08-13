@@ -59,6 +59,10 @@
 	margin: 0 50px;
 }
 
+.admin-panel-content .trumbowyg-box {
+	background: white;
+}
+
 .admin-input-file {
 	color:black;
 	background:grey;
@@ -102,6 +106,7 @@
 	position: absolute;
 	padding: 7px 0 0 0;
 	margin: 0 0 0 0;
+	z-index: 100;
 }
 
 .admin-select ul.list li.item {

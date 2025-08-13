@@ -430,6 +430,10 @@ class Controler {
     }
     
     protected function configure() {
+        $lang = substr($this->lang, 0, 2);
+        if ($lang !== 'en') {
+            $this->addScript("/trumbowyg/langs/$lang.js");
+        }
         $this->module->configure();
     }
     

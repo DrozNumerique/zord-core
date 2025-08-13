@@ -24,6 +24,11 @@
 			"type": "text/css",
 			"href": "/css/chosen.css"
 		},
+		"trumbowyg": {
+			"media": "screen",
+			"type": "text/css",
+			"href": "/trumbowyg/ui/trumbowyg.css"
+		},
 		"jquery-ui": {
 			"media": "screen",
 			"type": "text/css",
@@ -54,6 +59,10 @@
 		"chosen": {
 			"type": "text/javascript",
 			"src": "/js/chosen.js"
+		},
+		"trumbowyg": {
+			"type": "text/javascript",
+			"src": "/trumbowyg/trumbowyg.js"
 		},
 		"var": {
 			"type": "text/javascript",

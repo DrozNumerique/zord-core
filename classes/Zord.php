@@ -1149,26 +1149,28 @@ class Zord {
         }
     }
     
-    public static function content($name, $lang, $content = null) {
+    public static function content($name, $lang, $type = 'md', $content = null) {
         $folder = self::liveFolder('contents'.DS.$name.DS.$lang, false);
         if (isset($content)) {
             $date = date('YmdHis');
             if (!file_exists($folder)) {
                 mkdir($folder, 0777, true);
             }
-            return file_put_contents($folder.$date.'.md', $content) !== false ? self::date($date, $lang) : null;
+            return file_put_contents($folder.$date.'.'.$type, $content) !== false ? self::date($date, $lang) : null;
         }
-        $contents = glob($folder.'*.md');
+        $contents = glob($folder.'*.'.$type);
         if (!empty($contents)) {
             $content = max($contents);
         } else {
             foreach(array_reverse(COMPONENT_FOLDERS) as $folder) {
-                $content = $folder.'contents'.DS.$lang.DS.$name.'.md';
+                $root = $folder.'contents'.DS;
+                $file = $name.'.'.$type;
+                $content = $root.$lang.DS.$file;
                 if (!file_exists($content)) {
-                    $content = $folder.'contents'.DS.$name.'.md';
+                    $content = $root.$file;
                 }
                 if (!file_exists($content)) {
-                    $content = $folder.'contents'.DS.DEFAULT_LANG.DS.$name.'.md';
+                    $content = $root.DEFAULT_LANG.DS.$file;
                 }
                 if (!file_exists($content)) {
                     $content = null;
