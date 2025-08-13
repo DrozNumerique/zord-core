@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	}
 	
 	if (name) {
-		display(getSessionProperty('content.name', CONFIG.contents[0]));
+		display(getSessionProperty('content.name', Object.keys(CONFIG.contents)[0]));
 		[].forEach.call(items, function(item) {
 			item.addEventListener('click', function(event) {
 				display(item.dataset.value);
