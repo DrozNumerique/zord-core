@@ -7,7 +7,15 @@ class Portal extends Module {
     }
     
     protected function contentModels($name) {
-        return ['name' => $name];
+        $type = Zord::value('portal', ['contents',$name]) ?? 'md';
+        $content = Zord::content($name, $this->lang, $type);
+        if (isset($content)) {
+            $content = file_get_contents($content);
+            if ($type === 'md') {
+                $content = Zord::md2html($content);
+            }
+        }
+        return ['name' => $name, 'type' => $type, 'content' => $content];
     }
     
     public function content() {
