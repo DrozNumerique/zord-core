@@ -265,6 +265,10 @@ var dressAccount = function(container, selector) {
 			displayAccount(container, element.dataset.action);
 		});
 	});
+	var action = window.location.hash ?? false;
+	if (action && action.length > 1) {
+		displayAccount(container, action.substring(1));
+	}
 };
 
 var alertAccount = function(message, selector) {
