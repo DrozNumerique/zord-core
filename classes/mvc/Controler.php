@@ -9,6 +9,7 @@ class Controler {
     protected $scheme   = null;
     protected $indexURL = null;
     protected $baseURL  = null;
+    protected $basePath = null;
     protected $pathURL  = null;
     protected $lastURL  = null;
     protected $query    = null;
@@ -59,6 +60,10 @@ class Controler {
     
     public function getBaseURL() {
         return $this->baseURL;
+    }
+    
+    public function getBasePath() {
+        return $this->basePath;
     }
     
     public function getPathURL() {
@@ -146,6 +151,7 @@ class Controler {
             $this->query    = $target['query'];
             $this->fragment = $target['fragment'];
             $this->baseURL  = $target['baseURL'];
+            $this->basePath = $target['basePath'];
             $this->base     = $target['base'];
             $this->params   = $target['params'] ?? [];
             $this->config   = $target['config'];
@@ -272,6 +278,7 @@ class Controler {
             $target['query'] = $query;
             $target['fragment'] = $fragment;
             $target['baseURL'] = $scheme.'://'.$host.($target['prefix'] == '/' ? '' : $target['prefix']);
+            $target['basePath'] = $target['prefix'] == '/' ? '' : $target['prefix'];
             $target['base'] = $scheme.'://'.$host;
             $target['params'] = $redirect ? $_GET : array_merge($_GET, $_POST);
             if (is_string($target['params']['params'] ?? null)) {
@@ -349,6 +356,7 @@ class Controler {
                 'context'  => $this->context,
                 'indexURL' => $this->indexURL,
                 'baseURL'  => $this->baseURL,
+                'basePath' => $this->basePath,
                 'pathURL'  => $this->pathURL,
                 'query'    => $this->query,
                 'fragment' => $this->fragment,
@@ -385,6 +393,7 @@ class Controler {
             'scheme'    => $this->scheme,
             'base'      => $this->base,
             'baseURL'   => $this->baseURL,
+            'basePath'  => $this->basePath,
             'pathURL'   => $this->pathURL,
             'lastURL'   => $this->lastURL,
             'query  '   => $this->query,
@@ -399,13 +408,14 @@ class Controler {
     public function models() {
         $models = [
             'portal'    => [
-                'module'  => get_class($this->module),
-                'action'  => $this->action,
-                'params'  => Zord::json_encode($this->params, false),
-                'title'   => Zord::portalTitle($this->context, $this->lang),
-                'locale'  => Zord::getLocale('portal', $this->lang, true),
-                'baseURL' => ['zord' => $this->baseURL],
-                'user'    => [
+                'module'   => get_class($this->module),
+                'action'   => $this->action,
+                'params'   => Zord::json_encode($this->params, false),
+                'title'    => Zord::portalTitle($this->context, $this->lang),
+                'locale'   => Zord::getLocale('portal', $this->lang, true),
+                'baseURL'  => ['zord' => $this->baseURL],
+                'basePath' => ['zord' => $this->basePath],
+                'user'     => [
                     'login'   => $this->user->login,
                     'name'    => $this->user->name,
                     'email'   => $this->user->email,
@@ -417,6 +427,7 @@ class Controler {
             $urls = Zord::value('context', [$name,'url']);
             if (isset($urls)) {
                 $models['portal']['baseURL'][$name] = Zord::getContextURL($name);
+                $models['portal']['basePath'][$name] = Zord::getContextPath($name);
             }
         }
         return $models;

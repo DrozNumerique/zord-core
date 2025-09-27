@@ -470,6 +470,18 @@ class Zord {
 	    return $url;
 	}
 	
+	public static function getContextPath($name, $index = 0) {
+	    $urls = self::value('context', [$name,'url']);
+	    $path = null;
+	    if (is_array($urls) && $index < count($urls)) {
+	        $path = $urls[$index]['path'];
+	        if ($path == "/") {
+	            return "";
+	        }
+	    }
+	    return $path;
+	}
+	
 	public static function objectToArray($object) {
 	    if (!is_object($object) && !is_array($object)) {
 	        return $object;
