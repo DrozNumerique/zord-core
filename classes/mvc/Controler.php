@@ -279,7 +279,7 @@ class Controler {
             $target['fragment'] = $fragment;
             $target['baseURL'] = $scheme.'://'.$host.($target['prefix'] == '/' ? '' : $target['prefix']);
             $target['basePath'] = $target['prefix'] == '/' ? '' : $target['prefix'];
-            $target['base'] = $scheme.'://'.$host;
+            //$target['base'] = $scheme.'://'.$host;
             $target['params'] = $redirect ? $_GET : array_merge($_GET, $_POST);
             if (is_string($target['params']['params'] ?? null)) {
                 foreach (Zord::objectToArray(json_decode($target['params']['params'])) as $key => $value) {
