@@ -107,14 +107,17 @@ class Portal extends Module {
             return $this->error($this->user->isKnown() ? 403 : 401);
         }
         $value = Zord::getSkin($this->context);
-        foreach (explode('/', $this->params['property']) as $property) {
-            if (!isset($value->$property) && !isset($value[intval($property)])) {
-                return $this->error(404);
-            }
-            if (isset($value->$property)) {
-                $value = $value->$property;
-            } else if (isset($value[intval($property)])) {
-                $value = $value[intval($property)];
+        $path = $this->params['property'] ?? null;
+        if (!empty($path)) {
+            foreach (explode('/', $path) as $property) {
+                if (!isset($value->$property) && !isset($value[intval($property)])) {
+                    return $this->error(404);
+                }
+                if (isset($value->$property)) {
+                    $value = $value->$property;
+                } else if (isset($value[intval($property)])) {
+                    $value = $value[intval($property)];
+                }
             }
         }
         return Zord::objectToArray($value);
