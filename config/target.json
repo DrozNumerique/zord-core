@@ -96,6 +96,13 @@
 				"property": "PATH"
 			}
 		},
+		"skin": {
+			"shortcut": "skin",
+			"response": "DATA",
+			"parameters": {
+				"property": "PATH"
+			}
+		},
 		"token": {
 			"shortcut": "token",
 			"response": "DATA",

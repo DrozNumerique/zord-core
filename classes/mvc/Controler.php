@@ -152,7 +152,7 @@ class Controler {
             $this->fragment = $target['fragment'];
             $this->baseURL  = $target['baseURL'];
             $this->basePath = $target['basePath'];
-            $this->base     = $target['base'];
+            $this->base     = $target['base'] ?? null;
             $this->params   = $target['params'] ?? [];
             $this->config   = $target['config'];
             $this->skin     = $target['skin'];

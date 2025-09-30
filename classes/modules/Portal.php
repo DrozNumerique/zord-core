@@ -102,6 +102,24 @@ class Portal extends Module {
         return $locale;
     }
     
+    public function skin() {
+        if (!$this->user->hasRole('admin', $this->context)) {
+            return $this->error($this->user->isKnown() ? 403 : 401);
+        }
+        $value = Zord::getSkin($this->context);
+        foreach (explode('/', $this->params['property']) as $property) {
+            if (!isset($value->$property) && !isset($value[intval($property)])) {
+                return $this->error(404);
+            }
+            if (isset($value->$property)) {
+                $value = $value->$property;
+            } else if (isset($value[intval($property)])) {
+                $value = $value[intval($property)];
+            }
+        }
+        return Zord::objectToArray($value);
+    }
+    
     public function options() {
         $scope = $this->params['scope'] ?? 'portal';
         $key = $this->params['key'] ?? null;
