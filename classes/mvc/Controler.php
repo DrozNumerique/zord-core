@@ -434,7 +434,8 @@ class Controler {
     }
     
     public function contentModels($name) {
-        $type = Zord::value('portal', ['contents',$name]) ?? 'md';
+        $list = Zord::getInstance('Admin', $this)->contentList();
+        $type = $list[$name] ?? 'md';
         $content = Zord::content($name, $this->lang, $type);
         if (isset($content)) {
             $content = file_get_contents($content);
