@@ -8,6 +8,7 @@ class Controler {
     protected $method   = null;
     protected $scheme   = null;
     protected $indexURL = null;
+    protected $rootURL  = null;
     protected $baseURL  = null;
     protected $basePath = null;
     protected $pathURL  = null;
@@ -56,6 +57,10 @@ class Controler {
     
     public function getIndexURL() {
         return $this->indexURL;
+    }
+    
+    public function getRootURL() {
+        return $this->rootURL;
     }
     
     public function getBaseURL() {
@@ -274,6 +279,7 @@ class Controler {
                 header('Location: '.$url, true, 301);
                 die();
             }
+            $target['rootURL'] = $scheme.'://'.$host;
             $target['pathURL'] = $scheme.'://'.$host.$path;
             $target['query'] = $query;
             $target['fragment'] = $fragment;

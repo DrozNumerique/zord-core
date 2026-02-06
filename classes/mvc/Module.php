@@ -6,6 +6,7 @@ class Module {
     protected $context = null;
     protected $device = null;
     protected $indexURL = null;
+    protected $rootURL = null;
     protected $baseURL = null;
     protected $pathURL = null;
     protected $query = null;
@@ -31,6 +32,7 @@ class Module {
             $this->context  = $controler->getContext();
             $this->device   = $controler->getDevice();
             $this->indexURL = $controler->getIndexURL();
+            $this->rootURL  = $controler->getRootURL();
             $this->baseURL  = $controler->getBaseURL();
             $this->pathURL  = $controler->getPathURL();
             $this->query    = $controler->getQuery();

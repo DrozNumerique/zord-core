@@ -16,15 +16,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
 					var status  = result[0]
 					var message = result[1];
 					var type    = result[2];
-					var url     = result[3];
+					var path    = result[3];
+					var root    = result[4];
 					alert(message);
 					if (status === 'OK') {
-						var content = '<a href="' + url + '">' + url + '</a>'
+						var content = '<a href="' + path + '">' + root + path + '</a>'
 						if (type.startsWith('image')) {
-							content = content + '<img src="' + url + '" />';
+							content = content + '<img src="' + path + '" />';
 						}
 						if (type === 'application/pdf' || type.startsWith('application/vnd.oasis.opendocument')) {
-							content = content + '<iframe src="/ViewerJS/#..' + url + '" width="100%" height="1000"></iframe>';
+							content = content + '<iframe src="/ViewerJS/#..' + path + '" width="100%" height="1000"></iframe>';
 						}
 						preview.innerHTML = content;
 						preview.style.display = 'flex';

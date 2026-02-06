@@ -264,7 +264,7 @@ class Admin extends Module {
             return ['OK', "Le fichier peut être téléversé", false];
         } else {
             $type = Zord::value('content', pathinfo($filename, PATHINFO_EXTENSION)) ?? 'unknown';
-            return ['OK', "Le fichier a été téléversé", $type, '/'.PUBLIC_RESOURCE_BASE.$folder.$filename];
+            return ['OK', "Le fichier a été téléversé", $type, '/'.PUBLIC_RESOURCE_BASE.$folder.$filename, $this->rootURL];
         }
     }
     
