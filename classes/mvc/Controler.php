@@ -155,6 +155,7 @@ class Controler {
             $this->pathURL  = $target['pathURL'];
             $this->query    = $target['query'];
             $this->fragment = $target['fragment'];
+            $this->rootURL  = $target['rootURL'];
             $this->baseURL  = $target['baseURL'];
             $this->basePath = $target['basePath'];
             $this->base     = $target['base'] ?? null;
