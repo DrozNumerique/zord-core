@@ -362,6 +362,7 @@ class Controler {
                 'method'   => $this->method,
                 'context'  => $this->context,
                 'indexURL' => $this->indexURL,
+                'rootURL'  => $this->rootURL,
                 'baseURL'  => $this->baseURL,
                 'basePath' => $this->basePath,
                 'pathURL'  => $this->pathURL,
