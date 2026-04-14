@@ -43,7 +43,7 @@ trait NginxAdmin  {
         foreach ($hosts as $host) {
             $lines[]= "\t$host";
         }
-        $lines[] = ";";
+        $lines[] = ";\n";
         return $lines;
     }
 }
