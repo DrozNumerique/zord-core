@@ -22,7 +22,7 @@ class Account extends Module {
         }
         $models['switch'] = $switch;
         $models['response'] = ($this->params['xhr'] ?? false) ? 'DATA' : 'VIEW';
-        return ($this->params['xhr'] ?? false) ? $this->view('/portal/page/account', $models) : $this->page('account', $models);
+        return ($this->params['xhr'] ?? false) ? $this->view('/portal/page/account', $models, View::$DEFAULT_TYPE, false) : $this->page('account', $models);
     }
     
     protected function value($property) {

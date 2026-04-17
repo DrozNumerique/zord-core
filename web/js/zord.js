@@ -13,7 +13,7 @@
 	var inner  = params.inner == undefined ? null : params.inner;
 	var outer  = params.outer == undefined ? null : params.outer;
 	var open = params.open == undefined ? null : params.open;
-	var target = BASEPATH['zord'] + '/index.php';
+	var target = BASEPATH[CONTEXT] + '/index.php';
 	
 	if (before !== null) {
 		before();
