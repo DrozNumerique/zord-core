@@ -68,6 +68,7 @@ class Portal extends Module {
             if ($xhr === false) {
                 $target['context'] = $this->context;
                 $target['indexURL'] = $this->indexURL;
+                $target['pathURL'] = str_replace($target['baseURL'], $this->baseURL, $target['pathURL']);
                 $target['baseURL'] = $this->baseURL;
                 $target['lastURL'] = $target['pathURL'];
                 $target['prefix'] = Zord::value('context', [$this->context,'url'])[$this->indexURL]['path'];
