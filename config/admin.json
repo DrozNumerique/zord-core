@@ -31,7 +31,6 @@
 		]
 	},
 	"content": {
-		"scope": "context",
 		"scripts": [
 			{
 				"src": "/js/admin/content.js",
