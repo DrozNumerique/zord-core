@@ -234,7 +234,7 @@ class Controler {
         }
     }
         
-    public function findTarget($host, $path) {
+    public function findTarget($scheme, $host, $path, $query, $fragment) {
         $target = null;
         foreach (Zord::getConfig('context') as $context => $params) {
             if (isset($params['url'])) {
@@ -264,12 +264,12 @@ class Controler {
         if (substr($url, -1) == '/') {
             $url = substr($url, 0, -1);
         }
+        $scheme   = parse_url($url, PHP_URL_SCHEME);
         $host     = parse_url($url, PHP_URL_HOST);
         $path     = parse_url($url, PHP_URL_PATH);
-        $scheme   = parse_url($url, PHP_URL_SCHEME);
         $query    = parse_url($url, PHP_URL_QUERY);
         $fragment = parse_url($url, PHP_URL_FRAGMENT);
-        $target = $this->findTarget($host, $path);
+        $target = $this->findTarget($scheme, $host, $path, $query, $fragment);
         if ($target) {
             if ($target['prefix'] !== '/' && substr($url, strlen($scheme.'://'.$host), strlen($target['prefix'])) !== $target['prefix']) {
                 $path = $target['prefix'].$path;
@@ -471,6 +471,11 @@ class Controler {
         return $path;
     }
     
+    protected function redirect($uri) {
+        $headers = ['Location' => $uri];
+        $this->sendHeaders($this->status(303), $headers);
+    }
+    
     private function getShortcut($name) {
         foreach(Zord::getConfig('target') as $module => $actions) {
             foreach ($actions as $action => $config) {
@@ -578,10 +583,6 @@ class Controler {
 	        $content['__error__'] &&
 	        isset($content['__code__'])
 	    );
-	}
-	
-	private function redirect($uri) {
-	    $this->sendHeaders($this->status(303), ['Location' => $uri]);
 	}
 	
 	private function error($result, $type) {
