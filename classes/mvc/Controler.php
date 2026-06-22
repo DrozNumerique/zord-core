@@ -614,7 +614,7 @@ class Controler {
 	    $status = $this->status($code);
 	    switch ($type) {
 	        case 'DATA': {
-	            $json = Zord::json_encode($result);
+	            $json = Zord::json_encode(is_array($result['message'] ?? null) ? $result['message'] : $result);
 	            if ($this->action !== 'hashKey') {
     	            $key = $this->module->hashKey($this->action);
     	            if ($key) {
