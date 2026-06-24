@@ -88,6 +88,19 @@ abstract class Entity
     protected function query($criteria) {
         $this->sanitize($criteria);
         $join = false;
+        $select = false;
+        if (isset($criteria['select'])) {
+            $select = true;
+            if (!is_array($criteria['select'])) {
+                $criteria['select'] = [$criteria['select']];
+            }
+            foreach ($criteria['select'] as $field) {
+                $this->engine->select($this->type.'.'.$field, $field);
+            }
+        }
+        if (isset($criteria['distinct']) && $criteria['distinct'] === true) {
+            $this->engine->distinct();
+        }
         if (isset($criteria['join']) && isset($this->joins)) {
             if (!is_array($criteria['join'])) {
                 $criteria['join'] = [$criteria['join']];
@@ -95,73 +108,39 @@ abstract class Entity
             $this->engine->distinct();
             foreach ($criteria['join'] as $type) {
                 $join = true;
-                $this->engine()->join(Zord::value($this->mapping, [$type,'table']), [$this->type.'.'.$this->joins[$type][0], '=', $type.'.'.$this->joins[$type][1]], $type);
+                $this->engine($select)->join(Zord::value($this->mapping, [$type,'table']), [$this->type.'.'.$this->joins[$type][0], '=', $type.'.'.$this->joins[$type][1]], $type);
             }
         }
         if (isset($criteria['where']) && is_array($criteria['where'])) {
             foreach ($criteria['where'] as $key => $value) {
                 if ($key == 'any') {
-                    $this->engine()->where_any_is($value);
+                    $this->engine($select)->where_any_is($value);
                 } else if ($key == 'raw') {
                     if (isset($criteria['where']['parameters'])) {
                         $parameters = $criteria['where']['parameters'];
                         if (is_array($parameters)) {
-                            $this->engine()->where_raw($value, $parameters);
+                            $this->engine($select)->where_raw($value, $parameters);
                         } else if (is_scalar($parameters)) {
-                            $this->engine()->where_raw($value, [$parameters]);
+                            $this->engine($select)->where_raw($value, [$parameters]);
                         }
                     } else {
-                        $this->engine()->where_raw($value);
+                        $this->engine($select)->where_raw($value);
                     }
                 } else if ($key !== 'parameters') {
-                    $get = Zord::value($this->mapping, [$this->type,'expr',$key,'get']);
-                    if ($get) {
-                        $key = $get.'('.$key.'.)';
+                    if (!is_array($value) || Zord::is_associative($value)) {
+                        $value = [$value];
                     }
-                    if ($join) {
-                        $key = $this->type.'.'.$key;
-                    }
-                    if (is_array($value)) {
-                        foreach ($value as $op => $comp) {
-                            if ($op == '=') {
-                                $this->engine()->where_equal($key, $comp);
-                            } else if ($op == '!=') {
-                                $this->engine()->where_not_equal($key, $comp);
-                            } else if ($op == '>') {
-                                $this->engine()->where_gt($key, $comp);
-                            } else if ($op == '<') {
-                                $this->engine()->where_lt($key, $comp);
-                            } else if ($op == '>=') {
-                                $this->engine()->where_gte($key, $comp);
-                            } else if ($op == '<=') {
-                                $this->engine()->where_lte($key, $comp);
-                            } else if ($op == 'like') {
-                                $this->engine()->where_like($key, $comp);
-                            } else if ($op == '!like') {
-                                $this->engine()->where_not_like($key, $comp);
-                            } else if ($op == 'in' && is_array($comp)) {
-                                $this->engine()->where_in($key, $comp);
-                            } else if ($op == '!in' && is_array($comp)) {
-                                $this->engine()->where_not_in($key, $comp);
-                            }
-                        }
-                    } else {
-                        if ($value == '__NULL__' || !isset($value)) {
-                            $this->engine()->where_null($key);
-                        } else if ($value == '__NOT_NULL__') {
-                            $this->engine()->where_not_null($key);
-                        } else {
-                            $this->engine()->where($key, $value);
-                        }
+                    foreach ($value as $_value) {
+                        $this->queryField($key, $_value, $join, $select);
                     }
                 }
             }
         }
         if (isset($criteria['limit'])) {
-            $this->engine()->limit($criteria['limit']);
+            $this->engine($select)->limit($criteria['limit']);
         }
         if (isset($criteria['offset'])) {
-            $this->engine()->offset($criteria['offset']);
+            $this->engine($select)->offset($criteria['offset']);
         }
         if (isset($criteria['order'])) {
             if (Zord::is_associative($criteria['order'])) {
@@ -169,10 +148,53 @@ abstract class Entity
             }
             foreach ($criteria['order'] as $order) {
                 if (isset($order['asc'])) {
-                    $this->engine()->order_by_asc($order['asc']);
+                    $this->engine($select)->order_by_asc($order['asc']);
                 } else if (isset($order['desc'])) {
-                    $this->engine()->order_by_desc($order['desc']);
+                    $this->engine($select)->order_by_desc($order['desc']);
                 }
+            }
+        }
+    }
+    
+    protected function queryField($key, $value, $join, $select = false) {
+        $get = Zord::value($this->mapping, [$this->type,'expr',$key,'get']);
+        if ($get) {
+            $key = $get.'('.$key.'.)';
+        }
+        if ($join) {
+            $key = $this->type.'.'.$key;
+        }
+        if (is_array($value)) {
+            foreach ($value as $op => $comp) {
+                if ($op == '=') {
+                    $this->engine($select)->where_equal($key, $comp);
+                } else if ($op == '!=') {
+                    $this->engine($select)->where_not_equal($key, $comp);
+                } else if ($op == '>') {
+                    $this->engine($select)->where_gt($key, $comp);
+                } else if ($op == '<') {
+                    $this->engine($select)->where_lt($key, $comp);
+                } else if ($op == '>=') {
+                    $this->engine($select)->where_gte($key, $comp);
+                } else if ($op == '<=') {
+                    $this->engine($select)->where_lte($key, $comp);
+                } else if ($op == 'like') {
+                    $this->engine($select)->where_like($key, $comp);
+                } else if ($op == '!like') {
+                    $this->engine($select)->where_not_like($key, $comp);
+                } else if ($op == 'in' && is_array($comp)) {
+                    $this->engine($select)->where_in($key, $comp);
+                } else if ($op == '!in' && is_array($comp)) {
+                    $this->engine($select)->where_not_in($key, $comp);
+                }
+            }
+        } else {
+            if ($value == '__NULL__' || !isset($value)) {
+                $this->engine($select)->where_null($key);
+            } else if ($value == '__NOT_NULL__') {
+                $this->engine($select)->where_not_null($key);
+            } else {
+                $this->engine($select)->where($key, $value);
             }
         }
     }
@@ -263,7 +285,7 @@ abstract class Entity
             if ($criteria !== null) {
                 $this->query($criteria);
             }
-            $results = $this->engine()->find_many();
+            $results = $this->engine(!empty($criteria['select']))->find_many();
             if ($deep && isset($this->elements)) {
                 foreach ($results as $result) {
                     $this->deep($this->type, $result);
@@ -304,6 +326,13 @@ abstract class Entity
     public function retrieveFirst($criteria = null, $deep = false) {
         $iterator = $this->retrieveAll($criteria, $deep)->getIterator();
         return $iterator->valid() ? $iterator->current() : false;
+    }
+    
+    public function retrieveDistinct($criteria = null, $select, $deep = false) {
+        return $this->retrieveAll(array_merge($criteria, [
+            'select'   => $select,
+            'distinct' => true
+        ]), $deep);
     }
     
     public function update($criteria, array $data) {
