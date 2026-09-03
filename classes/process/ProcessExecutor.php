@@ -155,6 +155,7 @@ abstract class ProcessExecutor {
         }
         $this->plugin('before', $parameters);
         $this->execute($parameters);
+        sleep(1);
         $this->plugin('after', $parameters);
     }
     
